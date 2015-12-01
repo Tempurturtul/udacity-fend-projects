@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Matthew Feidt - Web Dev Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="content/normalize.css">
+    <link rel="stylesheet" href="content/main.css">
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <a href="https://www.udacity.com/" target="_blank">
+          <img src="content/img/udacity-logo.jpg" alt="Udacity logo.">
+        </a>
+        <div class="col">
+          <h1>Matthew Feidt</h1>
+          <p>Web Dev</p>
+        </div>
+      </header>
+      <div id="sticky-nav-container">
+        <nav>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#work">Featured Work</a></li>
+            <li><a href="#contact-form">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+      <section id="about" class="nav-target">
+        <h2>Who Am I?</h2>
+        <p>My name is Matthew. I strive to build elegant, modern, highly functional websites. Let me know how I'm doing if you have time.</p>
+        <p>I began as a web developer in mid-2015 by joining a relatively new program called <a href="http://www.freecodecamp.com/" target="_blank">FreeCodeCamp</a>. After a few months I felt that I'd reached the end of FreeCodeCamp's thoroughly developed content, and transitioned to a <a href="https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001" target="_blank">nanodegree program</a> offered by Udacity. So far I've found Udacity's program to offer a greater depth of content, as well as much needed access to professional reviews of my work.</p>
+        <p>I have experience programming in various languages including Ruby, Python, C#, and JavaScript. I've worked with jQuery, AngularJS, NodeJS, Vagrant, Gulp, Grunt, and other web development technologies. I plan to bring my front-end development skills up to par with what's expected of industry profressionals by taking full advantage of Udacity's nanodegree program.</p>
+        <p>I have a bachelor's degree in Security Management and am currently employed full-time in my field. I've grown fundamentally dissatisfied with my career choice and am in the process of transforming my programming hobby into a programming career. If you'd like to help, have a look at my work and give me some feedback. I'm always looking to improve. Thanks for reading!</p>
+      </section>
+      <section id="work" class="nav-target">
+        <h2>Featured Work</h2>
+        <div class="article-container">
+          <article>
+            <h3>Pomodoro Clock</h3>
+            <time datetime="2015-09">September 2015</time>
+            <a href="http://tempurturtul.github.io/pomodoro-clock" target="_blank">
+              <img class="work-preview" src="content/img/pomodoro-clock-600x600.png" srcset="content/img/pomodoro-clock-600x600.png 600w, content/img/pomodoro-clock-300x300.png 300w" sizes="(min-width: 700px) 300px, 600px" alt="A preview image for the Pomodoro Clock site.">
+            </a>
+            <a href="https://github.com/Tempurturtul/pomodoro-clock" target="_blank">
+              <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
+            </a>
+            <p>Based on the <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique" target="_blank">Pomodoro Technique</a>, this site provides a time management clock with customizable work and break cycles, including a long-break cycle which occurs at a specified frequency.  I use the canvas element to programmatically draw the clock itself, and use a browser notification combined with an audible alarm (toggleable) to alert the user of the end of a clock cycle.</p>
+          </article>
+          <article>
+            <h3>Local Weather</h3>
+            <time datetime="2015-08">August 2015</time>
+            <a href="http://tempurturtul.github.io/local-weather" target="_blank">
+              <img class="work-preview" src="content/img/local-weather-600x600.png" srcset="content/img/local-weather-600x600.png 600w, content/img/local-weather-300x300.png 300w" sizes="(min-width: 700px) 300px, 600px" alt="A preview image for the Local Weather site.">
+            </a>
+            <a href="https://github.com/Tempurturtul/local-weather" target="_blank">
+              <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
+            </a>
+            <p>This site uses your browser's location services to display local weather information gathered from Yahoo's weather API. If you happen to be in the USA, it also collects information from epa.gov's API to display the UV index high for the day.  Supports manual location searching and both imperial and metric units of measure.  Also includes a dynamic background based on local sunrise and sunset times plus current weather conditions.</p>
+          </article>
+          <article>
+            <h3>Quote Machine</h3>
+            <time datetime="2015-07">July 2015</time>
+            <a href="http://tempurturtul.github.io/quote-machine" target="_blank">
+              <img class="work-preview" src="content/img/quote-machine-600x600.png" srcset="content/img/quote-machine-600x600.png 600w, content/img/quote-machine-300x300.png 300w" sizes="(min-width: 700px) 300px, 600px" alt="A preview image for the Quote Machine site.">
+            </a>
+            <a href="https://github.com/Tempurturtul/quote-machine" target="_blank">
+              <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
+            </a>
+            <p>My second completed site, this displays a random quote from a collection.  The challenge was in providing a tweet button that updates with the currently displayed quote instead of constantly using the first displayed quote, then handling cases where the quote exceeded Twitter's character limit.</p>
+          </article>
+          <article>
+            <h3>Twitch Streamers</h3>
+            <time datetime="2015-07">July 2015</time>
+            <a href="http://tempurturtul.github.io/twitch-streamers" target="_blank">
+              <img class="work-preview" src="content/img/twitch-streamers-600x600.png" srcset="content/img/twitch-streamers-600x600.png 600w, content/img/twitch-streamers-300x300.png 300w" sizes="(min-width: 700px) 300px, 600px" alt="A preview image for the Twitch Streamers site.">
+            </a>
+            <a href="https://github.com/Tempurturtul/twitch-streamers" target="_blank">
+              <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
+            </a>
+            <p>The first site I ever completed.  It interfaces with twitch.tv's public API to retrieve and display information on a list of streamers.  Provides options for sorting and filtering.</p>
+          </article>
+        </div>
+      </section>
+      <section id="contact-form" class="nav-target">
+        <!-- autocomplete="off" prevents firefox from keeping form disabled on refresh. -->
+        <form autocomplete="off">
+          <h2>Send Me A Message</h2>
+          <div class="row">
+            <input id="name" type="text" placeholder="Name" maxlength="100">
+            <input id="email" type="email" placeholder="Email" maxlength="100">
+          </div>
+          <textarea id="message" placeholder="Message" maxlength="9000" required></textarea>
+          <button>Send</button>
+          <div id="contact-notification" class="message-overlay hidden click-to-hide">
+            <p>Placeholder message.</p>
+          </div>
+        </form>
+      </section>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="app.min.js"></script>
+  </body>
+</html>
