@@ -58,7 +58,6 @@ h3,
 h4,
 h5 {
   padding:10px 5%;
-
 }
 
 
@@ -168,6 +167,94 @@ span {
   text-align: center;
 }
 
+
+/* Custom CSS */
+.hide-content-container > .hide-content {
+  /* Hide the content inside the container. */
+  display: none;
+}
+
+.hide-content-container:hover > .hide-content {
+  /* On hover, display the content inside the container. */
+  display: inherit;
+  white-space: nowrap;
+}
+
+/* Name. */
+#name {
+  white-space: nowrap;
+}
+
+/* Role. */
+#header h1 + span {
+  white-space: nowrap;
+  display: inline-block;  /* Cause the role to wrap below the name if necessary. */
+  color: #222;  /* Didn't like the way black text looked here. */
+  text-shadow: 0 0 1px #333;  /* Shadow to make the text more visible. */
+}
+
+#topContacts, #footerContacts {
+  max-width: 500px;
+  margin: 0 auto;
+  flex-wrap: nowrap;
+}
+
+#topContacts li, #footerContacts li {
+  border-radius: 3px;
+  background: #f0f0f0;
+  height: 1.8em;
+  box-sizing: border-box;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  transition: all 1s;
+  width: 1.8em;
+  overflow: hidden;
+  font-size: .8em;
+}
+
+#topContacts a, #footerContacts a {
+  margin: 0;
+}
+
+#topContacts li:hover, #footerContacts li:hover {
+  transition: all 1s;
+  width: 100%;
+}
+
+#topContacts li:not(:last-of-type), #footerContacts li:not(:last-of-type) {
+  margin-right: 15px;
+}
+
+#skills li:not(:last-of-type) {
+/*  border-right: 1px white solid;*/
+}
+
+.project-images {
+  min-width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-x: scroll;
+  box-sizing: border-box;
+}
+
+.project-images img {
+  flex: 0 0 auto;
+  max-height: 100%;
+  box-sizing: border-box;
+  border: solid #ddd 1px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+#lets-connect h2 {
+  color: #222;
+}
+
 /* Media queries to handle various device widths */
 
 @media only screen and (max-width: 1024px) {
@@ -210,5 +297,14 @@ span {
   #skills-h3,
   .biopic {
     display: block;
+  }
+}
+
+/* Custom media queries. */
+@media (min-width: 500px) {
+  #topContacts li, #footerContacts li {
+    height: 2em;
+    width: 2em;
+    font-size: 1em;
   }
 }

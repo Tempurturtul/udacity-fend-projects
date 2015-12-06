@@ -22,6 +22,12 @@ var HTMLtwitter = '<li class="flex-item"><span class="orange-text">twitter</span
 var HTMLgithub = '<li class="flex-item"><span class="orange-text">github</span><span class="white-text">%data%</span></li>';
 var HTMLblog = '<li class="flex-item"><span class="orange-text">blog</span><span class="white-text">%data%</span></li>';
 var HTMLlocation = '<li class="flex-item"><span class="orange-text">location</span><span class="white-text">%data%</span></li>';
+/* Custom */
+var custHTMLmobile = '<li class="flex-item hide-content-container"><i class="fa fa-mobile"></i><span class="hide-content">%data%</span></li>';
+var custHTMLemail = '<li class="flex-item hide-content-container"><i class="fa fa-envelope-o"></i><span class="hide-content"><a href="mailto:%data%">%data%</a></span></li>';
+var custHTMLtwitter = '<li class="flex-item hide-content-container"><i class="fa fa-twitter"></i><span class="hide-content"><a href="https://twitter.com/%data%" target="_blank">%data%</a></span></li>';
+var custHTMLgithub = '<li class="flex-item hide-content-container"><i class="fa fa-github"></i><span class="hide-content"><a href="https://github.com/%data%" target="_blank">%data%</a></span></li>';
+var custHTMLlocation = '<li class="flex-item hide-content-container"><i class="fa fa-map-marker"></i><span class="hide-content"><a href="https://www.google.com/maps/search/%data%" target="_blank">%data%</a></span></li>';
 
 var HTMLbioPic = '<img src="%data%" class="biopic">';
 var HTMLwelcomeMsg = '<span class="welcome-message">%data%</span>';
@@ -35,12 +41,17 @@ var HTMLworkTitle = ' - %data%</a>';
 var HTMLworkDates = '<div class="date-text">%data%</div>';
 var HTMLworkLocation = '<div class="location-text">%data%</div>';
 var HTMLworkDescription = '<p><br>%data%</p>';
+/* Custom */
+var custHTMLworkEmployer = '<a href="mailto:%email-data%">%data%';
 
 var HTMLprojectStart = '<div class="project-entry"></div>';
 var HTMLprojectTitle = '<a href="#">%data%</a>';
 var HTMLprojectDates = '<div class="date-text">%data%</div>';
 var HTMLprojectDescription = '<p><br>%data%</p>';
 var HTMLprojectImage = '<img src="%data%">';
+/* Custom */
+var custHTMLprojectImageStart = '<div class="project-images"></div>'
+var custHTMLprojectTitle = '<a href="%url-data%" target="_blank">%data%</a>';
 
 var HTMLschoolStart = '<div class="education-entry"></div>';
 var HTMLschoolName = '<a href="#">%data%';
@@ -48,15 +59,19 @@ var HTMLschoolDegree = ' -- %data%</a>';
 var HTMLschoolDates = '<div class="date-text">%data%</div>';
 var HTMLschoolLocation = '<div class="location-text">%data%</div>';
 var HTMLschoolMajor = '<em><br>Major: %data%</em>';
+/* Custom */
+var custHTMLschoolName = '<a href="%url-data%" target="_blank">%data%';
 
 var HTMLonlineClasses = '<h3>Online Classes</h3>';
 var HTMLonlineTitle = '<a href="#">%data%';
 var HTMLonlineSchool = ' - %data%</a>';
 var HTMLonlineDates = '<div class="date-text">%data%</div>';
 var HTMLonlineURL = '<br><a href="#">%data%</a>';
+/* Custom */
+var custHTMLonlineTitle = '<a href="%url-data%" target="_blank">%data%';
+var custHTMLonlineDescription = '<p><br>%data%</p>';
 
 var internationalizeButton = '<button>Internationalize</button>';
-var googleMap = '<div id="map"></div>';
 
 
 /*
@@ -95,12 +110,14 @@ This is the fun part. Here's where we generate the custom Google Map for the web
 See the documentation below for more details.
 https://developers.google.com/maps/documentation/javascript/reference
 */
-var map;    // declares a global map variable
+// var map;    // declares a global map variable
 
 
 /*
 Start here! initializeMap() is called when page is loaded.
 */
+
+/*
 function initializeMap() {
 
   var locations;
@@ -108,18 +125,21 @@ function initializeMap() {
   var mapOptions = {
     disableDefaultUI: true
   };
+*/
 
   /*
   For the map to be displayed, the googleMap var must be
   appended to #mapDiv in resumeBuilder.js.
   */
-  map = new google.maps.Map(document.querySelector('#map'), mapOptions);
+//  map = new google.maps.Map(document.querySelector('#map'), mapOptions);
 
 
   /*
   locationFinder() returns an array of every location string from the JSONs
   written for bio, education, and work.
   */
+
+  /*
   function locationFinder() {
 
     // initializes an empty array
@@ -142,12 +162,15 @@ function initializeMap() {
 
     return locations;
   }
+  */
 
   /*
   createMapMarker(placeData) reads Google Places search results to create map pins.
   placeData is the object returned from search results containing information
   about a single location.
   */
+
+  /*
   function createMapMarker(placeData) {
 
     // The next lines save location data from the search result object to local variables
@@ -183,21 +206,25 @@ function initializeMap() {
     // center the map
     map.setCenter(bounds.getCenter());
   }
+  */
 
   /*
   callback(results, status) makes sure the search returned results for a location.
   If so, it creates a new map marker for that location.
   */
+  /*
   function callback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
       createMapMarker(results[0]);
     }
   }
+  */
 
   /*
   pinPoster(locations) takes in the array of locations created by locationFinder()
   and fires off Google place searches for each location
   */
+  /*
   function pinPoster(locations) {
 
     // creates a Google place search service object. PlacesService does the work of
@@ -229,11 +256,13 @@ function initializeMap() {
   pinPoster(locations);
 
 }
+*/
 
 /*
 Uncomment the code below when you're ready to implement a Google Map!
 */
 
+/*
 // Calls the initializeMap() function when the page loads
 window.addEventListener('load', initializeMap);
 
@@ -243,3 +272,4 @@ window.addEventListener('resize', function(e) {
   //Make sure the map bounds get updated on page resize
   map.fitBounds(mapBounds);
 });
+*/
