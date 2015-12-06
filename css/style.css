@@ -261,7 +261,8 @@ span {
 #education h3 {
   color: #999;
   font-weight: normal;
-  padding-bottom: 0;
+  padding-top: 20px;  /* Overriding top and bottom padding. */
+  padding-bottom: 0;  /* Overriding top and bottom padding. */
 }
 
 #lets-connect h2 {
