@@ -228,8 +228,14 @@ span {
   margin-right: 15px;
 }
 
-#skills li:not(:last-of-type) {
-/*  border-right: 1px white solid;*/
+.welcome-message {
+  font-size: 1em;
+  line-height: 1.5em;
+  padding: 0;
+}
+
+#skills li {
+  padding: 5px;
 }
 
 .project-images {
@@ -240,6 +246,7 @@ span {
   align-items: center;
   overflow-x: scroll;
   box-sizing: border-box;
+  margin: 10px 0;
 }
 
 .project-images img {
@@ -251,15 +258,22 @@ span {
   margin-right: 10px;
 }
 
+#education h3 {
+  color: #999;
+  font-weight: normal;
+  padding-bottom: 0;
+}
+
 #lets-connect h2 {
   color: #222;
 }
+
 
 /* Media queries to handle various device widths */
 
 @media only screen and (max-width: 1024px) {
   #lets-connect {
-    margin-top: 5%;
+    /*margin-top: 5%;*/
   }
 }
 
@@ -271,7 +285,7 @@ span {
 
 @media only screen and (max-width: 750px) {
   #lets-connect {
-    margin-top: 10%;
+    /*margin-top: 10%;*/
   }
   .biopic {
     width: 150px;
@@ -306,5 +320,11 @@ span {
     height: 2em;
     width: 2em;
     font-size: 1em;
+  }
+}
+
+@media (min-width: 900px) {
+  .welcome-message {
+    font-size: 1.2em;
   }
 }

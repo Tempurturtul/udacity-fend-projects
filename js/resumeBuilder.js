@@ -21,8 +21,7 @@ var bio = {
     "NodeJS",
     "AngularJS",
     "Git",
-    "Gulp",
-    "Vagrant"
+    "Gulp"
   ]
 };
 
