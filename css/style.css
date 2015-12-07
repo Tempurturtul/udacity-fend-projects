@@ -11,7 +11,7 @@ h5,
 h6 {
   padding:0;
   margin:0;
-  font-family: "Roboto", sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 .clear-fix {
@@ -88,14 +88,13 @@ a {
   color: #1199c3;
   text-decoration: none;
   margin-top: 10px;
-  display: block;
 }
 
 .welcome-message {
   font-style: italic;
-  font-size: 18px;
   color: #f3f3f3;
-  line-height: 28px;
+  line-height: 1.5em;
+  padding: 0;
 }
 
 #skills-h3 {
@@ -167,22 +166,6 @@ span {
   text-align: center;
 }
 
-
-/* Custom CSS */
-body,
-div,
-ul,
-li,
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Open Sans', sans-serif;  /* Overriding font-family. */
-}
-
 .hide-content-container > .hide-content {
   /* Hide the content inside the container (but not from screen-readers). */
   position: absolute;
@@ -200,16 +183,11 @@ h6 {
   white-space: nowrap;
 }
 
-/* Name. */
-#name {
-  white-space: nowrap;
-}
-
 /* Role. */
 #header h1 + span {
   white-space: nowrap;
   display: inline-block;  /* Cause the role to wrap below the name if necessary. */
-  color: #222;  /* Didn't like the way black text looked here. */
+  color: #222;
   text-shadow: 0 0 1px #333;  /* Shadow to make the text more visible. */
 }
 
@@ -259,18 +237,12 @@ h6 {
   margin-right: 15px;
 }
 
-.welcome-message {
-  font-size: 1em;
-  line-height: 1.5em;
-  padding: 0;
-}
-
 #skills li {
   padding: 5px;
 }
 
 .project-images {
-  min-width: 100%;
+  width: 100%;
   height: 300px;
   display: flex;
   justify-content: flex-start;
@@ -286,7 +258,7 @@ h6 {
   box-sizing: border-box;
   border: solid #ddd 1px;
   border-radius: 5px;
-  margin-right: 10px;
+  margin-right: 10px;  /* Ignored by overflow scroll (scrolls to last element's border edge, not margin edge). */
 }
 
 #education h3 {
@@ -303,40 +275,25 @@ h6 {
 
 /* Media queries to handle various device widths */
 
-@media only screen and (max-width: 1024px) {
-  #lets-connect {
-    /*margin-top: 5%;*/
-  }
-}
-
 @media only screen and (max-width:900px) {
   .biopic {
     width: 175px;
   }
 }
 
-@media only screen and (max-width: 750px) {
-  #lets-connect {
-    /*margin-top: 10%;*/
+@media only screen and (min-width: 900px) {
+  .welcome-message {
+    font-size: 1.2em;
   }
+}
+
+@media only screen and (max-width: 750px) {
   .biopic {
     width: 150px;
   }
   .welcome-message {
     display: none;
   }
-}
-
-#map {
-  display: block;
-  height: 100%;
-  margin: 0 5%;
-}
-
-#mapDiv {
-  height: 400px;
-  width: 100%;
-  padding-bottom: 5%;
 }
 
 @media only screen and (min-width: 750px) {
@@ -346,15 +303,8 @@ h6 {
   }
 }
 
-/* Custom media queries. */
-@media (min-width: 500px) {
+@media only screen and (min-width: 500px) {
   #topContacts li, #footerContacts li {
     font-size: 1em;
-  }
-}
-
-@media (min-width: 900px) {
-  .welcome-message {
-    font-size: 1.2em;
   }
 }

@@ -33,6 +33,11 @@ var education = {
       "location": "Harrisburg, PA",
       "degree": "BS",
       "majors": ["Security Management"],
+      "description": "An accelerated four-year degree program focusing on " +
+      "intelligence analysis, management, and police work. Obtained an " +
+      "Intelligence Analysis certificate and completed a 400-hour internship " +
+      "with a local police department as part of the degree program. " +
+      "Graduated Magna Cum Laude with a 3.7 GPA.",
       "url": "http://www.centralpenn.edu/"
     }
   ],
@@ -131,16 +136,18 @@ education.display = function() {
     var formattedSchoolDegree = HTMLschoolDegree.replace(/%data%/g, school.degree);
     var formattedSchoolDates = HTMLschoolDates.replace(/%data%/g, school.dates);
     var formattedSchoolLocation = HTMLschoolLocation.replace(/%data%/g, school.location);
+    var formattedSchoolDescription = HTMLschoolDescription.replace(/%data%/g, school.description);
 
     $('.education-entry:last').append(formattedSchoolName + formattedSchoolDegree);
     $('.education-entry:last').append(formattedSchoolDates);
     $('.education-entry:last').append(formattedSchoolLocation);
 
-    for (major in school.majors) {
-      var major = school.majors[major];
-      var formattedSchoolMajor = HTMLschoolMajor.replace(/%data%/g, major);
+    if (school.majors.length) {
+      var formattedSchoolMajor = HTMLschoolMajor.replace(/%data%/g, school.majors.join(', '));
       $('.education-entry:last').append(formattedSchoolMajor);
     }
+
+    $('.education-entry:last').append(formattedSchoolDescription);
   }
 
   if (education.onlineCourses.length) {
