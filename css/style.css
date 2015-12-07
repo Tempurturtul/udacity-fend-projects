@@ -169,14 +169,34 @@ span {
 
 
 /* Custom CSS */
+body,
+div,
+ul,
+li,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Open Sans', sans-serif;  /* Overriding font-family. */
+}
+
 .hide-content-container > .hide-content {
-  /* Hide the content inside the container. */
-  display: none;
+  /* Hide the content inside the container (but not from screen-readers). */
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
 }
 
 .hide-content-container:hover > .hide-content {
   /* On hover, display the content inside the container. */
-  display: inherit;
+  position: inherit;
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0.5s, opacity 0.5s linear;
+  transition-delay: 0.8s;
   white-space: nowrap;
 }
 
@@ -197,22 +217,26 @@ span {
   max-width: 500px;
   margin: 0 auto;
   flex-wrap: nowrap;
+  justify-content: center;  /* space-around causes unwanted space to the right of the page beyond 100% width. */
+}
+
+#footerContacts {
+  line-height: 0;  /* Remove unwanted space below element. */
 }
 
 #topContacts li, #footerContacts li {
   border-radius: 3px;
   background: #f0f0f0;
-  height: 1.8em;
+  height: 2em;
   box-sizing: border-box;
   padding: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2em;
-  transition: all 1s;
-  width: 1.8em;
   overflow: hidden;
-  font-size: .8em;
+  font-size: 0.8em;
+  width: 2em;
+  transition: width 1s;
 }
 
 #topContacts a, #footerContacts a {
@@ -220,8 +244,8 @@ span {
 }
 
 #topContacts li:hover, #footerContacts li:hover {
-  transition: all 1s;
   width: 100%;
+  transition: width 1s;
 }
 
 #topContacts li:not(:last-of-type), #footerContacts li:not(:last-of-type) {
@@ -318,8 +342,6 @@ span {
 /* Custom media queries. */
 @media (min-width: 500px) {
   #topContacts li, #footerContacts li {
-    height: 2em;
-    width: 2em;
     font-size: 1em;
   }
 }
