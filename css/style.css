@@ -217,7 +217,9 @@ h6 {
   max-width: 500px;
   margin: 0 auto;
   flex-wrap: nowrap;
-  justify-content: center;  /* space-around causes unwanted space to the right of the page beyond 100% width. */
+  justify-content: space-around;
+  position: relative;  /* Along with overflow:hidden, prevents contacts flexbox from creating unwanted whitespace beyond 100% width. */
+  overflow: hidden;  /* Along with position:relative, prevents contacts flexbox from creating unwanted whitespace beyond 100% width. */
 }
 
 #footerContacts {
@@ -236,16 +238,21 @@ h6 {
   overflow: hidden;
   font-size: 0.8em;
   width: 2em;
-  transition: width 1s;
+  flex: 0 0 auto;
+  transition: flex 1s;
 }
 
-#topContacts a, #footerContacts a {
-  margin: 0;
+#topContacts li span, #footerContacts li span {
+  font-size: 0.7em;  /* (Relative to parent's font-size.) */
+}
+
+#topContacts li a, #footerContacts li a {
+  margin: 0;  /* Override margin-top:10px. */
 }
 
 #topContacts li:hover, #footerContacts li:hover {
-  width: 100%;
-  transition: width 1s;
+  flex: 1 0 auto;
+  transition: flex 1s;
 }
 
 #topContacts li:not(:last-of-type), #footerContacts li:not(:last-of-type) {
