@@ -6,41 +6,55 @@
   box-sizing: border-box;
 }
 
+a {
+  color: #1199c3;
+  text-decoration: none;
+}
+
 body {
   font-family: "Open Sans", sans-serif;
 }
 
-header {
-  background-color: #484848;
+footer {
+  padding: 5px 5%;
+  text-align: center;
 }
 
 h1 {
   color: #f5a623;
+  margin: 0;
 }
 
 h2 {
   color: #999;
+  margin-top: 0;
+}
+
+h3 {
+  margin-bottom: 0;
 }
 
 h4 {
   color: #4a4a4a;
 }
 
-p {
-  color: #333;
+header {
+  background-color: #484848;
+  padding: 5px 5%;
 }
 
-a {
-  color: #1199c3;
-  text-decoration: none;
+p {
+  color: #333;
+  margin: 0;
+}
+
+section {
+  padding: 25px 5%;
 }
 
 ul {
   list-style: none;
-}
-
-footer {
-  text-align: center;
+  padding: 0;
 }
 
 
@@ -48,61 +62,112 @@ footer {
   Classes
 *************************/
 
-.orange {
-  background-color: #f5ae23;
+.biopic {
+  border-radius: 50%;
+  display: none;
+  flex: 0 0 auto;
+  margin-right: 10px;
+  width: 150px;
 }
 
-.orange-text {
-  color: #f5ae23;
-}
-
-.gray {
-  background-color: #f3f3f3;
+.contacts-list {
+  display: flex;
+  justify-content: space-around;
+  max-width: 500px;
+  margin: 15px auto;
 }
 
 .dark-gray {
   background-color: #4a4a4a;
 }
 
-.subtitle {
+.description {
+  margin-top: 0.5em;
+}
+
+.education-entry {
 
 }
 
-.time-period {
-  font-style: italic;
-  color: #999;
-}
-
-.location {
-  font-style: italic;
-  color: #999;
-}
-
-.welcome-message {
-  font-style: italic;
-  color: #f3f3f3;
-  line-height: 1.5em;
-}
-
-.biopic {
-  width: 200px;
+.gray {
+  background-color: #f3f3f3;
 }
 
 .hide-content-container > .hide-content {
   /* Hide the content inside the container (but not from screen-readers). */
+  opacity: 0;
   position: absolute;
   visibility: hidden;
-  opacity: 0;
 }
 
 .hide-content-container:hover > .hide-content {
   /* On hover, display the content inside the container. */
-  position: inherit;
-  visibility: visible;
   opacity: 1;
-  transition: visibility 0.5s, opacity 0.5s linear;
-  transition-delay: 0.8s;
+  position: inherit;
+  transition: visibility 0.2s, opacity 0.2s linear;
+  transition-delay: 0.3s;
+  visibility: visible;
   white-space: nowrap;
+}
+
+.links {
+  color: #999;
+  font-size: 1.2rem;
+  line-height: 1rem;
+}
+
+.location {
+  color: #999;
+  font-style: italic;
+}
+
+.orange {
+  background-color: #f5ae23;
+}
+
+.project-entry {
+
+}
+
+.project-images {
+  align-items: center;
+  display: flex;
+  height: 300px;
+  justify-content: flex-start;
+  margin-top: 15px;
+  overflow-x: scroll;
+  width: 100%;
+}
+
+.row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.subtitle {
+  display: inline-block;
+  font-size: 1rem;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.time-period {
+  color: #999;
+  font-style: italic;
+}
+
+.welcome-message {
+  color: #f3f3f3;
+  display: none;
+  font-style: italic;
+  line-height: 1.5em;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.work-entry {
+
 }
 
 
@@ -110,7 +175,107 @@ footer {
   Specific Styles
 *************************/
 
+#education {
+
+}
+
+#main-container {
+
+}
+
+#projects {
+
+}
+
+#skills {
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9em;
+  justify-content: center;
+}
+
+#skills li:not(:last-of-type) {
+  margin-right: 15px;
+}
+
+#subtitle {
+
+}
+
+#work-experience {
+
+}
+
+/* Name. */
+header h1 {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+/* Role. */
+header h1 + p {
+  color: #222;
+  text-shadow: 0 0 1px #333;
+}
+
+.contacts-list li {
+  align-items: center;
+  background: #f0f0f0;
+  border-radius: 3px;
+  display: flex;
+  flex: 0 0 auto;
+  font-size: 0.8em;
+  height: 2em;
+  justify-content: center;
+  padding: 5px;
+  overflow: hidden;
+  transition: flex 0.7s;
+  width: 2em;
+}
+
+.contacts-list li:hover {
+  flex: 1 0 auto;
+  transition: flex 0.7s;
+}
+
+.contacts-list li:not(:last-of-type) {
+  margin-right: 10px;
+}
+
+.contacts-list li span {
+  font-size: 0.7em;
+  margin-left: 0.5em;
+}
+
+.project-images img {
+  border: solid #ddd 1px;
+  border-radius: 5px;
+  flex: 0 0 auto;
+  margin-right: 10px;  /* Ignored by overflow scroll (scrolls to last element's border edge, not margin edge). */
+  max-height: 100%;
+}
+
+.links a {
+  color: inherit;
+}
+
+.links a:not(:last-of-type) {
+  margin-right: 0.5em;
+}
+
 
 /*************************
   Media Queries
 *************************/
+@media (min-width: 500px) {
+  .welcome-message {
+    display: block;
+  }
+}
+
+@media (min-width: 600px) {
+  .biopic {
+    display: block;
+  }
+}

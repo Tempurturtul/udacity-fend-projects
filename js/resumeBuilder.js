@@ -54,6 +54,7 @@ var projects = {
         "images/fend-portfolio-work.png",
         "images/fend-portfolio-contact.png"
       ],
+      "github": "https://github.com/Tempurturtul/fend-resume",
       "url": "http://tempurturtul.github.io/fend-portfolio/"
     }
   ]
@@ -100,10 +101,10 @@ bio.display = function() {
   var formattedBioPic = HTMLbioPic.replace(/%data%/g, bio.bioPic);
   var formattedWelcomeMsg = HTMLwelcomeMsg.replace(/%data%/g, bio.welcomeMessage);
 
+  $('header').prepend(formattedRole);
   $('header').prepend(formattedName);
-  $('#name').append(formattedRole);
   $('header').append(formattedBioPic);
-  $('header').append(formattedWelcomeMsg);
+  $('header .row:last').append(formattedWelcomeMsg);
   $('.contacts-list').append(formattedMobile);
   $('.contacts-list').append(formattedEmail);
   $('.contacts-list').append(formattedGithub);
@@ -135,7 +136,7 @@ work.display = function () {
 
     $('.work-entry:last').append(formattedWorkEmployer + formattedWorkTitle);
     $('.work-entry:last').append(formattedWorkEmployed);
-    $('.work-entry:last').append(formattedWorkLocation);
+    $('.work-entry:last .row:last').append(formattedWorkLocation);
     $('.work-entry:last').append(formattedWorkDescription);
   }
 };
@@ -147,12 +148,30 @@ projects.display = function() {
     $('#projects').append(HTMLprojectStart);
 
     var formattedProjectTitle = HTMLprojectTitle.replace(/%data%/g, project.title);
-    formattedProjectTitle = formattedProjectTitle.replace(/%url-data%/g, project.url);
     var formattedProjectCompleted = HTMLprojectCompleted.replace(/%data%/g, project.completed);
     var formattedProjectDescription = HTMLprojectDescription.replace(/%data%/g, project.description);
 
     $('.project-entry:last').append(formattedProjectTitle);
     $('.project-entry:last').append(formattedProjectCompleted);
+
+    if (project.github || project.url) {
+      $('.project-entry:last .row:last').append(HTMLprojectLinkStart);
+
+      if (project.github) {
+        var formattedProjectGithub = HTMLprojectLink.replace(/%url-data%/g, project.github);
+        formattedProjectGithub = formattedProjectGithub.replace(/%data%/g, '<i class="fa fa-github"></i>');
+
+        $('.project-entry:last .links:last').append(formattedProjectGithub);
+      }
+
+      if (project.url) {
+        var formattedProjectUrl = HTMLprojectLink.replace(/%url-data%/g, project.url);
+        formattedProjectUrl = formattedProjectUrl.replace(/%data%/g, '<i class="fa fa-eye"></i>');
+
+        $('.project-entry:last .links:last').append(formattedProjectUrl);
+      }
+    }
+
     $('.project-entry:last').append(formattedProjectDescription);
 
     if (project.images.length) {
