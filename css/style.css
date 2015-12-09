@@ -16,7 +16,6 @@ body {
 }
 
 footer {
-  padding: 5px 5%;
   text-align: center;
 }
 
@@ -35,7 +34,7 @@ h3 {
 }
 
 h4 {
-  color: #4a4a4a;
+  margin-bottom: 0;
 }
 
 header {
@@ -75,6 +74,8 @@ ul {
   justify-content: space-around;
   max-width: 500px;
   margin: 15px auto;
+  overflow: hidden;  /* Along with position:relative, prevents contacts flexbox from creating unwanted whitespace beyond 100% width. */
+  position: relative;  /* Along with overflow:hidden, prevents contacts flexbox from creating unwanted whitespace beyond 100% width. */
 }
 
 .dark-gray {
@@ -160,6 +161,7 @@ ul {
 .welcome-message {
   color: #f3f3f3;
   display: none;
+  flex: 1 1 auto;
   font-style: italic;
   line-height: 1.5em;
   margin: 10px 0;
@@ -174,6 +176,10 @@ ul {
 /*************************
   Specific Styles
 *************************/
+
+#classes-heading {
+  color: #999;
+}
 
 #education {
 
@@ -219,6 +225,11 @@ header h1 + p {
   text-shadow: 0 0 1px #333;
 }
 
+/* Biopic and Welcome Message. */
+header .row {
+  justify-content: center;
+}
+
 .contacts-list li {
   align-items: center;
   background: #f0f0f0;
@@ -258,12 +269,32 @@ header h1 + p {
 
 .links a {
   color: inherit;
+  position: relative;
+  top: 0;
+  transition: top 0.2s, color 0.2s;
+}
+
+.links a:hover {
+  color: #1199c3;
+  top: -3px;
+  transition: top 0.2s, color 0.2s;
 }
 
 .links a:not(:last-of-type) {
   margin-right: 0.5em;
 }
 
+footer h2 {
+  color: black;
+  margin-bottom: 0;
+  padding: 8px;
+}
+
+footer .contacts-list {
+  line-height: 0;  /* Remove unwanted space below element. */
+  margin: 0 auto;
+  padding: 10px 0;
+}
 
 /*************************
   Media Queries
@@ -275,6 +306,16 @@ header h1 + p {
 }
 
 @media (min-width: 600px) {
+  .contacts-list li {
+    font-size: 1em;
+    height: 2em;
+    width: 2em;
+  }
+
+  .contacts-list li span {
+    font-size: 0.8em;
+  }
+
   .biopic {
     display: block;
   }

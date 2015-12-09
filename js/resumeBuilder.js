@@ -202,7 +202,7 @@ education.display = function() {
 
     $('.education-entry:last').append(formattedSchoolName + formattedSchoolDegree);
     $('.education-entry:last').append(formattedSchoolAttended);
-    $('.education-entry:last').append(formattedSchoolLocation);
+    $('.education-entry:last .row:last').append(formattedSchoolLocation);
 
     if (school.majors.length) {
       var formattedSchoolMajor = HTMLschoolMajor.replace(/%data%/g, school.majors.join(', '));
