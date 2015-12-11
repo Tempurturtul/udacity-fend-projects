@@ -8,7 +8,7 @@ var bio = {
     "twitter" : "tempurturtul",
     "location" : "Brasher Falls, NY"
   },
-  "bioPic" : "images/self.jpg",
+  "bioPic" : "img/self.jpg",
   "welcomeMessage" : "This resume was built as part of the Udacity Front-End " +
   "Web Developer nanodegree program. The method of construction and the " +
   "majority of the styling for this site comes from a template provided by " +
@@ -50,9 +50,9 @@ var projects = {
       "description": "A web development portfolio built as the first project " +
       "in Udacity's Front-End Web Development Nanodegree program.",
       "images": [
-        "images/fend-portfolio-top.png",
-        "images/fend-portfolio-work.png",
-        "images/fend-portfolio-contact.png"
+        "img/fend-portfolio-top.png",
+        "img/fend-portfolio-work.png",
+        "img/fend-portfolio-contact.png"
       ],
       "github": "https://github.com/Tempurturtul/fend-resume",
       "url": "http://tempurturtul.github.io/fend-portfolio/"

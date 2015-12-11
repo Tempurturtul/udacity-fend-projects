@@ -2,21 +2,17 @@
  *    lint:js           (Lint JavaScript.)
  *    lint:json         (Lint JSON.)
  *    lint              (Run all lint tasks.)
- *    optimize:js       (Optimize .js files.)
- *    optimize:css      (Optimize .css files.)
- *    otimize:img       (Optimize images.)
- *    optimize:html     (Optimize .html files.)
- *    optimize          (Run all optimize tasks.)
+ *    clean             (Delete dist files.)
+ *    build             (Build dist files.)
  *    serve             (Serve src files.)
  *    serve:dist        (Serve dist files.)
- *    build             (Build dist files.)
  *    deploy:gh-pages   (Deploy dist files to gh-pages.)
  *    default           (Default task - lint, optimize, serve.)
  */
 
 var DEST = 'dist';
-var JS = 'app.min.js';
-var CSS = 'style.min.css';
+var JS_OUT = 'app.min.js';
+var CSS_OUT = 'style.min.css';
 
 /* File globs. */
 var jsFiles = [
@@ -45,16 +41,15 @@ var clientHTMLFiles = [
 
 /* Gulp and plugins. */
 var gulp = require('gulp');
-var concat = require('gulp-concat');
-var concatCSS = require('gulp-concat-css');
-// var del = require('del');
-// var gls = require('gulp-live-server');
+var browserSync = require('browser-sync').create();
+var del = require('del');
+var gulpif = require('gulp-if');
 var imagemin = require('gulp-imagemin');
 var jshint = require('gulp-jshint');
 var jsonlint = require('gulp-jsonlint');
+var merge = require('merge-stream');
 var minifyCSS = require('gulp-minify-css');
 var minifyHTML = require('gulp-minify-html');
-// var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
 var useref = require('gulp-useref');
 
@@ -72,57 +67,46 @@ gulp.task('lint:json', function() {
 
 gulp.task('lint', ['lint:js', 'lint:json']);
 
-gulp.task('optimize:js', function() {
-  return gulp.src(clientJSFiles)
-    .pipe(concat(JS))
-    .pipe(uglify())
-    .pipe(gulp.dest(DEST));
+gulp.task('clean', function() {
+  return del([DEST]);
 });
 
-gulp.task('optimize:css', function() {
-  return gulp.src(clientCSSFiles)
-    .pipe(concatCSS(CSS))
-    .pipe(minifyCSS())
-    .pipe(gulp.dest(DEST));
+gulp.task('build', ['clean'], function() {
+  return merge(
+    gulp.src(clientImageFiles)
+      .pipe(imagemin({
+        progressive: true,  // jpg
+        interlaced: true    // gif
+      }))
+      .pipe(gulp.dest(DEST)),
+    gulp.src(clientHTMLFiles)
+      .pipe(useref())
+      .pipe(gulpif('*.js', uglify()))
+      .pipe(gulpif('*.css', minifyCSS()))
+      .pipe(gulpif('*.html', minifyHTML({
+        empty: true,
+        quotes: true,
+        spare: true
+      })))
+      .pipe(gulp.dest(DEST)));
 });
 
-gulp.task('optimize:img', function() {
-  return gulp.src(clientImageFiles)
-    .pipe(imagemin({
-      progressive: true,  // jpg
-      interlaced: true    // gif
-    }))
-    .pipe(gulp.dest(DEST));
-});
-
-gulp.task('optimize:html', function() {
-  return gulp.src(clientHTMLFiles)
-    // TODO: Okay... useref concatenates, renames, and moves things. Those things must then be minified.  This isn't what I want, I just want to replace references to src code with references to dist code.
-    .pipe(useref())
-    // .pipe(minifyHTML({
-    //   empty: true,
-    //   quotes: true,
-    //   spare: true
-    // }))
-    .pipe(gulp.dest(DEST));
-});
-
-gulp.task('optimize', [
-  'optimize:js',
-  'optimize:css',
-  'optimize:img',
-  'optimize:html'
-]);
-
+// TODO: Live-reloading.
 gulp.task('serve', function() {
-
+  browserSync.init({
+      server: {
+        baseDir: 'src/client',
+        routes: {
+          '/bower_components': './bower_components'
+        }
+      },
+      https: false,
+      notify: false,
+      minify: false
+  });
 });
 
 gulp.task('serve:dist', function() {
-
-});
-
-gulp.task('build', function() {
 
 });
 
