@@ -43,6 +43,7 @@ var clientHTMLFiles = [
 var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
 var del = require('del');
+var ghPages = require('gulp-gh-pages');
 var gulpif = require('gulp-if');
 var imagemin = require('gulp-imagemin');
 var jshint = require('gulp-jshint');
@@ -91,7 +92,6 @@ gulp.task('build', ['clean'], function() {
       .pipe(gulp.dest(DEST)));
 });
 
-// TODO: Live-reloading.
 gulp.task('serve', function() {
   browserSync.init({
       server: {
@@ -104,14 +104,31 @@ gulp.task('serve', function() {
       notify: false,
       minify: false
   });
+
+  gulp.watch(clientJSFiles, browserSync.reload);
+  gulp.watch(clientCSSFiles, browserSync.reload);
+  gulp.watch(clientHTMLFiles, browserSync.reload);
+  gulp.watch(clientImageFiles, browserSync.reload);
 });
 
 gulp.task('serve:dist', function() {
+  browserSync.init({
+      server: {
+        baseDir: DEST
+      },
+      https: false,
+      notify: false,
+      minify: false
+  });
 
+  gulp.watch([DEST + '/**/*'], browserSync.reload);
 });
 
 gulp.task('deploy:gh-pages', function() {
-
+  return gulp.src(DEST + '/**/*')
+    .pipe(ghPages());
 });
 
-gulp.task('default', []);
+gulp.task('default', function() {
+  // TODO: Define task that lints then serves then lints changes.
+});
