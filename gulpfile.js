@@ -1,13 +1,13 @@
 /*  Tasks:
  *    lint:js           (Lint JavaScript.)
  *    lint:json         (Lint JSON.)
- *    lint              (Run all lint tasks.)
+ *    lint              (Run all lint tasks then watch and re-lint.)
  *    clean             (Delete dist files.)
  *    build             (Build dist files.)
- *    serve             (Serve src files.)
- *    serve:dist        (Serve dist files.)
+ *    serve             (Serve src files then watch and re-serve.)
+ *    serve:dist        (Serve dist files then watch and re-serve.)
  *    deploy:gh-pages   (Deploy dist files to gh-pages.)
- *    default           (Default task - lint, optimize, serve.)
+ *    default           (Lint and serve.)
  */
 
 var DEST = 'dist';
@@ -66,7 +66,10 @@ gulp.task('lint:json', function() {
     .pipe(jsonlint.reporter());
 });
 
-gulp.task('lint', ['lint:js', 'lint:json']);
+gulp.task('lint', ['lint:js', 'lint:json'], function() {
+  gulp.watch(jsFiles, ['lint:js']);
+  gulp.watch(jsonFiles, ['lint:json']);
+});
 
 gulp.task('clean', function() {
   return del([DEST]);
@@ -129,6 +132,4 @@ gulp.task('deploy:gh-pages', function() {
     .pipe(ghPages());
 });
 
-gulp.task('default', function() {
-  // TODO: Define task that lints then serves then lints changes.
-});
+gulp.task('default', ['lint', 'serve']);
