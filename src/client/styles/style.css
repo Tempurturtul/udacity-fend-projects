@@ -15,6 +15,14 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
+button {
+  border: none;
+}
+
+button:focus {
+  outline: none;
+}
+
 footer {
   text-align: center;
 }
@@ -67,6 +75,21 @@ ul {
   flex: 0 0 auto;
   margin-right: 10px;
   width: 150px;
+}
+
+.collapse-button {
+  background: inherit;
+  border-top: solid 1px #ddd;
+  color: #777;
+  display: block;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.collapse-button:hover {
+  border-top-color: #1199c3;
+  color: #1199c3;
+  transition: border-color 0.5s, color 0.5s;
 }
 
 .contacts-list {
@@ -135,7 +158,6 @@ ul {
   display: flex;
   height: 300px;
   justify-content: flex-start;
-  margin-top: 15px;
   overflow-x: scroll;
   width: 100%;
 }

@@ -10,6 +10,8 @@
  *    default           (Lint and serve.)
  */
 
+// TODO: Vulcanize task.
+
 var DEST = 'dist';
 var JS_OUT = 'app.min.js';
 var CSS_OUT = 'style.min.css';
@@ -18,13 +20,13 @@ var CSS_OUT = 'style.min.css';
 var jsFiles = [
   '**/*.js',
   '!**/*.min.js',
-  '!**/node_modules/**/*.js',
-  '!**/bower_components/**/*.js'
+  '!**/node_modules/**/*',
+  '!**/bower_components/**/*'
 ];
 var jsonFiles = [
   '**/*.json',
-  '!**/node_modules/**/*.json',
-  '!**/bower_components/**/*.json'
+  '!**/node_modules/**/*',
+  '!**/bower_components/**/*'
 ];
 var clientJSFiles = [
   'src/client/**/*.js'
@@ -37,6 +39,9 @@ var clientImageFiles = [
 ];
 var clientHTMLFiles = [
   'src/client/**/*.html'
+];
+var bowerFiles = [
+  'bower_components/**/*'
 ];
 
 /* Gulp and plugins. */
@@ -77,6 +82,8 @@ gulp.task('clean', function() {
 
 gulp.task('build', ['clean'], function() {
   return merge(
+    gulp.src(bowerFiles)
+      .pipe(gulp.dest(DEST + '/bower_components')),
     gulp.src(clientImageFiles)
       .pipe(imagemin({
         progressive: true,  // jpg

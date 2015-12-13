@@ -26,7 +26,7 @@ var HTMLprojectCompleted = '<div class="row"><p class="time-period">%data%</p></
 var HTMLprojectLinkStart = '<div class="links"></div>';
 var HTMLprojectLink = '<a href="%url-data%" target="_blank">%data%</a>';
 var HTMLprojectDescription = '<p class="description">%data%</p>';
-var HTMLprojectImageStart = '<div class="project-images"></div>';
+var HTMLprojectImageStart = '<button class="collapse-button"><i class="fa fa-angle-down"></i></button><iron-collapse><div class="project-images"></div></iron-collapse>';
 var HTMLprojectImage = '<img src="%data%">';
 
 var HTMLschoolStart = '<article class="education-entry"></article>';
