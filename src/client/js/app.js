@@ -5,6 +5,9 @@ $(document).ready(function() {
   projects.display();
   education.display();
 
+  places.updatePlaces();
+  places.display();
+
   // On collapse-button click...
   $('.collapse-button').click(toggleIronCollapse);
 

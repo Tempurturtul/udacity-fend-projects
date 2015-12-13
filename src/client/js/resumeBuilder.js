@@ -6,7 +6,7 @@ var bio = {
     "email" : "tempurturtul@gmail.com",
     "github" : "Tempurturtul",
     "twitter" : "tempurturtul",
-    "location" : "Brasher Falls, NY"
+    "location" : "Massena, NY"
   },
   "bioPic" : "img/self.jpg",
   "welcomeMessage" : "This resume was built as part of the Udacity Front-End " +
@@ -80,21 +80,11 @@ var education = {
   ],
   "onlineCourses": [
     {
-      "title": "JavaScript Basics",
-      "school": "Udacity",
-      "completed": "December 2015",
-      "description": "Develop an interactive resume application that reads " +
-      "resume content from a JSON object and dynamically displays that " +
-      "content within a provided template. Focus on data types and flow " +
-      "control.",
-      "url": "https://www.udacity.com/course/javascript-basics--ud804"
-    },
-    {
-      "title": "Programming Languages",
-      "school": "Univeristy of Washington",
-      "completed": "December 2014",
-      "description": "\"Learn many of the concepts that underlie all programming languages. Use functional programming and contrast it with object-oriented programming. Through experience writing programs and studying three different languages, learn the key issues in designing and using programming languages, such as modularity and the complementary benefits of static and dynamic typing. This course is neither particularly theoretical nor just about programming specifics – it will give you a framework for understanding how to use language constructs effectively and how to design correct and elegant programs. By using different languages, you learn to think more deeply than in terms of the particular syntax of one language. The emphasis on functional programming is essential for learning how to write robust, reusable, composable, and elegant programs – in any language.\"",
-      "url": "https://www.coursera.org/course/proglang"
+      "title": "Learn Python The Hard Way",
+      "school": "Zed A. Shaw",
+      "completed": "November 2013",
+      "description": "\"Learn Python by slowly building and establishing skills through techniques like practice and memorization, then applying them to increasingly difficult problems. By the end of the book you will have the tools needed to begin learning more complex programming topics. I like to tell people that my book gives you your 'programming black belt.' What this means is that you know the basics well enough to now start learning programming.\"",
+      "url": "http://learnpythonthehardway.org/book/"
     },
     {
       "title": "HTML5 and CSS3 Fundamentals",
@@ -104,14 +94,26 @@ var education = {
       "url": "https://mva.microsoft.com/en-US/training-courses/html5-css3-fundamentals-development-for-absolute-beginners-14207"
     },
     {
-      "title": "Learn Python The Hard Way",
-      "school": "Zed A. Shaw",
-      "completed": "November 2013",
-      "description": "\"Learn Python by slowly building and establishing skills through techniques like practice and memorization, then applying them to increasingly difficult problems. By the end of the book you will have the tools needed to begin learning more complex programming topics. I like to tell people that my book gives you your 'programming black belt.' What this means is that you know the basics well enough to now start learning programming.\"",
-      "url": "http://learnpythonthehardway.org/book/"
+      "title": "Programming Languages",
+      "school": "Univeristy of Washington",
+      "completed": "December 2014",
+      "description": "\"Learn many of the concepts that underlie all programming languages. Use functional programming and contrast it with object-oriented programming. Through experience writing programs and studying three different languages, learn the key issues in designing and using programming languages, such as modularity and the complementary benefits of static and dynamic typing. This course is neither particularly theoretical nor just about programming specifics – it will give you a framework for understanding how to use language constructs effectively and how to design correct and elegant programs. By using different languages, you learn to think more deeply than in terms of the particular syntax of one language. The emphasis on functional programming is essential for learning how to write robust, reusable, composable, and elegant programs – in any language.\"",
+      "url": "https://www.coursera.org/course/proglang"
+    },
+    {
+      "title": "JavaScript Basics",
+      "school": "Udacity",
+      "completed": "December 2015",
+      "description": "Develop an interactive resume application that reads " +
+      "resume content from a JSON object and dynamically displays that " +
+      "content within a provided template. Focus on data types and flow " +
+      "control.",
+      "url": "https://www.udacity.com/course/javascript-basics--ud804"
     }
   ]
 };
+
+var places = {};
 
 bio.display = function() {
   var formattedName = HTMLheaderName.replace(/%data%/g, bio.name);
@@ -253,4 +255,35 @@ education.display = function() {
       $('.education-entry:last').append(formattedCourseDescription);
     }
   }
+};
+
+places.updatePlaces = function() {
+  var arr = [];
+
+  arr.push(bio.contacts.location);
+
+  for (var job in work.jobs) {
+    job = work.jobs[job];
+    arr.push(job.location);
+  }
+
+  for (var school in education.schools) {
+    school = education.schools[school];
+    arr.push(school.location);
+  }
+
+  // Remove duplicates.
+  arr = arr.reduce(function(acc, curr) {
+    if (acc.indexOf(curr) === -1) {
+      acc.push(curr);
+    }
+    return acc;
+  }, []);
+
+  places.places = arr;
+};
+
+places.display = function() {
+  // TODO: Add logic to populate map with places and display map.
+  console.log(places.places);
 };
