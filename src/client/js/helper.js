@@ -3,9 +3,9 @@ var HTMLheaderRole = '<p class="subtitle">%data%</p><hr>';
 
 var HTMLmobile = '<li class="hide-content-container"><i class="fa fa-mobile"></i><span class="hide-content">%data%</span></li>';
 var HTMLemail = '<li class="hide-content-container"><i class="fa fa-envelope-o"></i><span class="hide-content"><a href="mailto:%data%">%data%</a></span></li>';
-var HTMLtwitter = '<li class="hide-content-container"><i class="fa fa-twitter"></i><span class="hide-content"><a href="https://twitter.com/%data%">%data%</a></span></li>';
-var HTMLgithub = '<li class="hide-content-container"><i class="fa fa-github"></i><span class="hide-content"><a href="https://github.com/%data%">%data%</a></span></li>';
-var HTMLlocation = '<li class="hide-content-container"><i class="fa fa-map-marker"></i><span class="hide-content"><a href="https://www.google.com/maps/search/%data%">%data%</a></span></li>';
+var HTMLtwitter = '<li class="hide-content-container"><i class="fa fa-twitter"></i><span class="hide-content"><a href="https://twitter.com/%data%" target="_blank">%data%</a></span></li>';
+var HTMLgithub = '<li class="hide-content-container"><i class="fa fa-github"></i><span class="hide-content"><a href="https://github.com/%data%" target="_blank">%data%</a></span></li>';
+var HTMLlocation = '<li class="hide-content-container"><i class="fa fa-map-marker"></i><span class="hide-content"><a href="https://www.google.com/maps/search/%data%" target="_blank">%data%</a></span></li>';
 
 var HTMLbioPic = '<div class="row"><img class="biopic" src="%data%"></div>';
 var HTMLwelcomeMsg = '<p class="welcome-message">%data%</p>';

@@ -20,8 +20,11 @@ var bio = {
     "jQuery",
     "NodeJS",
     "AngularJS",
+    "Polymer",
     "Git",
-    "Gulp"
+    "Gulp",
+    "Grunt",
+    "Vagrant"
   ]
 };
 
@@ -36,8 +39,7 @@ var work = {
       "investigations, strict adherence to Standard Operating Procedures, " +
       "and regular professional interaction with both stakeholders and the " +
       "public. Supervisory and peer-mentoring roles fulfilled on multiple " +
-      "occasions at the request of managment.",
-      "url": "#"
+      "occasions at the request of managment."
     }
   ]
 };
@@ -81,11 +83,32 @@ var education = {
       "title": "JavaScript Basics",
       "school": "Udacity",
       "completed": "December 2015",
-      "description": "Developed an interactive resume application that reads " +
+      "description": "Develop an interactive resume application that reads " +
       "resume content from a JSON object and dynamically displays that " +
       "content within a provided template. Focus on data types and flow " +
       "control.",
       "url": "https://www.udacity.com/course/javascript-basics--ud804"
+    },
+    {
+      "title": "Programming Languages",
+      "school": "Univeristy of Washington",
+      "completed": "December 2014",
+      "description": "\"Learn many of the concepts that underlie all programming languages. Use functional programming and contrast it with object-oriented programming. Through experience writing programs and studying three different languages, learn the key issues in designing and using programming languages, such as modularity and the complementary benefits of static and dynamic typing. This course is neither particularly theoretical nor just about programming specifics – it will give you a framework for understanding how to use language constructs effectively and how to design correct and elegant programs. By using different languages, you learn to think more deeply than in terms of the particular syntax of one language. The emphasis on functional programming is essential for learning how to write robust, reusable, composable, and elegant programs – in any language.\"",
+      "url": "https://www.coursera.org/course/proglang"
+    },
+    {
+      "title": "HTML5 and CSS3 Fundamentals",
+      "school": "Microsoft Virtual Academy",
+      "completed": "February 2014",
+      "description": "Learn the fundamentals of web development with HTML5 and CSS3.",
+      "url": "https://mva.microsoft.com/en-US/training-courses/html5-css3-fundamentals-development-for-absolute-beginners-14207"
+    },
+    {
+      "title": "Learn Python The Hard Way",
+      "school": "Zed A. Shaw",
+      "completed": "November 2013",
+      "description": "\"Learn Python by slowly building and establishing skills through techniques like practice and memorization, then applying them to increasingly difficult problems. By the end of the book you will have the tools needed to begin learning more complex programming topics. I like to tell people that my book gives you your 'programming black belt.' What this means is that you know the basics well enough to now start learning programming.\"",
+      "url": "http://learnpythonthehardway.org/book/"
     }
   ]
 };
@@ -129,7 +152,6 @@ work.display = function () {
 
     var formattedWorkTitle = HTMLworkTitle.replace(/%data%/g, job.title);
     var formattedWorkEmployer = HTMLworkEmployer.replace(/%data%/g, job.employer);
-    formattedWorkEmployer = formattedWorkEmployer.replace(/%url-data%/g, job.url);
     var formattedWorkEmployed = HTMLworkEmployed.replace(/%data%/g, job.employed);
     var formattedWorkLocation = HTMLworkLocation.replace(/%data%/g, job.location);
     var formattedWorkDescription = HTMLworkDescription.replace(/%data%/g, job.description);
