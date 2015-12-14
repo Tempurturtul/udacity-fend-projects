@@ -42,3 +42,6 @@ var HTMLonlineTitle = '<h4><a href="%url-data%" target="_blank">%data%';
 var HTMLonlineSchool = ' - %data%</a></h4>';
 var HTMLonlineCompleted = '<p class="time-period">%data%</p>';
 var HTMLonlineDescription = '<p class="description">%data%</p>';
+
+var HTMLmap = '<div id="map-container"><div id="map"></div></div>';
+var HTMLprotectiveOverlay = '<div class="protective-overlay">Click to interact.</div>';

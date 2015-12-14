@@ -162,6 +162,27 @@ ul {
   width: 100%;
 }
 
+.protective-overlay {
+  align-items: center;
+  color: black;
+  display: flex;
+  font-size: 2rem;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  text-shadow: 0 0 4px white;
+  top: 0;
+  width: 100%;
+  opacity: 0;
+  z-index: 10;
+}
+
+.protective-overlay:hover {
+  background: rgba(255,255,255,0.7);
+  opacity: 1;
+}
+
 .row {
   align-items: center;
   display: flex;
@@ -208,6 +229,18 @@ ul {
 }
 
 #main-container {
+
+}
+
+#map {
+  height: 400px;
+}
+
+#map-container {
+  position: relative;  /* Needed for protective-overlay. */
+}
+
+#places {
 
 }
 

@@ -113,7 +113,7 @@ var education = {
   ]
 };
 
-var places = {};
+var locations = {};
 
 bio.display = function() {
   var formattedName = HTMLheaderName.replace(/%data%/g, bio.name);
@@ -257,7 +257,7 @@ education.display = function() {
   }
 };
 
-places.updatePlaces = function() {
+locations.updatePlaces = function() {
   var arr = [];
 
   arr.push(bio.contacts.location);
@@ -280,10 +280,59 @@ places.updatePlaces = function() {
     return acc;
   }, []);
 
-  places.places = arr;
+  locations.places = arr;
 };
 
-places.display = function() {
-  // TODO: Add logic to populate map with places and display map.
-  console.log(places.places);
+locations.display = function() {
+  $('#places').append(HTMLmap);
+
+  // An overlay on the map to prevent the user from interacting with it unintentionally.
+  // Clicking hides until mouse leaves map area.
+  $('#map-container').append(HTMLprotectiveOverlay);
+
+  var map = new google.maps.Map(document.querySelector('#map'), {disableDefaultUI: true});
+  var service = new google.maps.places.PlacesService(map);
+  var bounds = new google.maps.LatLngBounds();
+
+  window.addEventListener('resize', function() {
+    map.fitBounds(bounds);
+  });
+
+  for (var place in locations.places) {
+    place = locations.places[place];
+
+    service.textSearch({query: place}, handleResults);
+  }
+
+  function handleResults(results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      createMapMarker(results[0]);
+    } else {
+      console.error(status);
+    }
+  }
+
+  function createMapMarker(placeData) {
+    var lat = placeData.geometry.location.lat();
+    var lng = placeData.geometry.location.lng();
+    var name = placeData.formatted_address;
+
+    var marker = new google.maps.Marker({
+      map: map,
+      position: placeData.geometry.location,
+      title: name
+    });
+
+    var infoWindow = new google.maps.InfoWindow({
+      content: name
+    });
+
+    marker.addListener('click', function() {
+      infoWindow.open(map, marker);
+    });
+
+    bounds.extend(new google.maps.LatLng(lat, lng));
+    map.fitBounds(bounds);
+    map.setCenter(bounds.getCenter());
+  }
 };

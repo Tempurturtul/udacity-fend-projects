@@ -5,11 +5,21 @@ $(document).ready(function() {
   projects.display();
   education.display();
 
-  places.updatePlaces();
-  places.display();
+  locations.updatePlaces();
+  locations.display();
 
   // On collapse-button click...
   $('.collapse-button').click(toggleIronCollapse);
+
+  // On protective-overlay click...
+  $('.protective-overlay').click(function() {
+    $(this).hide();
+  });
+
+  // On protective-overlay's parent mouse-leave...
+  $('.protective-overlay').parent().mouseleave(function() {
+    $(this).children('.protective-overlay').show();
+  });
 
   function toggleIronCollapse() {
     // Open or close the next iron-collapse sibling.

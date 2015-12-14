@@ -5,7 +5,6 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^1.2.0",
     "jquery": "~2.1.4",
-    "iron-collapse": "PolymerElements/iron-collapse#~1.0.5",
-    "google-map": "GoogleWebComponents/google-map#~1.1.7"
+    "iron-collapse": "PolymerElements/iron-collapse#~1.0.5"
   }
 }
