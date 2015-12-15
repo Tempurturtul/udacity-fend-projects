@@ -17,12 +17,13 @@ var bio = {
     'CSS',
     'JavaScript',
     'jQuery',
-    'NodeJS',
-    'AngularJS',
+    'Node',
+    'Angular',
     'Polymer',
     'Git',
     'Gulp',
     'Grunt',
+    'Bower',
     'Vagrant'
   ],
   'biopic' : 'img/self.jpg'
