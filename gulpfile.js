@@ -1,11 +1,11 @@
 /*  Tasks:
  *    lint:js           (Lint JavaScript.)
  *    lint:json         (Lint JSON.)
- *    lint              (Run all lint tasks then watch and re-lint.)
+ *    lint              (Run all lint tasks and watch for files to re-lint.)
  *    clean             (Delete dist files.)
  *    build             (Build dist files.)
- *    serve             (Serve src files then watch and re-serve.)
- *    serve:dist        (Serve dist files then watch and re-serve.)
+ *    serve             (Serve src files and watch for files to reload.)
+ *    serve:dist        (Serve dist files and watch for files to reload.)
  *    deploy:gh-pages   (Deploy dist files to gh-pages.)
  *    default           (Lint and serve.)
  */
@@ -18,15 +18,13 @@ var CSS_OUT = 'style.min.css';
 
 /* File globs. */
 var jsFiles = [
-  '**/*.js',
-  '!**/*.min.js',
-  '!**/node_modules/**/*',
-  '!**/bower_components/**/*'
+  'gulpfile.js',
+  'src/**/*.js'
 ];
 var jsonFiles = [
-  '**/*.json',
-  '!**/node_modules/**/*',
-  '!**/bower_components/**/*'
+  'package.json',
+  'bower.json',
+  'src/**/*.json'
 ];
 var clientJSFiles = [
   'src/client/**/*.js'

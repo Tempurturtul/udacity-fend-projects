@@ -23,6 +23,9 @@
 
     <!-- Webcomponents-lite (for Polymer). -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.19/webcomponents-lite.min.js"></script>
+    <!-- Webcomponents-lite fallback. -->
+    <script>window.WebComponents || document.write('<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"><\/script>')</script>
+
     <link rel="import" href="elements/elements.html">
   </head>
   <body>
@@ -43,8 +46,7 @@
       <section id="places">
         <h2>Places</h2>
       </section>
-      <footer class="dark-gray">
-        <h2 class="orange">Let's Connect</h2>
+      <footer>
         <ul class="contacts-list">
         </ul>
       </footer>
@@ -52,6 +54,8 @@
 
     <!-- jQuery. -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <!-- jQuery fallback. -->
+    <script>window.jquery || document.write('<script src="bower_components/jquery/dist/jquery.min.js"><\/script>');</script>
 
     <!-- My scripts. -->
     <!-- build:js app.min.js -->

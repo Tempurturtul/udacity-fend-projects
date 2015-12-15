@@ -1,47 +1,49 @@
-var HTMLheaderName = '<h1>%data%</h1>';
-var HTMLheaderRole = '<p class="subtitle">%data%</p><hr>';
+var helper = {};
 
-var HTMLmobile = '<li class="hide-content-container"><i class="fa fa-mobile"></i><span class="hide-content">%data%</span></li>';
-var HTMLemail = '<li class="hide-content-container"><i class="fa fa-envelope-o"></i><span class="hide-content"><a href="mailto:%data%">%data%</a></span></li>';
-var HTMLtwitter = '<li class="hide-content-container"><i class="fa fa-twitter"></i><span class="hide-content"><a href="https://twitter.com/%data%" target="_blank">%data%</a></span></li>';
-var HTMLgithub = '<li class="hide-content-container"><i class="fa fa-github"></i><span class="hide-content"><a href="https://github.com/%data%" target="_blank">%data%</a></span></li>';
-var HTMLlocation = '<li class="hide-content-container"><i class="fa fa-map-marker"></i><span class="hide-content"><a href="https://www.google.com/maps/search/%data%" target="_blank">%data%</a></span></li>';
+helper.HTMLheaderName = '<h1>%data%</h1>';
+helper.HTMLheaderRole = '<p class="subtitle">%data%</p><hr>';
 
-var HTMLbioPic = '<div class="row"><img class="biopic" src="%data%"></div>';
-var HTMLwelcomeMsg = '<p class="welcome-message">%data%</p>';
+helper.HTMLmobile = '<li class="hide-content-container"><i class="fa fa-mobile"></i><span class="hide-content">%data%</span></li>';
+helper.HTMLemail = '<li class="hide-content-container"><i class="fa fa-envelope-o"></i><span class="hide-content"><a href="mailto:%data%">%data%</a></span></li>';
+helper.HTMLtwitter = '<li class="hide-content-container"><i class="fa fa-twitter"></i><span class="hide-content"><a href="https://twitter.com/%data%" target="_blank">%data%</a></span></li>';
+helper.HTMLgithub = '<li class="hide-content-container"><i class="fa fa-github"></i><span class="hide-content"><a href="https://github.com/%data%" target="_blank">%data%</a></span></li>';
+helper.HTMLlocation = '<li class="hide-content-container"><i class="fa fa-map-marker"></i><span class="hide-content"><a href="https://www.google.com/maps/search/%data%" target="_blank">%data%</a></span></li>';
 
-var HTMLskillsStart = '<ul id="skills"></ul>';
-var HTMLskills = '<li>%data%</li>';
+helper.HTMLbioPic = '<div class="row"><img class="biopic" src="%data%"></div>';
+helper.HTMLwelcomeMsg = '<p class="welcome-message">%data%</p>';
 
-var HTMLworkStart = '<article class="work-entry"></article>';
-var HTMLworkEmployer = '<h3>%data%';
-var HTMLworkTitle = ' - %data%</h3>';
-var HTMLworkDates = '<div class="row"><p class="time-period">%data%</p></div>';
-var HTMLworkLocation = '<p class="location">%data%</p>';
-var HTMLworkDescription = '<p class="description">%data%</p>';
+helper.HTMLskillsStart = '<ul id="skills"></ul>';
+helper.HTMLskills = '<li>%data%</li>';
 
-var HTMLprojectStart = '<article class="project-entry"></article>';
-var HTMLprojectTitle = '<h3>%data%</h3>';
-var HTMLprojectDates = '<div class="row"><p class="time-period">%data%</p></div>';
-var HTMLprojectLinkStart = '<div class="links"></div>';
-var HTMLprojectLink = '<a href="%url-data%" target="_blank">%data%</a>';
-var HTMLprojectDescription = '<p class="description">%data%</p>';
-var HTMLprojectImageStart = '<button class="collapse-button"><i class="fa fa-angle-down"></i></button><iron-collapse><div class="project-images"></div></iron-collapse>';
-var HTMLprojectImage = '<img src="%data%">';
+helper.HTMLworkStart = '<article class="work-entry"></article>';
+helper.HTMLworkEmployer = '<h3>%data%';
+helper.HTMLworkTitle = ' - %data%</h3>';
+helper.HTMLworkDates = '<div class="row"><p class="time-period">%data%</p></div>';
+helper.HTMLworkLocation = '<p class="location">%data%</p>';
+helper.HTMLworkDescription = '<p class="description">%data%</p>';
 
-var HTMLschoolStart = '<article class="education-entry"></article>';
-var HTMLschoolName = '<h3><a href="%url-data%" target="_blank">%data%';
-var HTMLschoolDegree = ' -- %data%</a></h3>';
-var HTMLschoolDates = '<div class="row"><p class="time-period">%data%</p></div>';
-var HTMLschoolLocation = '<p class="location">%data%</p>';
-var HTMLschoolMajor = '<p>Major: %data%</p>';
-var HTMLschoolDescription = '<p class="description">%data%</p>';
+helper.HTMLprojectStart = '<article class="project-entry"></article>';
+helper.HTMLprojectTitle = '<h3>%data%</h3>';
+helper.HTMLprojectTitleWithUrl = '<h3><a href="%url-data%" target="_blank">%data%</a></h3>';
+helper.HTMLprojectDates = '<div class="row"><p class="time-period">%data%</p></div>';
+helper.HTMLprojectGithub = '<a class="github-link" href="%data%" target="_blank"><i class="fa fa-github"></i></a>';
+helper.HTMLprojectDescription = '<p class="description">%data%</p>';
+helper.HTMLprojectImageStart = '<div class="collapse-container"><iron-collapse><div class="project-images"></div></iron-collapse><button class="collapse-button collapse-prev"><i class="fa fa-angle-down"></i></button></div>';
+helper.HTMLprojectImage = '<img src="%data%">';
 
-var HTMLonlineClasses = '<h3 id="classes-heading">Online Classes</h3>';
-var HTMLonlineTitle = '<h4><a href="%url-data%" target="_blank">%data%';
-var HTMLonlineSchool = ' - %data%</a></h4>';
-var HTMLonlineDate = '<p class="time-period">%data%</p>';
-var HTMLonlineDescription = '<p class="description">%data%</p>';
+helper.HTMLschoolStart = '<article class="education-entry"></article>';
+helper.HTMLschoolName = '<h3><a href="%url-data%" target="_blank">%data%';
+helper.HTMLschoolDegree = ' -- %data%</a></h3>';
+helper.HTMLschoolDates = '<div class="row"><p class="time-period">%data%</p></div>';
+helper.HTMLschoolLocation = '<p class="location">%data%</p>';
+helper.HTMLschoolMajor = '<p>Major: %data%</p>';
+helper.HTMLschoolDescription = '<p class="description">%data%</p>';
 
-var HTMLmap = '<div id="map-container"><div id="map"></div></div>';
-var HTMLprotectiveOverlay = '<div class="protective-overlay">Click to interact.</div>';
+helper.HTMLonlineClasses = '<h3 id="classes-heading">Online Classes</h3>';
+helper.HTMLonlineTitle = '<h4><a href="%url-data%" target="_blank">%data%';
+helper.HTMLonlineSchool = ' - %data%</a></h4>';
+helper.HTMLonlineDate = '<p class="time-period">%data%</p>';
+helper.HTMLonlineDescription = '<p class="description">%data%</p>';
+
+helper.HTMLmap = '<div id="map-container"><div id="map"></div></div>';
+helper.HTMLprotectiveOverlay = '<div class="protective-overlay">Click to interact.</div>';
