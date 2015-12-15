@@ -52,6 +52,10 @@ $(document).ready(function() {
    * @param {string} pos.y
    */
   function popup(msg, pos) {
+    var $body = $('body');
+
+    // TODO: Adjust position to prevent positioning out of bounds.
+
     var popupClass = 'popup';
     var popupStyle = 'text-align: center;' +
                      'color: black;' +
@@ -71,9 +75,9 @@ $(document).ready(function() {
     var elem = '<div class="' + popupClass + '" style="' + popupStyle + '">' + msg + '</div>';
 
     // Dismiss existing popups.
-    $('body').children('.' + popupClass).remove();
+    $body.children('.' + popupClass).remove();
     // Add new popup.
-    $('body').append(elem);
+    $body.append(elem);
     // Dismiss popup on click.
     $('.' + popupClass).click(function() {
       $(this).remove();
