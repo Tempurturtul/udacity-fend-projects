@@ -35,7 +35,6 @@ var work = {
       'employer': 'Government',
       'title': 'Security Officer',
       'location': 'Massena, NY',
-      // 'employed': '2012 - Current',
       'dates': '2012 - Current',
       'description': 'Sensitive security work requiring routine background ' +
       'investigations, strict adherence to Standard Operating Procedures, ' +
@@ -50,7 +49,6 @@ var projects = {
   'projects': [
     {
       'title': 'Portfolio',
-      // 'completed': 'November 2015',
       'dates': 'November 2015',
       'description': 'A web development portfolio built as the first project ' +
       'in Udacity\'s Front-End Web Development Nanodegree program.',
@@ -72,7 +70,6 @@ var education = {
       'location': 'Harrisburg, PA',
       'degree': 'BS',
       'majors': ['Security Management'],
-      // 'attended': '2008 - 2011',
       'dates': 2011,
       'url': 'http://www.centralpenn.edu/',
       'description': 'An accelerated four-year degree program focusing on ' +
@@ -86,7 +83,6 @@ var education = {
     {
       'title': 'Learn Python The Hard Way',
       'school': 'Zed A. Shaw',
-      // 'completed': 'November 2013',
       'date': 2013,
       'url': 'http://learnpythonthehardway.org/book/',
       'description': '"Learn Python by slowly building and establishing skills through techniques like practice and memorization, then applying them to increasingly difficult problems. By the end of the book you will have the tools needed to begin learning more complex programming topics. I like to tell people that my book gives you your \'programming black belt.\' What this means is that you know the basics well enough to now start learning programming."'
@@ -94,7 +90,6 @@ var education = {
     {
       'title': 'HTML5 and CSS3 Fundamentals',
       'school': 'Microsoft Virtual Academy',
-      // 'completed': 'February 2014',
       'date': 2014,
       'url': 'https://mva.microsoft.com/en-US/training-courses/html5-css3-fundamentals-development-for-absolute-beginners-14207',
       'description': 'Learn the fundamentals of web development with HTML5 and CSS3.'
@@ -102,7 +97,6 @@ var education = {
     {
       'title': 'Programming Languages',
       'school': 'Univeristy of Washington',
-      // 'completed': 'December 2014',
       'date': 2014,
       'url': 'https://www.coursera.org/course/proglang',
       'description': '"Learn many of the concepts that underlie all programming languages. Use functional programming and contrast it with object-oriented programming. Through experience writing programs and studying three different languages, learn the key issues in designing and using programming languages, such as modularity and the complementary benefits of static and dynamic typing. This course is neither particularly theoretical nor just about programming specifics – it will give you a framework for understanding how to use language constructs effectively and how to design correct and elegant programs. By using different languages, you learn to think more deeply than in terms of the particular syntax of one language. The emphasis on functional programming is essential for learning how to write robust, reusable, composable, and elegant programs – in any language."'
@@ -110,7 +104,6 @@ var education = {
     {
       'title': 'JavaScript Basics',
       'school': 'Udacity',
-      // 'completed': 'December 2015',
       'date': 2015,
       'url': 'https://www.udacity.com/course/javascript-basics--ud804',
       'description': 'Develop an interactive resume application that reads ' +
@@ -215,11 +208,10 @@ education.display = function() {
     $('#education').append(helper.HTMLschoolStart);
 
     var formattedSchoolName = helper.HTMLschoolName.replace(/%data%/g, school.name)
-                                            .replace(/%url-data%/g, school.url);
+                                                   .replace(/%url-data%/g, school.url);
     var formattedSchoolDegree = helper.HTMLschoolDegree.replace(/%data%/g, school.degree);
     var formattedSchoolDates = helper.HTMLschoolDates.replace(/%data%/g, school.dates);
     var formattedSchoolLocation = helper.HTMLschoolLocation.replace(/%data%/g, school.location);
-    var formattedSchoolDescription = helper.HTMLschoolDescription.replace(/%data%/g, school.description);
 
     $('.education-entry:last').append(formattedSchoolName + formattedSchoolDegree)
                               .append(formattedSchoolDates);
@@ -230,7 +222,11 @@ education.display = function() {
       $('.education-entry:last').append(formattedSchoolMajor);
     }
 
-    $('.education-entry:last').append(formattedSchoolDescription);
+    // Optional school description.
+    if (school.description) {
+      var formattedSchoolDescription = helper.HTMLschoolDescription.replace(/%data%/g, school.description);
+      $('.education-entry:last').append(formattedSchoolDescription);
+    }
   });
 
   if (education.onlineCourses.length) {
@@ -243,11 +239,15 @@ education.display = function() {
                                                 .replace(/%url-data%/g, course.url);
       var formattedCourseSchool = helper.HTMLonlineSchool.replace(/%data%/g, course.school);
       var formattedCourseDate = helper.HTMLonlineDate.replace(/%data%/g, course.date);
-      var formattedCourseDescription = helper.HTMLonlineDescription.replace(/%data%/g, course.description);
 
       $('.education-entry:last').append(formattedCourseTitle + formattedCourseSchool)
-                                .append(formattedCourseDate)
-                                .append(formattedCourseDescription);
+                                .append(formattedCourseDate);
+
+      // Optional course description.
+      if (course.description) {
+        var formattedCourseDescription = helper.HTMLonlineDescription.replace(/%data%/g, course.description);
+        $('.education-entry:last').append(formattedCourseDescription);
+      }
     });
   }
 };
