@@ -8,10 +8,10 @@ var bio = {
     'twitter' : 'tempurturtul',
     'location' : 'Massena, NY'
   },
-  'welcomeMessage' : 'This resume was built as part of the Udacity Front-End ' +
-  'Web Developer nanodegree program. The method of construction and the ' +
-  'majority of the styling for this site comes from a template provided by ' +
-  'said program. Data presented here is accurate as of December 2015.',
+  'welcomeMessage' : 'Hello and thank you for viewing my online resume! I\'m ' +
+  'currently seeking employment as a front-end web developer and am happy to ' +
+  'relocate as necessary within the United States. This resume was last ' +
+  'updated in December of 2015. Please don\'t hesitate to contact me!',
   'skills' : [
     'HTML',
     'CSS',

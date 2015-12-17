@@ -349,10 +349,14 @@ footer .contacts-list {
 /*************************
   Media Queries
 *************************/
-@media (min-width: 550px) {
+@media (min-width: 980px) {
   .biopic {
     margin: 0 10px 0 0;
     order: 0;
+  }
+
+  .welcome-message {
+    margin-right: 160px;
   }
 
   /* The bio pic and welcome message row. */
