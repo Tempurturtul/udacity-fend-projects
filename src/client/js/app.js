@@ -12,8 +12,8 @@ $(document).ready(function() {
     var msg = 'Please contact me directly if you would like more details ' +
     'regarding this position.';
     var pos = {
-      x: e.pageX + 'px',
-      y: e.pageY + 'px'
+      x: e.pageX,
+      y: e.pageY
     };
 
     popup(msg, pos);
@@ -44,31 +44,45 @@ $(document).ready(function() {
     $(this).children('.protective-overlay').show();
   });
 
+  // TODO: Keep popup in desired position on window resize.
+  // TODO: Keep popup from going beyond 100% height or width.
   /**
    * Creates a dismissable popup message at the given position.
    * @param {string} msg
    * @param {Object} pos
-   * @param {string} pos.x
-   * @param {string} pos.y
+   * @param {number} pos.x
+   * @param {number} pos.y
    */
   function popup(msg, pos) {
     var $body = $('body');
 
-    // TODO: Adjust position to prevent positioning out of bounds.
+    // If the body is wider than 300 px...
+    if ($body.width() >= 300) {
+      // If the popup would extend beyond the edge of the body...
+      if (pos.x + 300 > $body.width()) {
+        // Reposition the popup so it doesn't extend beyond the edge of the body.
+        pos.x = $body.width() - 300;
+      }
+    }
+    // Otherwise...
+    else {
+      // Reposition the popup to the left edge of the body.
+      pos.x = 0;
+    }
 
     var popupClass = 'popup';
     var popupStyle = 'text-align: center;' +
-                     'color: black;' +
+                     'color: #333;' +
                      'background: white;' +
-                     'border: solid 2px black;' +
+                     'border: solid 2px #444;' +
                      'border-radius: 5px;' +
                      'box-sizing: border-box;' +
                      'padding: 20px;' +
                      'width: 100%;' +
                      'max-width: 300px;' +
                      'position: absolute;' +
-                     'top: ' + pos.y + ';' +
-                     'left: ' + pos.x + ';' +
+                     'top: ' + pos.y + 'px;' +
+                     'left: ' + pos.x + 'px;' +
                      'cursor: pointer;' +
                      'font-weight: bold;' +
                      'font-size: 1rem;';

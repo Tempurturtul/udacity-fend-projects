@@ -49,6 +49,10 @@ h4 {
   margin-bottom: 0;
 }
 
+header {
+  text-shadow: -1px -1px 0 #444;
+}
+
 p {
   color: #444;
   margin: 0;
@@ -74,6 +78,8 @@ ul {
 *************************/
 
 .biopic {
+  border-left: solid #444 1px;
+  border-top: solid #444 1px;
   border-radius: 50%;
   display: none;
   flex: 0 0 auto;
@@ -105,6 +111,7 @@ ul {
   margin: 15px auto;
   overflow: hidden;  /* Along with position:relative, prevents contacts flexbox from creating unwanted whitespace beyond 100% width. */
   position: relative;  /* Along with overflow:hidden, prevents contacts flexbox from creating unwanted whitespace beyond 100% width. */
+  text-shadow: none;
 }
 
 .description {
@@ -259,6 +266,7 @@ ul {
   display: flex;
   flex-wrap: wrap;
   font-size: 0.9em;
+  font-variant: small-caps;
   justify-content: center;
 }
 
@@ -282,7 +290,7 @@ header h1 {
 
 /* Role. */
 header h1 + p {
-  color: #444;
+  color: #bdc9d1;
 }
 
 /* Biopic and Welcome Message. */
@@ -293,7 +301,10 @@ header .row {
 .contacts-list li {
   align-items: center;
   background: #f0f0f0;
+  border-top: 1px solid #666;
+  border-left: 1px solid #666;
   border-radius: 3px;
+  color: #333;
   display: flex;
   flex: 0 0 auto;
   font-size: 0.8em;

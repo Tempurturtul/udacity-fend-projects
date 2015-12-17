@@ -26,7 +26,7 @@ var bio = {
     'Bower',
     'Vagrant'
   ],
-  'biopic' : 'img/self.jpg'
+  'biopic' : 'img/self.png'
 };
 
 var work = {
