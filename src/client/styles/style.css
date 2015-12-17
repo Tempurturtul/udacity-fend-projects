@@ -81,9 +81,8 @@ ul {
   border-left: solid #444 1px;
   border-top: solid #444 1px;
   border-radius: 50%;
-  display: none;
   flex: 0 0 auto;
-  margin-right: 10px;
+  margin: 10px 0;
   width: 150px;
 }
 
@@ -216,7 +215,6 @@ ul {
 
 .welcome-message {
   color: #f3f3f3;
-  display: none;
   flex: 1 1 auto;
   font-style: italic;
   line-height: 1.5em;
@@ -295,6 +293,7 @@ header h1 + p {
 
 /* Biopic and Welcome Message. */
 header .row {
+  flex-direction: column;
   justify-content: center;
 }
 
@@ -350,9 +349,15 @@ footer .contacts-list {
 /*************************
   Media Queries
 *************************/
-@media (min-width: 500px) {
-  .welcome-message {
-    display: block;
+@media (min-width: 550px) {
+  .biopic {
+    margin: 0 10px 0 0;
+    order: 0;
+  }
+
+  /* The bio pic and welcome message row. */
+  header > .row {
+    flex-direction: row;
   }
 }
 
@@ -365,9 +370,5 @@ footer .contacts-list {
 
   .contacts-list li span {
     font-size: 0.8em;
-  }
-
-  .biopic {
-    display: block;
   }
 }
