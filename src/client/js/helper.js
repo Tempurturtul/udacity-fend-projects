@@ -5,8 +5,8 @@ helper.HTMLheaderRole = '<p class="subtitle">%data%</p><hr>';
 
 helper.HTMLmobile = '<li class="hide-content-container"><i class="fa fa-mobile"></i><span class="hide-content">%data%</span></li>';
 helper.HTMLemail = '<li class="hide-content-container"><i class="fa fa-envelope-o"></i><span class="hide-content"><a href="mailto:%data%">%data%</a></span></li>';
-helper.HTMLtwitter = '<li class="hide-content-container"><i class="fa fa-twitter"></i><span class="hide-content"><a href="https://twitter.com/%data%" target="_blank">%data%</a></span></li>';
-helper.HTMLgithub = '<li class="hide-content-container"><i class="fa fa-github"></i><span class="hide-content"><a href="https://github.com/%data%" target="_blank">%data%</a></span></li>';
+helper.HTMLtwitter = '<li class="hide-content-container"><i class="fa fa-twitter"></i><span class="hide-content"><a href="%url-data%" target="_blank">@%data%</a></span></li>';
+helper.HTMLgithub = '<li class="hide-content-container"><i class="fa fa-github"></i><span class="hide-content"><a href="%url-data%" target="_blank">%data%</a></span></li>';
 helper.HTMLlocation = '<li class="hide-content-container"><i class="fa fa-map-marker"></i><span class="hide-content"><a href="https://www.google.com/maps/search/%data%" target="_blank">%data%</a></span></li>';
 
 helper.HTMLbioPic = '<div class="row"><img class="biopic" src="%data%"></div>';

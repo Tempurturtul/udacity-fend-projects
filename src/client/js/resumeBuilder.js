@@ -4,8 +4,8 @@ var bio = {
   'contacts' : {
     'mobile' : '717-303-9839',
     'email' : 'tempurturtul@gmail.com',
-    'github' : 'Tempurturtul',
-    'twitter' : 'tempurturtul',
+    'github' : 'https://github.com/Tempurturtul',
+    'twitter' : 'https://twitter.com/tempurturtul',
     'location' : 'Massena, NY'
   },
   'welcomeMessage' : 'Hello and thank you for viewing my online resume! I\'m ' +
@@ -32,15 +32,17 @@ var bio = {
 var work = {
   'jobs': [
     {
-      'employer': 'Government',
+      'employer': 'U.S. Government',
       'title': 'Security Officer',
       'location': 'Massena, NY',
       'dates': '2012 - Current',
-      'description': 'Sensitive security work requiring routine background ' +
-      'investigations, strict adherence to Standard Operating Procedures, ' +
-      'and regular professional interaction with both stakeholders and the ' +
-      'public. Supervisory and peer-mentoring roles fulfilled on multiple ' +
-      'occasions at the request of managment.'
+      'description': 'I gained this position shortly after graduating from ' +
+      'college. I perform critical security work requiring strict adherence ' +
+      'to a set of Standard Operating Procedures, am entrusted with ' +
+      'Sensitive Security Information, and am required to constantly adapt ' +
+      'to an evolving threat environment. Due to my high performance, I\'ve ' +
+      'been directed to fulfill supervisory and peer-mentoring roles on ' +
+      'multiple occasions.'
     }
   ]
 };
@@ -50,8 +52,11 @@ var projects = {
     {
       'title': 'Portfolio',
       'dates': 'November 2015',
-      'description': 'A web development portfolio built as the first project ' +
-      'in Udacity\'s Front-End Web Development Nanodegree program.',
+      'description': 'This is a web development portfolio built as the first ' +
+      'project in Udacity\'s Front-End Web Development Nanodegree program. ' +
+      'It features a navigation bar that docks to the top of the window and ' +
+      'indicates the section currently being viewed, and a contact form that ' +
+      'uses the Mandrill API to send emails to my inbox.',
       'images': [
         'img/fend-portfolio-top.png',
         'img/fend-portfolio-work.png',
@@ -121,8 +126,18 @@ bio.display = function() {
   var formattedRole = helper.HTMLheaderRole.replace(/%data%/g, bio.role);
   var formattedMobile = helper.HTMLmobile.replace(/%data%/g, bio.contacts.mobile);
   var formattedEmail = helper.HTMLemail.replace(/%data%/g, bio.contacts.email);
-  var formattedGithub = helper.HTMLgithub.replace(/%data%/g, bio.contacts.github);
-  var formattedTwitter = helper.HTMLtwitter.replace(/%data%/g, bio.contacts.twitter);
+
+  // Replace %url-data% with the full bio.contacts.github value.
+  var formattedGithub = helper.HTMLgithub.replace(/%url-data%/g, bio.contacts.github)
+  // Replace %data% with the substring occuring after the last '/' in bio.contacts.github.
+                                         .replace(/%data%/g, bio.contacts.github.slice(bio.contacts.github.lastIndexOf('/') + 1));
+
+  // Replace %url-data% with the full bio.contacts.twitter value.
+  var formattedTwitter = helper.HTMLtwitter.replace(/%url-data%/g, bio.contacts.twitter)
+  // Replace %data% with the substring occuring after the last '/' in bio.contacts.twitter.
+                                           .replace(/%data%/g, bio.contacts.twitter.slice(bio.contacts.twitter.lastIndexOf('/') + 1));
+
+
   var formattedLocation = helper.HTMLlocation.replace(/%data%/g, bio.contacts.location);
   var formattedBioPic = helper.HTMLbioPic.replace(/%data%/g, bio.biopic);
   var formattedWelcomeMsg = helper.HTMLwelcomeMsg.replace(/%data%/g, bio.welcomeMessage);
