@@ -1,111 +1,140 @@
 /*  Tasks:
- *    lint
- *    bundle:js
- *      (Requires completion of: lint.)
- *    bundle
- *      (Requires completion of: lint.)
- *    build
- *      (Requires completion of: bundle.)
- *    default
- *      (Requires completion of: bundle:js.)
+ *    lint:js           (Lint JavaScript.)
+ *    lint:json         (Lint JSON.)
+ *    lint              (Run all lint tasks and watch for files to re-lint.)
+ *    clean             (Delete dist files.)
+ *    build             (Build dist files.)
+ *    serve             (Serve src files and watch for files to reload.)
+ *    serve:dist        (Serve dist files and watch for files to reload.)
+ *    deploy:gh-pages   (Deploy dist files to gh-pages.)
+ *    default           (Lint and serve.)
  */
 
+var DEST = 'dist';
+var JS_OUT = 'app.min.js';
+var CSS_OUT = 'style.min.css';
+
 /* File globs. */
-var gulpJS = 'gulpfile.js';
-var clientJS = 'src/client/**/*.js';
-var serverJS = 'src/server/**/*.js';
-var minifiedJS = 'src/**/*.min.js';
-var bundledJS = 'src/client/app.min.js';
-var clientHTML = 'src/client/**/*.html';
-var clientCSS = 'src/client/**/*.css';
-var clientImgs = 'src/client/**/img/**/*';
-var lintFiles = [gulpJS, clientJS, serverJS, '!' + minifiedJS];
-var bundleJSFiles = [clientJS, '!' + minifiedJS];
-var buildFiles = [clientHTML, clientCSS, clientImgs, bundledJS];
+var jsFiles = [
+  'gulpfile.js',
+  'src/**/*.js'
+];
+var jsonFiles = [
+  'package.json',
+  // 'bower.json',
+  'src/**/*.json'
+];
+var clientJSFiles = [
+  'src/client/**/*.js'
+];
+var clientCSSFiles = [
+  'src/client/**/*.css'
+];
+var clientImageFiles = [
+  'src/client/**/img/**/*'
+];
+var clientHTMLFiles = [
+  'src/client/**/*.html'
+];
+// var bowerFiles = [
+//   'bower_components/**/*'
+// ];
 
 /* Gulp and plugins. */
 var gulp = require('gulp');
-var concat = require('gulp-concat');
-var gls = require('gulp-live-server');
-var jshint = require('gulp-jshint');
-var sourcemaps = require('gulp-sourcemaps');
-var uglify = require('gulp-uglify');
+var browserSync = require('browser-sync').create();
 var del = require('del');
+var ghPages = require('gulp-gh-pages');
+var gulpif = require('gulp-if');
+var imagemin = require('gulp-imagemin');
+var jshint = require('gulp-jshint');
+var jsonlint = require('gulp-jsonlint');
+var merge = require('merge-stream');
+var minifyCSS = require('gulp-minify-css');
+var minifyHTML = require('gulp-minify-html');
+var uglify = require('gulp-uglify');
+var useref = require('gulp-useref');
 
-/*  gulp lint
- *    Lints .js files.
- */
-gulp.task('lint', function() {
-  return gulp.src(lintFiles)
+gulp.task('lint:js', function() {
+  return gulp.src(jsFiles)
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
 
-/*  gulp bundle:js
- *    Concatenates and minifies client .js files, and outputs the resulting
- *    app.min.js file to the src/client directory.
- */
-gulp.task('bundle:js', ['lint'], function() {
-  return gulp.src(bundleJSFiles)
-    // Remove sourcemaps in production build.
-    .pipe(sourcemaps.init())
-      .pipe(concat('app.min.js'))
-      .pipe(uglify())
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('src/client'));
+gulp.task('lint:json', function() {
+  return gulp.src(jsonFiles)
+    .pipe(jsonlint())
+    .pipe(jsonlint.reporter());
 });
 
-/*  gulp bundle
- *    Same as bundle:js but without sourcemaps.
- */
- gulp.task('bundle', ['lint'], function() {
-   return gulp.src(bundleJSFiles)
-     .pipe(concat('app.min.js'))
-     .pipe(uglify())
-     .pipe(gulp.dest('src/client'));
- });
-
-/*  gulp build
- *    Populates the dist folder.
- */
-gulp.task('build', ['bundle'], function() {
-  // Delete existing files.
-  del(['dist/**/*'])
-    .then(function() {
-      // Copy the build files to the dist/ directory.
-      return gulp.src(buildFiles, {base: 'src/client'})
-        .pipe(gulp.dest('dist'));
-    });
+gulp.task('lint', ['lint:js', 'lint:json'], function() {
+  gulp.watch(jsFiles, ['lint:js']);
+  gulp.watch(jsonFiles, ['lint:json']);
 });
 
-/*  gulp
- *    Starts the livereloading server and watches for file changes.
- */
-gulp.task('default', ['bundle:js'], function() {
-  // Start server.js on its port (3000) and start the livereload server on port 35729.
-  var server = gls('src/server/server.js', undefined, 35729);
-  // Note: The server must log some output in order for control to be passed back to gulp.
-  server.start();
+gulp.task('clean', function() {
+  return del([DEST]);
+});
 
-  // Live reload .html, .css, and bundled .js file changes.
-  gulp.watch([
-    clientCSS,
-    clientHTML,
-    bundledJS
-  ], function (file) {
-    server.notify.apply(server, [file]);
+gulp.task('build', ['clean'], function() {
+  return merge(
+    // gulp.src(bowerFiles)
+    //   .pipe(gulp.dest(DEST + '/bower_components')),
+    gulp.src(clientImageFiles)
+      .pipe(imagemin({
+        progressive: true,  // jpg
+        interlaced: true    // gif
+      }))
+      .pipe(gulp.dest(DEST)),
+    gulp.src(clientHTMLFiles)
+      .pipe(useref())
+      .pipe(gulpif('*.js', uglify()))
+      .pipe(gulpif('*.css', minifyCSS({
+        restructuring: false  // There is a bug that causes styles to cascade incorrectly. (https://github.com/jakubpawlowicz/clean-css/issues/708)
+      })))
+      .pipe(gulpif('*.html', minifyHTML({
+        empty: true,
+        quotes: true,
+        spare: true
+      })))
+      .pipe(gulp.dest(DEST)));
+});
+
+gulp.task('serve', function() {
+  browserSync.init({
+      server: {
+        baseDir: 'src/client'
+        // routes: {
+        //   '/bower_components': './bower_components'
+        // }
+      },
+      https: false,
+      notify: false,
+      minify: false
   });
 
-  // Rebundle .js file changes.
-  gulp.watch(bundleJSFiles, ['bundle:js']);
-
-  // Lint non-client .js file changes.
-  gulp.watch(lintFiles.filter(function(ele) {
-    return bundleJSFiles.indexOf(ele) === -1;
-  }));
-
-  // Restart server when server .js files changes.
-  gulp.watch([serverJS], function() {
-    server.start.bind(server)();
-  });
+  gulp.watch(clientJSFiles, browserSync.reload);
+  gulp.watch(clientCSSFiles, browserSync.reload);
+  gulp.watch(clientHTMLFiles, browserSync.reload);
+  gulp.watch(clientImageFiles, browserSync.reload);
 });
+
+gulp.task('serve:dist', function() {
+  browserSync.init({
+      server: {
+        baseDir: DEST
+      },
+      https: false,
+      notify: false,
+      minify: false
+  });
+
+  gulp.watch([DEST + '/**/*'], browserSync.reload);
+});
+
+gulp.task('deploy:gh-pages', function() {
+  return gulp.src(DEST + '/**/*')
+    .pipe(ghPages());
+});
+
+gulp.task('default', ['lint', 'serve']);
