@@ -10,3 +10,19 @@ I used the Polymer iron-collapse component in order to achieve the "Exceeds Spec
 The live site may be viewed at [tempurturtul.github.io/fend-resume](http://tempurturtul.github.io/fend-resume).
 
 The client-side source files are located in `src/client`.
+
+## Setup
+
+**Prerequisites**
+- [Node](https://nodejs.org/en/)
+- [Gulp](http://gulpjs.com/)
+- [Bower](http://bower.io/)
+
+**Install dependencies.**
+- In project directory: `npm install`.
+
+**Install front-end dependencies.**
+- In project directory: `bower install`.
+
+**Run Gulp tasks.**
+- In project directory: `gulp` or `gulp --tasks` for list of available tasks.

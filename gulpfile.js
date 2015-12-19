@@ -10,8 +10,6 @@
  *    default           (Lint and serve.)
  */
 
-// TODO: Vulcanize task.
-
 var DEST = 'dist';
 var JS_OUT = 'app.min.js';
 var CSS_OUT = 'style.min.css';
@@ -91,7 +89,9 @@ gulp.task('build', ['clean'], function() {
     gulp.src(clientHTMLFiles)
       .pipe(useref())
       .pipe(gulpif('*.js', uglify()))
-      .pipe(gulpif('*.css', minifyCSS()))
+      .pipe(gulpif('*.css', minifyCSS({
+        restructuring: false  // There is a bug that causes styles to cascade incorrectly. (https://github.com/jakubpawlowicz/clean-css/issues/708)
+      })))
       .pipe(gulpif('*.html', minifyHTML({
         empty: true,
         quotes: true,
