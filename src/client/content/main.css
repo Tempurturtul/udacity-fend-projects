@@ -67,14 +67,12 @@ header h1 {
 #sticky-nav-container {
   height: 45px;
   width: 100%;
-  max-width: 900px;
   position: relative;
 }
 
 nav {
   height: 45px;
   width: 100%;
-  max-width: 900px;  /* Equivalent to parent container's max-width. */
   position: absolute;  /* Without this, links are only selectable via their text due to the about section being offset and overlapping the nav. Using z-index doesn't correct the problem. */
   border-top: #777 solid 1px;
   border-bottom: #777 solid 1px;
@@ -123,12 +121,17 @@ section {
   align-items: center;
 }
 
+section:not(last-of-type) {
+  border-bottom: solid 1px #bbb;
+}
+
 #about p {
   margin: 10px 15px;
   text-indent: 3em;
 }
 
 h2 {
+  font-variant: small-caps;
   text-align: center;
   padding-top: 10px;
 }
@@ -226,7 +229,7 @@ form button:disabled {
 ******************************/
 .container {
   margin: 0 auto;
-  max-width: 900px;
+  width: 100%;
   height: 100%;  /* Allows enforcing min-height on children. */
 }
 
@@ -257,6 +260,7 @@ form button:disabled {
   border: solid 2px #d5d5d5;
   border-radius: 8px;
   box-sizing: border-box;
+  margin: 5px 0;
 }
 
 .work-preview:hover {
@@ -288,6 +292,7 @@ form button:disabled {
   top: 0;
   z-index: 1;  /* Ensure nav stays on top. */
   border-top: none;
+  width: 100%;
 }
 
 /* Used by elements the nav links to. */
@@ -325,5 +330,33 @@ form button:disabled {
   article {
     width: 50%;
     box-sizing: border-box;
+  }
+
+  .container {
+    width: 90%;
+  }
+
+  .stick-top {
+    width: 90%;
+  }
+}
+
+@media (min-width: 1000px) {
+  .container {
+    width: 80%;
+  }
+
+  .stick-top {
+    width: 80%;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    width: 70%;
+  }
+
+  .stick-top {
+    width: 70%;
   }
 }
