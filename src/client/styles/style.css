@@ -329,6 +329,11 @@ header .row {
   margin-left: 0.5em;
 }
 
+/* Work entry titles. */
+.work-entry > h3 {
+  display: inline-block;  /* Require the user to mouse over the title text. */
+}
+
 .work-entry > h3:hover {
   color: #5f7d8e;  /* Same as a elements. */
   cursor: pointer;  /* Same as a elements. */
