@@ -1,8 +1,6 @@
 # fend-frogger
 
-This is the third project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program.
-
-Followed Udacity's [rubric](https://www.udacity.com/course/viewer/#!/c-nd001/l-2696458597/m-2687128535) and [instructions](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true) while completing the project.
+This is the third project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program. It provides art assets and a game engine that must be used to build a frogger clone.
 
 ## Course Notes
 
@@ -21,3 +19,25 @@ Followed Udacity's [rubric](https://www.udacity.com/course/viewer/#!/c-nd001/l-2
 7. Identify the various classes you will need to write.
 8. Identify and code the properties each class must have to accomplish its tasks.
 9. Write the functions that provide functionality to each of your class instances.
+
+## Game Notes
+
+### Basic Functionality
+
+**Player**
+
+- Can move left, right, up, and down.
+- Returned to start position on collision with enemy.
+- Wins on collision with water.
+
+**Enemies**
+
+- Move right at varying speeds.
+- Only appear on paved portion of map.
+
+### Additional Functionality
+
+- Player character selection.
+- Score.
+- Collectables.
+- ...
