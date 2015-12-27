@@ -19,7 +19,8 @@
     enemyRows: [1, 2, 3]
   };
   var player;
-  var allEnemies = [null, null, null, null];
+  var allEnemies = [];
+  var enemyCount = 4;
 
   function Actor(sprite, x, y) {
     this.sprite = sprite || '';
@@ -139,17 +140,23 @@
 
   Player.prototype = new Actor();
 
+  function spawnEnemies(num) {
+    // Empty allEnemies array.
+    allEnemies = [];
+
+    for (var i = 0; i < num; i++) {
+      var x = board.tileWidth * randomRange(-1, board.rows - 1);
+      var y = board.tileHeight * randomRange(board.enemyRows[0], board.enemyRows[board.enemyRows.length - 1]) + board.tileCenterTopOffset;
+      var enemy = new Enemy('images/enemy-bug.png', x, y);
+
+      allEnemies.push(enemy);
+    }
+  }
+
   function start() {
     player = new Player('images/char-boy.png');
 
-    allEnemies.forEach(function(enemy, index) {
-      var x = board.tileWidth * randomRange(-1, board.rows - 1);
-      var y = board.tileHeight * randomRange(board.enemyRows[0], board.enemyRows[board.enemyRows.length - 1]) + board.tileCenterTopOffset;
-
-      enemy = new Enemy('images/enemy-bug.png', x, y);
-
-      allEnemies[index] = enemy;
-    });
+    spawnEnemies(enemyCount);
 
     doc.addEventListener('keyup', function(e) {
       var allowedKeys = {
