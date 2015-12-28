@@ -170,6 +170,8 @@
     });
 
     doc.addEventListener('touchend', function(e) {
+      e.preventDefault();  // Prevent double-touch zoom.
+
       var relativeToPlayer;
 
       var bodyRect = doc.getElementsByTagName('body')[0].getBoundingClientRect();
