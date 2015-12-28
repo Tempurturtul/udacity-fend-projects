@@ -168,6 +168,35 @@
 
       player.handleInput(allowedKeys[e.keyCode]);
     });
+
+    doc.addEventListener('touchend', function(e) {
+      var relativeToPlayer;
+
+      var bodyRect = doc.getElementsByTagName('body')[0].getBoundingClientRect();
+      var canvasRect = doc.getElementsByTagName('canvas')[0].getBoundingClientRect();
+
+      var touchX = e.changedTouches[0].clientX;
+      var touchY = e.changedTouches[0].clientY;
+      var playerX = bodyRect.width / 2 - canvasRect.width / 2 + (player.x + 50);
+      var playerY = bodyRect.height / 2 - canvasRect.height / 2 + (player.y + 124);
+      var buffer = board.tileWidth / 2;
+
+      if (Math.abs(touchX - playerX) > Math.abs(touchY - playerY)) {
+        if (touchX > playerX + buffer) {
+          relativeToPlayer = 'right';
+        } else if (touchX < playerX - buffer) {
+          relativeToPlayer = 'left';
+        }
+      } else {
+        if (touchY > playerY + buffer) {
+          relativeToPlayer = 'down';
+        } else if (touchY < playerY - buffer) {
+          relativeToPlayer = 'up';
+        }
+      }
+
+      player.handleInput(relativeToPlayer);
+    });
   }
 
   start();
