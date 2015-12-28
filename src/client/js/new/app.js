@@ -1,11 +1,120 @@
-// ISSUE: Resizing.
+// REFACTORING TO SEPARATE LOGIC.
+// APP.JS SHOULD CONTAIN ONLY GAME-SPECIFIC LOGIC.
+
+// LAST DONE:
+//  Defined game object.
+//  Removed redundant variables defined in game object.
 
 (function(global) {
   var doc = global.document;
   var win = global.window;
-  var player;
-  var allEnemies = [null, null, null, null];
 
+  var game = {
+    sprites: {
+      water: {
+        url: 'images/water-block.png',
+        width: 101,
+        height: 83,
+        imageWidth: 101,
+        imageHeight: 171,
+        offsetTop: 50,  // Offset to apply to image to get functional top.
+        offsetLeft: 0   // Offset to apply to image to get functional left.
+      },
+      stone: {
+        url: 'images/stone-block.png',
+        width: 101,
+        height: 83,
+        imageWidth: 101,
+        imageHeight: 171,
+        offsetTop: 50,  // Offset to apply to image to get functional top.
+        offsetLeft: 0   // Offset to apply to image to get functional left.
+      },
+      grass: {
+        url: 'images/grass-block.png',
+        width: 101,
+        height: 83,
+        imageWidth: 101,
+        imageHeight: 171,
+        offsetTop: 50,  // Offset to apply to image to get functional top.
+        offsetLeft: 0   // Offset to apply to image to get functional left.
+      },
+      charBoy: {
+        url: 'images/char-boy.png',
+        width: 68,
+        height: 78,
+        imageWidth: 101,
+        imageHeight: 171,
+        offsetTop: 62,
+        offsetLeft: 17
+      },
+      charCatGirl: {
+        url: 'images/char-cat-girl.png',
+        width: 68,
+        height: 78,
+        imageWidth: 101,
+        imageHeight: 171,
+        offsetTop: 62,
+        offsetLeft: 17
+      },
+      charHornGirl: {
+        url: 'images/char-horn-girl.png',
+        width: 68,
+        height: 78,
+        imageWidth: 101,
+        imageHeight: 171,
+        offsetTop: 62,
+        offsetLeft: 17
+      },
+      charPinkGirl: {
+        url: 'images/char-pink-girl.png',
+        width: 68,
+        height: 78,
+        imageWidth: 101,
+        imageHeight: 171,
+        offsetTop: 62,
+        offsetLeft: 17
+      },
+      charPrincessGirl: {
+        url: 'images/char-princess-girl.png',
+        width: 68,
+        height: 78,
+        imageWidth: 101,
+        imageHeight: 171,
+        offsetTop: 62,
+        offsetLeft: 17
+      },
+      enemyBug: {
+        url: 'images/enemy-bug.png',
+        width: 98,
+        height: 67,
+        imageWidth: 101,
+        imageHeight: 171,
+        offsetTop: 77,
+        offsetLeft: 1
+      }
+    },
+    map: {
+      rows: 6,
+      cols: 5,
+      enemyRows: [1, 2, 3],  // First row is 0.
+      rowSprites: [
+        'water',  // Row 0 (Win row.)
+        'stone',  // Row 1 (Enemy row.)
+        'stone',  // Row 2 (Enemy row.)
+        'stone',  // Row 3 (Enemy row.)
+        'grass',  // Row 4
+        'grass'   // Row 5 (Start row.)
+      ]
+    },
+    entities: {
+      player: null,
+      enemies: []
+    },
+    settings: {
+      numEnemies: 4,
+      playerSprite: 'charBoy'
+    }
+  };
 
   function Actor(sprite, x, y) {
     this.sprite = sprite || '';
@@ -17,6 +126,7 @@
     };
   }
 
+  // TODO Use engine.js for collision checking.
   /* Actor -> Enemy */
   function Enemy(sprite, x, y) {
     Actor.call(this, sprite, x, y);
@@ -53,6 +163,7 @@
 
   Enemy.prototype = new Actor();
 
+  // TODO Use engine.js for collision checking.
   /* Actor -> Player */
   function Player(sprite) {
     var startX = board.tileWidth * (Math.floor((board.cols - 1) / 2));  // Middle x-axis.
@@ -189,12 +300,15 @@
     player.reset();
   }
 
+  // TODO Perform this call elsewhere.
   start();
 
-  // Exposed as required by engine.
+  // TODO Expose differently.
   global.player = player;
   global.allEnemies = allEnemies;
 
+
+  // TODO Move utility functions elsewhere (util.js?).
   /*************************
     Utility Functions
   *************************/

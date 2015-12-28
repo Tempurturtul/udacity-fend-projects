@@ -25,8 +25,96 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
-    canvas.height = 606;
+    /* BEGIN My Code */
+    var board = {
+      rowImages: [
+        'images/water-block.png',   // Top row is water
+        'images/stone-block.png',   // Row 1 of 3 of stone
+        'images/stone-block.png',   // Row 2 of 3 of stone
+        'images/stone-block.png',   // Row 3 of 3 of stone
+        'images/grass-block.png',   // Row 1 of 2 of grass
+        'images/grass-block.png'    // Row 2 of 2 of grass
+      ],
+      tileImageHeight: 171,
+      tileImageWidth: 101,
+      tileHeight: 83,
+      tileWidth: 101,
+      tileCenterTopOffset: -30,  // The center of the tile as an offset from its height. (Ex.: A tile at 0 on the y-axis would have a y-axis center at 83 + -30.)
+      rows: 6,
+      cols: 5,
+      enemyRows: [1, 2, 3]
+    };
+
+    updateSizes();
+
+    function updateSizes() {
+      console.log('updating sizes...');
+
+      setCanvasDimensions();
+      updateBoardImageSizes();
+      updateBoardTileSizes();
+
+      // Determine canvas width and height based on body dimensions.
+      function setCanvasDimensions() {
+        var bodyRect = doc.body.getBoundingClientRect();
+        var baseCanvasHeight = 606;
+        var baseCanvasWidth = 505;
+
+        // Check if the base canvas dimensions exceed the bounds of the body element.
+        if (bodyRect.width < baseCanvasWidth || bodyRect.height < baseCanvasHeight) {
+          // If they do, resize the canvas appropriately.
+          var newWidth;
+          var newHeight;
+
+          // Figure out which axis to resize by.
+          if (baseCanvasWidth - bodyRect.width > baseCanvasHeight - bodyRect.height) {
+            // Resize by width.
+            newWidth = Math.floor(bodyRect.width);
+            newHeight = Math.floor((baseCanvasHeight / baseCanvasWidth) * newWidth);
+          } else {
+            // Resize by height.
+            newHeight = Math.floor(bodyRect.height);
+            newWidth = Math.floor((baseCanvasWidth / baseCanvasHeight) * newHeight);
+          }
+
+          canvas.width = newWidth;
+          canvas.height = newHeight;
+        } else {
+          // If they do not, create the canvas with the base dimensions.
+          canvas.width = 505;
+          canvas.height = 606;
+        }
+      }
+
+      function updateBoardImageSizes() {
+        // Determine image sizes.
+        var baseImageWidth = 101;
+        var baseImageHeight = 171;
+        var newImageWidth = canvas.width / board.cols;
+        var newImageHeight = (baseImageHeight / baseImageWidth) * newImageWidth;
+
+        board.tileImageWidth = newImageWidth;
+        board.tileImageHeight = newImageHeight;
+      }
+
+      function updateBoardTileSizes() {
+        // Determine tile sizes.
+        var baseTileWidth = 101;
+        var baseTileHeight = 83;
+        var baseTileCenterTopOffset = -30;
+        var newTileWidth = canvas.width / board.cols;
+        var newTileHeight = (baseTileHeight / baseTileWidth) * newTileWidth;
+        var newTileCenterTopOffset = (baseTileHeight + baseTileCenterTopOffset) / baseTileHeight * newTileHeight - newTileHeight;
+
+        board.tileWidth = newTileWidth;
+        board.tileHeight = newTileHeight;
+        board.tileCenterTopOffset = newTileCenterTopOffset;
+      }
+    }
+    /* END My Code */
+
+    // canvas.width = 505;
+    // canvas.height = 606;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -97,47 +185,59 @@ var Engine = (function(global) {
         player.update();
     }
 
+    /* BEGIN My Code */
+    function render() {
+      for (var row = 0; row < board.rows; row++) {
+        for (var col = 0; col < board.cols; col++) {
+          ctx.drawImage(Resources.get(board.rowImages[row]), col * board.tileWidth, row * board.tileHeight, board.tileImageWidth, board.tileImageHeight);
+        }
+      }
+
+      renderEntities();
+    }
+    /* END My Code */
+
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
      * game tick (or loop of the game engine) because that's how games work -
      * they are flipbooks creating the illusion of animation but in reality
      * they are just drawing the entire screen over and over.
      */
-    function render() {
-        /* This array holds the relative URL to the image used
-         * for that particular row of the game level.
-         */
-        var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
-            ],
-            numRows = 6,
-            numCols = 5,
-            row, col;
-
-        /* Loop through the number of rows and columns we've defined above
-         * and, using the rowImages array, draw the correct image for that
-         * portion of the "grid"
-         */
-        for (row = 0; row < numRows; row++) {
-            for (col = 0; col < numCols; col++) {
-                /* The drawImage function of the canvas' context element
-                 * requires 3 parameters: the image to draw, the x coordinate
-                 * to start drawing and the y coordinate to start drawing.
-                 * We're using our Resources helpers to refer to our images
-                 * so that we get the benefits of caching these images, since
-                 * we're using them over and over.
-                 */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
-            }
-        }
-
-        renderEntities();
-    }
+    // function render() {
+    //     /* This array holds the relative URL to the image used
+    //      * for that particular row of the game level.
+    //      */
+    //     var rowImages = [
+    //             'images/water-block.png',   // Top row is water
+    //             'images/stone-block.png',   // Row 1 of 3 of stone
+    //             'images/stone-block.png',   // Row 2 of 3 of stone
+    //             'images/stone-block.png',   // Row 3 of 3 of stone
+    //             'images/grass-block.png',   // Row 1 of 2 of grass
+    //             'images/grass-block.png'    // Row 2 of 2 of grass
+    //         ],
+    //         board.rows = 6,
+    //         board.cols = 5,
+    //         row, col;
+    //
+    //     /* Loop through the number of rows and columns we've defined above
+    //      * and, using the rowImages array, draw the correct image for that
+    //      * portion of the "grid"
+    //      */
+    //     for (row = 0; row < board.rows; row++) {
+    //         for (col = 0; col < board.cols; col++) {
+    //             /* The drawImage function of the canvas' context element
+    //              * requires 3 parameters: the image to draw, the x coordinate
+    //              * to start drawing and the y coordinate to start drawing.
+    //              * We're using our Resources helpers to refer to our images
+    //              * so that we get the benefits of caching these images, since
+    //              * we're using them over and over.
+    //              */
+    //             ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+    //         }
+    //     }
+    //
+    //     renderEntities();
+    // }
 
     /* This function is called by the render function and is called on each game
      * tick. Its purpose is to then call the render functions you have defined
@@ -181,4 +281,12 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+
+    /* BEGIN My Code */
+    // Board info required by app.js.
+    global.board = board;
+
+    win.addEventListener('resize', updateSizes);
+    /* END My Code */
+
 })(this);
