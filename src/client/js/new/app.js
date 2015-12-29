@@ -1,110 +1,108 @@
 // REFACTORING TO SEPARATE LOGIC.
 // APP.JS SHOULD CONTAIN ONLY GAME-SPECIFIC LOGIC.
 
-// LAST DONE:
-//  Defined game object.
-//  Removed redundant variables defined in game object.
-
 (function(global) {
   var doc = global.document;
   var win = global.window;
-
   var game = {
     sprites: {
       water: {
         url: 'images/water-block.png',
-        width: 101,
-        height: 83,
         imageWidth: 101,
         imageHeight: 171,
-        offsetTop: 50,  // Offset to apply to image to get functional top.
-        offsetLeft: 0   // Offset to apply to image to get functional left.
+        colliderWidth: 101,
+        colliderHeight: 83,
+        colliderOffsetTop: 50,
+        colliderOffsetLeft: 0
       },
       stone: {
         url: 'images/stone-block.png',
-        width: 101,
-        height: 83,
         imageWidth: 101,
         imageHeight: 171,
-        offsetTop: 50,  // Offset to apply to image to get functional top.
-        offsetLeft: 0   // Offset to apply to image to get functional left.
+        colliderWidth: 101,
+        colliderHeight: 83,
+        colliderOffsetTop: 50,
+        colliderOffsetLeft: 0
       },
       grass: {
         url: 'images/grass-block.png',
-        width: 101,
-        height: 83,
         imageWidth: 101,
         imageHeight: 171,
-        offsetTop: 50,  // Offset to apply to image to get functional top.
-        offsetLeft: 0   // Offset to apply to image to get functional left.
+        colliderWidth: 101,
+        colliderHeight: 83,
+        colliderOffsetTop: 50,
+        colliderOffsetLeft: 0
       },
       charBoy: {
         url: 'images/char-boy.png',
-        width: 68,
-        height: 78,
         imageWidth: 101,
         imageHeight: 171,
-        offsetTop: 62,
-        offsetLeft: 17
+        colliderWidth: 68,
+        colliderHeight: 78,
+        colliderOffsetTop: 62,
+        colliderOffsetLeft: 17
       },
       charCatGirl: {
         url: 'images/char-cat-girl.png',
-        width: 68,
-        height: 78,
         imageWidth: 101,
         imageHeight: 171,
-        offsetTop: 62,
-        offsetLeft: 17
+        colliderWidth: 68,
+        colliderHeight: 78,
+        colliderOffsetTop: 62,
+        colliderOffsetLeft: 17
       },
       charHornGirl: {
         url: 'images/char-horn-girl.png',
-        width: 68,
-        height: 78,
         imageWidth: 101,
         imageHeight: 171,
-        offsetTop: 62,
-        offsetLeft: 17
+        colliderWidth: 68,
+        colliderHeight: 78,
+        colliderOffsetTop: 62,
+        colliderOffsetLeft: 17
       },
       charPinkGirl: {
         url: 'images/char-pink-girl.png',
-        width: 68,
-        height: 78,
         imageWidth: 101,
         imageHeight: 171,
-        offsetTop: 62,
-        offsetLeft: 17
+        colliderWidth: 68,
+        colliderHeight: 78,
+        colliderOffsetTop: 62,
+        colliderOffsetLeft: 17
       },
       charPrincessGirl: {
         url: 'images/char-princess-girl.png',
-        width: 68,
-        height: 78,
         imageWidth: 101,
         imageHeight: 171,
-        offsetTop: 62,
-        offsetLeft: 17
+        colliderWidth: 68,
+        colliderHeight: 78,
+        colliderOffsetTop: 62,
+        colliderOffsetLeft: 17
       },
       enemyBug: {
         url: 'images/enemy-bug.png',
-        width: 98,
-        height: 67,
         imageWidth: 101,
         imageHeight: 171,
-        offsetTop: 77,
-        offsetLeft: 1
+        colliderWidth: 98,
+        colliderHeight: 67,
+        colliderOffsetTop: 77,
+        colliderOffsetLeft: 1
       }
     },
-    map: {
+    map: [[]],
+    mapData: {
       rows: 6,
       cols: 5,
-      enemyRows: [1, 2, 3],  // First row is 0.
+      rowHeight: 83,
+      colWidth: 101,
       rowSprites: [
-        'water',  // Row 0 (Win row.)
-        'stone',  // Row 1 (Enemy row.)
-        'stone',  // Row 2 (Enemy row.)
-        'stone',  // Row 3 (Enemy row.)
+        'water',  // Row 0 (Win.)
+        'stone',  // Row 1 (Enemies.)
+        'stone',  // Row 2 (Enemies.)
+        'stone',  // Row 3 (Enemies.)
         'grass',  // Row 4
-        'grass'   // Row 5 (Start row.)
-      ]
+        'grass'   // Row 5 (Start.)
+      ],
+      enemyRows: [1, 2, 3]
     },
     entities: {
       player: null,
@@ -113,64 +111,107 @@
     settings: {
       numEnemies: 4,
       playerSprite: 'charBoy'
+    },
+    events: {
+      onKeyUp: onKeyUp,
+      onTouchEnd: onTouchEnd
     }
   };
 
-  function Actor(sprite, x, y) {
-    this.sprite = sprite || '';
-    this.x = x || 0;
-    this.y = y || 0;
+  // TODO Use engine.js for rendering.
+  /**
+   * @param {Object} sprite
+   * @param {string} sprite.url
+   * @param {number} sprite.imageWidth
+   * @param {number} sprite.imageHeight
+   * @param {number} sprite.colliderWidth
+   * @param {number} sprite.colliderHeight
+   * @param {number} sprite.colliderOffsetTop
+   * @param {number} sprite.colliderOffsetLeft
+   * @param {Object} pos
+   * @param {number} pos.x
+   * @param {number} pos.y
+   */
+  function Entity(sprite, pos) {
+    this.sprite = sprite;
+    this.pos = pos;
 
     this.render = function() {
-      ctx.drawImage(Resources.get(this.sprite), this.x, this.y, board.tileImageWidth, board.tileImageHeight);
+      // ctx.drawImage(Resources.get(this.sprite.url), this.pos.x, this.pos.y, board.tileImageWidth, board.tileImageHeight);
     };
   }
 
   // TODO Use engine.js for collision checking.
-  /* Actor -> Enemy */
-  function Enemy(sprite, x, y) {
-    Actor.call(this, sprite, x, y);
+  /**
+   * @param {Object} sprite
+   * @param {string} sprite.url
+   * @param {number} sprite.imageWidth
+   * @param {number} sprite.imageHeight
+   * @param {number} sprite.colliderWidth
+   * @param {number} sprite.colliderHeight
+   * @param {number} sprite.colliderOffsetTop
+   * @param {number} sprite.colliderOffsetLeft
+   * @param {Object} pos
+   * @param {number} pos.x
+   * @param {number} pos.y
+   * @param {(number|number[])} speed
+   */
+  function Enemy(sprite, pos, speed) {
+    Entity.call(this, sprite, pos);
 
-    var minSpeed = 120;
-    var maxSpeed = 330;
-
-    this.speed = randomRange(minSpeed, maxSpeed);
+    this.speed = getSpeed(speed);
 
     this.update = function(dt) {
       // Move right.
-      this.x += this.speed * dt;
+      this.pos.x += this.speed * dt;
 
       // Reset if too far right.
-      if (this.x > board.tileWidth * board.cols) {
+      if (this.pos.x > game.mapData.cols) {
+        // The enemy has gone off the right side of the map by a full unit.
         this.reset();
       }
 
+      // Handle collisions.
       this.handleCollisions();
     };
 
     this.handleCollisions = function() {
-      // Handle player collision.
-      if (this.y === player.y && (this.x + board.tileWidth / 2 > player.x && this.x - board.tileWidth / 2 < player.x)) {
-        player.die();
-      }
+      // TODO Handle player collision.
+
+      // if (this.y === player.y && (this.x + board.tileWidth / 2 > player.x && this.x - board.tileWidth / 2 < player.x)) {
+      //   player.die();
+      // }
     };
 
     this.reset = function() {
-      this.x = -board.tileWidth;
-      this.speed = randomRange(minSpeed, maxSpeed);
+      // Place off the left side of the map by a full unit.
+      this.pos.x = -1;
+
+      // Redetermine speed.
+      this.speed = getSpeed(speed);
     };
+
+    function getSpeed(speed) {
+      if (Array.isArray(speed)) {
+        // If speed is an array it should contain two numbers, the first being the
+        // minimum speed and the second being the maximum speed.
+        return util.randomRange(speed[0], speed[1]);
+      } else {
+        return speed;
+      }
+    }
   }
 
-  Enemy.prototype = new Actor();
+  Enemy.prototype = new Entity();
 
   // TODO Use engine.js for collision checking.
-  /* Actor -> Player */
+  /* Entity -> Player */
   function Player(sprite) {
-    var startX = board.tileWidth * (Math.floor((board.cols - 1) / 2));  // Middle x-axis.
-    var startY = board.tileHeight * (board.rows - 1) + board.tileCenterTopOffset;  // Bottom y-axis.
+    var startX = Math.floor((game.mapData.cols - 1) / 2);  // Middle or immediately left of middle.
+    var startY = game.mapData.rows - 1;  // Bottom y-axis.
+    var pos = {x: startX, y: startY};
 
-    Actor.call(this, sprite, startX, startY);
-
+    Entity.call(this, sprite, pos);
 
     this.update = function(dt) {
       this.handleCollisions();
@@ -179,35 +220,31 @@
     this.handleInput = function(input) {
       switch (input) {
         case 'left':
-          // Do not move further left than column 0.
-          if (this.x - board.tileWidth <= 0) {
+          if (this.x - 1 <= 0) {
             this.x = 0;
           } else {
-            this.x -= board.tileWidth;
+            this.x--;
           }
           break;
         case 'right':
-          // Do not move further right than columns.
-          if (this.x + board.tileWidth >= board.tileWidth * (board.cols - 1)) {
-            this.x = board.tileWidth * (board.cols - 1);
+          if (this.x + 1 >= game.mapData.cols - 1) {
+            this.x = game.mapData.cols - 1;
           } else {
-            this.x += board.tileWidth;
+            this.x++;
           }
           break;
         case 'down':
-          // Do not move further down than rows.
-          if (this.y + board.tileHeight >= board.tileHeight * (board.rows - 1) + board.tileCenterTopOffset) {
-            this.y = board.tileHeight * (board.rows - 1) + board.tileCenterTopOffset;
+          if (this.y + 1 >= game.mapData.rows - 1) {
+            this.y = game.mapData.rows - 1;
           } else {
-            this.y += board.tileHeight;
+            this.y++;
           }
           break;
         case 'up':
-          // Do not move further up than row 0.
-          if (this.y - board.tileHeight <= 0 + board.tileCenterTopOffset) {
-            this.y = 0 + board.tileCenterTopOffset;
+          if (this.y - 1 <= 0) {
+            this.y = 0;
           } else {
-            this.y -= board.tileHeight;
+            this.y--;
           }
           break;
       }
@@ -215,14 +252,14 @@
 
     this.handleCollisions = function() {
       // Handle win zone collisions (top row).
-      if (this.y <= board.tileCenterTopOffset) {
+      if (this.y <= 0) {
         this.win();
       }
     };
 
     this.reset = function() {
-      this.x = startX;
-      this.y = startY;
+      this.pos.x = startX;
+      this.pos.y = startY;
     };
 
     this.die = function() {
@@ -234,67 +271,28 @@
     };
   }
 
-  Player.prototype = new Actor();
+  Player.prototype = new Entity();
 
   function spawnEnemies() {
-    for (var i = 0; i < allEnemies.length; i++) {
-      var x = board.tileWidth * randomRange(-1, board.rows - 1);
-      var y = board.tileHeight * randomRange(board.enemyRows[0], board.enemyRows[board.enemyRows.length - 1]) + board.tileCenterTopOffset;
-      var enemy = new Enemy('images/enemy-bug.png', x, y);
+    for (var i = 0; i < game.settings.numEnemies; i++) {
+      var x = randomRange(-1, game.mapData.rows - 1);
+      var y = randomRange(game.mapData.enemyRows[0], game.mapData.enemyRows[game.mapData.enemyRows.length - 1]);
+      var enemy = new Enemy('images/enemy-bug.png', {x: x, y: y});
 
-      allEnemies[i] = enemy;
+      game.entities.enemies.push(enemy);
     }
   }
 
+  // TODO Use engine.js for event listeners.
   function start() {
-    player = new Player('images/char-boy.png');
+    player = new Player(game.settings.playerSprite);
 
     spawnEnemies();
-
-    doc.addEventListener('keyup', function(e) {
-      var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-      };
-
-      player.handleInput(allowedKeys[e.keyCode]);
-    });
-
-    doc.addEventListener('touchend', function(e) {
-      e.preventDefault();  // Prevent double-touch zoom.
-
-      var relativeToPlayer;
-
-      var bodyRect = doc.getElementsByTagName('body')[0].getBoundingClientRect();
-      var canvasRect = doc.getElementsByTagName('canvas')[0].getBoundingClientRect();
-
-      var touchX = e.changedTouches[0].clientX;
-      var touchY = e.changedTouches[0].clientY;
-      var playerX = bodyRect.width / 2 - canvasRect.width / 2 + (player.x + 50);
-      var playerY = bodyRect.height / 2 - canvasRect.height / 2 + (player.y + 124);
-      var buffer = board.tileWidth / 2;
-
-      if (Math.abs(touchX - playerX) > Math.abs(touchY - playerY)) {
-        if (touchX > playerX + buffer) {
-          relativeToPlayer = 'right';
-        } else if (touchX < playerX - buffer) {
-          relativeToPlayer = 'left';
-        }
-      } else {
-        if (touchY > playerY + buffer) {
-          relativeToPlayer = 'down';
-        } else if (touchY < playerY - buffer) {
-          relativeToPlayer = 'up';
-        }
-      }
-
-      player.handleInput(relativeToPlayer);
-    });
   }
 
   function restart() {
+    // TODO Destroy existing enemies.
+
     spawnEnemies();
 
     player.reset();
@@ -303,18 +301,47 @@
   // TODO Perform this call elsewhere.
   start();
 
-  // TODO Expose differently.
-  global.player = player;
-  global.allEnemies = allEnemies;
+  function onKeyUp(e) {
+    var allowedKeys = {
+      37: 'left',
+      38: 'up',
+      39: 'right',
+      40: 'down'
+    };
 
-
-  // TODO Move utility functions elsewhere (util.js?).
-  /*************************
-    Utility Functions
-  *************************/
-
-  function randomRange(min, max) {
-    // Returns random number between min (included) and max (included).
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    player.handleInput(allowedKeys[e.keyCode]);
   }
+
+  function onTouchEnd(e) {
+    var relativeToPlayer;
+
+    // Determine on which axis the touch is furthest from the player. (Recall
+    // that the player's pos refers to the top-left position of the player,
+    // therefore we adjust to search from the middle of the player.)
+    if (Math.abs(e.pos.x - (player.pos.x + player.sprite.colliderWidth / 2)) > Math.abs(e.pos.y - (player.pos.y + player.sprite.colliderHeight / 2))) {
+      // Furthest on the x-axis.
+      // Check where the click was relative to the player on the x-axis, again
+      // don't forget that the player's pos refers to the top-left position.
+      if (e.pos.x > player.pos.x + player.sprite.colliderWidth) {
+        relativeToPlayer = 'right';
+      } else if (e.pos.x < player.pos.x) {
+        relativeToPlayer = 'left';
+      }
+    } else {
+      // Furthest on the y-axis.
+      // Check where the click was relative to the player on the y-axis.
+      if (e.pos.y > player.pos.y + player.sprite.colliderHeight) {
+        relativeToPlayer = 'down';
+      } else if (e.pos.x < player.pos.x) {
+        relativeToPlayer = 'up';
+      }
+    }
+
+    // Check if relativeToPlayer was defined.
+    if (relativeToPlayer) {
+      player.handleInput(relativeToPlayer);
+    }
+  }
+
+  global.game = game;
 })(this);

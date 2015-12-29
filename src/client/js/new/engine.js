@@ -11,9 +11,7 @@ var Engine = (function(global) {
   var ctx = canvas.getContext('2d');
   var lastTime;
 
-
-  // TODO Move this concept elsewhere in engine.js (init?).
-  updateSizes();
+  init();
 
   // TODO Remake this, separating game logic from engine logic.
   function updateSizes() {
@@ -79,9 +77,6 @@ var Engine = (function(global) {
     }
   }
 
-  // TODO Move this elsewhere in engine.js (init?).
-  doc.body.appendChild(canvas);
-
   function main() {
       var now = Date.now(),
           dt = (now - lastTime) / 1000.0;
@@ -95,9 +90,74 @@ var Engine = (function(global) {
   }
 
   function init() {
+    updateSizes();
+    doc.body.appendChild(canvas);
+    win.addEventListener('resize', updateSizes);
+    doc.addEventListener('keyup', onKeyUp);
+    doc.addEventListener('touchend', onTouchEnd);
+
+    var spritesToLoad = [];
+    for (var sprite in game.sprites) {
+      spritesToLoad.push(game.sprites[sprite].url);
+    }
+    Resources.load(spritesToLoad);
+    Resources.onReady(stageTwo);
+
+    function stageTwo() {
       reset();
       lastTime = Date.now();
       main();
+    }
+  }
+
+  function onKeyUp(e) {
+    e.preventDefault();
+
+    var formattedEvent = {
+      keyCode: e.keyCode
+    };
+
+    // Call the related game event method.
+    game.events.onKeyUp(formattedEvent);
+  }
+
+  function onTouchEnd(e) {
+    e.preventDefault();
+
+    var x = getRelativePos(e.changedTouches[0].clientX);
+    var y = getRelativePos(e.changedTouches[0].clientY);
+
+    var formattedEvent = {
+      pos: {
+        x: x,  // x-axis position relative to canvas.
+        y: y   // y-axis position relative to canvas.
+      }
+    };
+
+    // Call the related game event method.
+    game.events.onTouchEnd(formattedEvent);
+  }
+
+  /**
+   * Converts a number to be relative to the size of game.mapData.rowHeight and
+   * game.mapData.colWidth. For example, if rowHeight and colWidth are both 100,
+   * then a pos value of {x: 50, y: 100} will return {x: 0.5, y: 1}.
+   * @param {Object} pos
+   * @param {number} pos.x
+   * @param {number} pos.y
+   */
+  function getRelativePos(pos) {
+    var canvasRect = canvas.getBoundingClientRect();  // left and top is equivalent to 0 and 0.
+
+    // Offset pos by canvas's position.
+    pos.x -= canvasRect.left;
+    pos.y -= canvasRect.top;
+
+    // Resize pos by colWidth and rowHeight.
+    pos.x /= game.mapData.colWidth;
+    pos.y /= game.mapData.rowHeight;
+
+    return pos;
   }
 
   function update(dt) {
@@ -136,23 +196,4 @@ var Engine = (function(global) {
     // noop
   }
 
-  // TODO Access game logic differently.
-  Resources.load([
-      'images/stone-block.png',
-      'images/water-block.png',
-      'images/grass-block.png',
-      'images/enemy-bug.png',
-      'images/char-boy.png',
-      'images/char-cat-girl.png'
-  ]);
-
-  Resources.onReady(init);
-
-  // TODO Publicize engine logic differently.
-  global.ctx = ctx;
-
-  // TODO Publicize engine logic differently.
-  global.board = board;
-
-  win.addEventListener('resize', updateSizes);
 })(this);
