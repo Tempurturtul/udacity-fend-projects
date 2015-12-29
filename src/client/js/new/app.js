@@ -88,12 +88,13 @@
         colliderOffsetLeft: 1
       }
     },
-    map: [[]],
     mapData: {
       rows: 6,
       cols: 5,
       rowHeight: 83,
       colWidth: 101,
+      rowImageHeight: 171,
+      colImageWidth: 101,
       rowSprites: [
         'water',  // Row 0 (Win.)
         'stone',  // Row 1 (Enemies.)
@@ -105,7 +106,7 @@
       enemyRows: [1, 2, 3]
     },
     entities: {
-      player: null,
+      players: [],
       enemies: []
     },
     settings: {
@@ -285,7 +286,9 @@
 
   // TODO Use engine.js for event listeners.
   function start() {
-    player = new Player(game.settings.playerSprite);
+    var player = new Player(game.settings.playerSprite);
+
+    game.entities.players.push(player);
 
     spawnEnemies();
   }
