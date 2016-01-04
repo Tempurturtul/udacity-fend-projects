@@ -68,12 +68,12 @@ var projects = {
     {
       'title': 'Resume',
       'dates': 'December 2015',
-      'description': 'My online resume for web development. It dynamically ' +
-      'creates page content with data retrieved from a JSON object and ' +
-      'utilizes CSS transitions, a Polymer element, and Google Maps\' API to ' +
-      'provide additional functionality. I also expanded my workflow options ' +
-      'with this project by learning to use Bower and by refining my usage ' +
-      'of Gulp.',
+      'description': 'My online resume for web development (which you are ' +
+      'currently using). It dynamically creates page content with data ' +
+      'retrieved from a JSON object and utilizes CSS transitions, a Polymer ' +
+      'element, and Google Maps\' API to provide additional functionality. I ' +
+      'also expanded my workflow options with this project by learning to ' +
+      'use Bower and by refining my usage of Gulp.',
       'images': [
         'img/fend-resume-top.png',
         'img/fend-resume-mid.png',
@@ -110,7 +110,7 @@ var education = {
       'description': 'A miniature degree program developed by Udacity in ' +
       'partnership with AT&T, Google, Hack Reactor, and GitHub. Designed to ' +
       'give graduates the ability to build "beautiful, responsive websites ' +
-      'optimized for security and performance." You\'re currently using it!'
+      'optimized for security and performance."'
     }
   ],
   'onlineCourses': [
