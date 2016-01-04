@@ -17,14 +17,14 @@ var bio = {
     'CSS',
     'JavaScript',
     'jQuery',
-    'Node',
-    'Angular',
-    'Polymer',
-    'Git',
+    'NodeJS',
+    'AngularJS',
+    // 'Polymer',
     'Gulp',
-    'Grunt',
-    'Bower',
-    'Vagrant'
+    // 'Grunt',
+    // 'Bower',
+    // 'Vagrant',
+    'Git'
   ],
   'biopic' : 'img/self.png'
 };
@@ -62,8 +62,25 @@ var projects = {
         'img/fend-portfolio-work.png',
         'img/fend-portfolio-contact.png'
       ],
-      'github': 'https://github.com/Tempurturtul/fend-resume',
+      'github': 'https://github.com/Tempurturtul/fend-portfolio',
       'url': 'http://tempurturtul.github.io/fend-portfolio/'
+    },
+    {
+      'title': 'Resume',
+      'dates': 'December 2015',
+      'description': 'My online resume for web development. It dynamically ' +
+      'creates page content with data retrieved from a JSON object and ' +
+      'utilizes CSS transitions, a Polymer element, and Google Maps\' API to ' +
+      'provide additional functionality. I also expanded my workflow options ' +
+      'with this project by learning to use Bower and by refining my usage ' +
+      'of Gulp.',
+      'images': [
+        'img/fend-resume-top.png',
+        'img/fend-resume-mid.png',
+        'img/fend-resume-bot.png'
+      ],
+      'github': 'https://github.com/Tempurturtul/fend-resume',
+      'url': 'http://tempurturtul.github.io/fend-resume/'
     }
   ]
 };
@@ -82,6 +99,18 @@ var education = {
       'Intelligence Analysis certificate and completed a 400-hour internship ' +
       'with a local police department as part of the degree program. ' +
       'Graduated Magna Cum Laude with a 3.7 GPA.'
+    },
+    {
+      'name': 'Udacity',
+      'location': 'Online',
+      'degree': 'Nanodegree',
+      'majors': ['Front-End Web Developer'],
+      'dates': 2016,
+      'url': 'https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001',
+      'description': 'A miniature degree program developed by Udacity in ' +
+      'partnership with AT&T, Google, Hack Reactor, and GitHub. Designed to ' +
+      'give graduates the ability to build "beautiful, responsive websites ' +
+      'optimized for security and performance."'
     }
   ],
   'onlineCourses': [
@@ -284,7 +313,9 @@ locations.updatePlaces = function() {
   });
 
   education.schools.forEach(function(school) {
-    arr.push(school.location);
+    if (school.location && school.location !== 'Online') {
+      arr.push(school.location);
+    }
   });
 
   // Remove duplicates.
