@@ -11,7 +11,7 @@ var bio = {
   'welcomeMessage' : 'Hello and thank you for viewing my online resume! I\'m ' +
   'currently seeking employment as a front-end web developer and am happy to ' +
   'relocate as necessary within the United States. This resume was last ' +
-  'updated in December of 2015. Please don\'t hesitate to contact me!',
+  'updated in January of 2016. Please don\'t hesitate to contact me!',
   'skills' : [
     'HTML',
     'CSS',
