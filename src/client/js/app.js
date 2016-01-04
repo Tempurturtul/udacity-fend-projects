@@ -223,15 +223,17 @@ function drawScore() {
 var Collectable = function() {
   var colors = ['Blue', 'Green', 'Orange'];
   var randomColor = colors[util.randomRange(0, 2)];
-  var velocities = [-20, 20];
-  var randomVelocity = velocities[util.randomRange(0, 1)];
 
   this.sprite = 'images/Gem ' + randomColor + '.png';
   this.x = 101 * util.randomRange(0, 4) + 38;
   this.y = 83 * util.randomRange(1, 3) + 60;
   this.origX = this.x;
   this.origY = this.y;
-  this.velocity = randomVelocity;
+  this.velocity = util.randomRange(15, 35);
+
+  if (Math.random() > 0.5) {
+    this.velocity = -this.velocity;
+  }
 };
 
 Collectable.prototype.render = function() {
