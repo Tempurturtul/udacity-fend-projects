@@ -1,3 +1,21 @@
+var settings = {
+  numEnemies: 2,
+  enemySpeedRange: [130, 300],
+  numCollectables: 3,
+  original: {
+    numEnemies: 2,
+    enemySpeedRange: [130, 300]
+  },
+  caps: {
+    numEnemies: 6,
+    enemySpeedRange: [200, 700]
+  }
+};
+
+var wins = 0;
+var lives = 3;
+var score = 0;
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -8,7 +26,7 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.x = util.randomRange(0, 101 * 4);
     this.y = 83 * util.randomRange(1, 3) - 25;
-    this.speed = util.randomRange(80, 500);
+    this.speed = util.randomRange(settings.enemySpeedRange[0], settings.enemySpeedRange[1]);
 };
 
 // Update the enemy's position, required method for game
@@ -22,7 +40,7 @@ Enemy.prototype.update = function(dt) {
     if (this.x >= 101 * 5) {
       this.x = -101;
       this.y = 83 * util.randomRange(1, 3) - 25;
-      this.speed = util.randomRange(80, 500);
+      this.speed = util.randomRange(settings.enemySpeedRange[0], settings.enemySpeedRange[1]);
     }
 
     this.handleCollisions();
@@ -94,14 +112,39 @@ Player.prototype.handleInput = function(input) {
 
 Player.prototype.win = function() {
   score += 100;
+  wins++;
+
+  // Increment enemy min speed.
+  if (settings.enemySpeedRange[0] + 7 < settings.caps.enemySpeedRange[0]) {
+    settings.enemySpeedRange[0] += 7;
+  } else {
+    settings.enemySpeedRange[0] = settings.caps.enemySpeedRange[0];
+  }
+
+  // Increment enemy max speed.
+  if (settings.enemySpeedRange[1] + 25 < settings.caps.enemySpeedRange[1]) {
+    settings.enemySpeedRange[1] += 25;
+  } else {
+    settings.enemySpeedRange[1] = settings.caps.enemySpeedRange[1];
+  }
+
+  // Increment number of enemies.
+  if (wins % 3 === 0 && settings.numEnemies < settings.caps.numEnemies) {
+    settings.numEnemies++;
+  }
+
   this.reset();
   spawnEnemies();
   spawnCollectables();
 };
 
 Player.prototype.die = function() {
-  this.reset();
-  score -= 75;
+  if (--lives < 0) {
+    resetGame();
+  } else {
+    score -= 75;
+    this.reset();
+  }
 };
 
 Player.prototype.reset = function() {
@@ -112,7 +155,6 @@ Player.prototype.reset = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var numEnemies = 4;
 var allEnemies = [];
 var player = new Player();
 
@@ -121,7 +163,7 @@ spawnEnemies();
 function spawnEnemies() {
   allEnemies = [];
 
-  for (var i = 0; i < numEnemies; i++) {
+  for (var i = 0; i < settings.numEnemies; i++) {
     var enemy = new Enemy();
     allEnemies.push(enemy);
   }
@@ -170,8 +212,6 @@ document.addEventListener('touchend', function(e) {
 
   player.handleInput(relativeToPlayer);
 });
-
-var score = 0;
 
 function drawScore() {
   ctx.font = '28px serif';
@@ -224,15 +264,33 @@ Collectable.prototype.destroy = function() {
   allCollectables.splice(index, 1);
 };
 
-var numCollectables = 3;
 var allCollectables = [];
 spawnCollectables();
 
 function spawnCollectables() {
   allCollectables = [];
 
-  for (var i = 0; i < numCollectables; i++) {
+  for (var i = 0; i < settings.numCollectables; i++) {
     var collectable = new Collectable();
     allCollectables.push(collectable);
   }
+}
+
+function drawLives() {
+  var x = 0;
+  for (var i = 0; i < lives; i++) {
+    ctx.drawImage(Resources.get('images/Heart.png'), x, 10, 25, 43);
+    x += 30;
+  }
+}
+
+function resetGame() {
+  settings.numEnemies = settings.original.numEnemies;
+  settings.enemySpeedRange = settings.original.enemySpeedRange;
+  wins = 0;
+  lives = 3;
+  score = 0;
+  spawnEnemies();
+  spawnCollectables();
+  player.reset();
 }

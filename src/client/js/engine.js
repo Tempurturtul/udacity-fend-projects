@@ -160,6 +160,7 @@ var Engine = (function(global) {
         **********************/
         // Draw the score.
         drawScore();
+        drawLives();
 
         // Draw the collectables.
         allCollectables.forEach(function(collectable) {
@@ -210,7 +211,8 @@ var Engine = (function(global) {
         **********************/
         'images/Gem Blue.png',
         'images/Gem Green.png',
-        'images/Gem Orange.png'
+        'images/Gem Orange.png',
+        'images/Heart.png'
         /**********************
         * END My Code
         **********************/
