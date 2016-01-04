@@ -1,7 +1,3 @@
-/********************
-*  Working on score.
-********************/
-
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -43,12 +39,6 @@ Enemy.prototype.handleCollisions = function() {
     player.die();
   }
 };
-
-Enemy.prototype.respawn = function() {
-  this.x = util.randomRange(0, 101 * 4);
-  this.y = 83 * util.randomRange(1, 3) - 25;
-  this.speed = util.randomRange(80, 500);
-}
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -103,14 +93,15 @@ Player.prototype.handleInput = function(input) {
 };
 
 Player.prototype.win = function() {
+  score += 100;
   this.reset();
-  allEnemies.forEach(function(enemy) {
-    enemy.respawn();
-  });
+  spawnEnemies();
+  spawnCollectables();
 };
 
 Player.prototype.die = function() {
   this.reset();
+  score -= 75;
 };
 
 Player.prototype.reset = function() {
@@ -125,9 +116,15 @@ var numEnemies = 4;
 var allEnemies = [];
 var player = new Player();
 
-for (var i = 0; i < numEnemies; i++) {
-  var enemy = new Enemy();
-  allEnemies.push(enemy);
+spawnEnemies();
+
+function spawnEnemies() {
+  allEnemies = [];
+
+  for (var i = 0; i < numEnemies; i++) {
+    var enemy = new Enemy();
+    allEnemies.push(enemy);
+  }
 }
 
 // This listens for key presses and sends the keys to your
@@ -174,17 +171,68 @@ document.addEventListener('touchend', function(e) {
   player.handleInput(relativeToPlayer);
 });
 
-var Text = function(text, x, y) {
-  this.text = text;
-  this.x = x;
-  this.y = y;
-};
+var score = 0;
 
-Text.prototype.render = function() {
+function drawScore() {
   ctx.font = '28px serif';
   ctx.textAlign = 'end';  // start, end, left, right, center
   ctx.textBaseline = 'top';  // top, hanging, middle, alphabetic, ideographic, bottom
-  ctx.fillText(this.text, this.x, this.y);
+  ctx.fillText('Score: ' + score, 101 * 5, 20);
 }
 
-var score = new Text('Score: 0', 101 * 5, 20);
+var Collectable = function() {
+  var colors = ['Blue', 'Green', 'Orange'];
+  var randomColor = colors[util.randomRange(0, 2)];
+  var velocities = [-20, 20];
+  var randomVelocity = velocities[util.randomRange(0, 1)];
+
+  this.sprite = 'images/Gem ' + randomColor + '.png';
+  this.x = 101 * util.randomRange(0, 4) + 38;
+  this.y = 83 * util.randomRange(1, 3) + 60;
+  this.origX = this.x;
+  this.origY = this.y;
+  this.velocity = randomVelocity;
+};
+
+Collectable.prototype.render = function() {
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 25, 43);
+};
+
+Collectable.prototype.update = function (dt) {
+  if (this.x < this.origX - 8) {
+    this.velocity = -this.velocity;
+    this.x = this.origX - 8;
+  } else if (this.x > this.origX + 8) {
+    this.velocity = -this.velocity;
+    this.x = this.origX + 8;
+  } else {
+    this.x += this.velocity * dt;
+  }
+
+  this.handleCollisions();
+};
+
+Collectable.prototype.handleCollisions = function() {
+  if (this.y - 60 === player.y + 25 && (this.origX + 101 / 2 > player.x && this.origX - 101 < player.x)) {
+    score += 25;
+    this.destroy();
+  }
+};
+
+Collectable.prototype.destroy = function() {
+  var index = allCollectables.indexOf(this);
+  allCollectables.splice(index, 1);
+};
+
+var numCollectables = 3;
+var allCollectables = [];
+spawnCollectables();
+
+function spawnCollectables() {
+  allCollectables = [];
+
+  for (var i = 0; i < numCollectables; i++) {
+    var collectable = new Collectable();
+    allCollectables.push(collectable);
+  }
+}

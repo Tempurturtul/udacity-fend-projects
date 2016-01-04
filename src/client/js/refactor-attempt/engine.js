@@ -105,9 +105,9 @@ var Engine = (function(global) {
 
   function updateEntities(dt) {
     for (var entityArr in game.entities) {
-      entityArr.forEach(function(entity) {
-        entity.update(dt);
-      });
+      for (var i = 0; i < game.entities[entityArr].length; i++) {
+        game.entities[entityArr][i].update(dt);
+      }
     }
   }
 
@@ -176,7 +176,7 @@ var Engine = (function(global) {
               };
               var collision2 = {
                 entity: entity
-              }
+              };
 
               // Call both entity's onCollision functions.
               entity.onCollision(collision);

@@ -273,7 +273,7 @@
           var leftBoundary = game.mapData.colImageOffsetLeft * engine.scale;
 
           if (newX <= leftBoundary) {
-            this.x = ;
+            // this.x = ;
           } else {
             this.x -= tileWidth;
           }

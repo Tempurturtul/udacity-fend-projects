@@ -95,6 +95,16 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+
+        /**********************
+        * BEGIN My Code
+        **********************/
+        allCollectables.forEach(function(collectable) {
+          collectable.update(dt);
+        });
+        /**********************
+        * END My Code
+        **********************/
     }
 
     /* This function initially draws the "game level", it will then call
@@ -104,6 +114,15 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
+      /**********************
+      * BEGIN My Code
+      **********************/
+      // Clear the canvas prior to redrawing.
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      /**********************
+      * END My Code
+      **********************/
+
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
@@ -136,6 +155,20 @@ var Engine = (function(global) {
             }
         }
 
+        /**********************
+        * BEGIN My Code
+        **********************/
+        // Draw the score.
+        drawScore();
+
+        // Draw the collectables.
+        allCollectables.forEach(function(collectable) {
+          collectable.render();
+        });
+        /**********************
+        * END My Code
+        **********************/
+
         renderEntities();
     }
 
@@ -152,10 +185,6 @@ var Engine = (function(global) {
         });
 
         player.render();
-
-        /* BEGIN: MY CODE */
-        score.render();
-        /* END: MY CODE */
     }
 
     /* This function does nothing but it could have been a good place to
@@ -175,7 +204,16 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        /**********************
+        * BEGIN My Code
+        **********************/
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
+        /**********************
+        * END My Code
+        **********************/
     ]);
     Resources.onReady(init);
 
