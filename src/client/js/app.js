@@ -151,7 +151,7 @@ document.addEventListener('touchend', function(e) {
   var touchX = e.changedTouches[0].clientX;
   var touchY = e.changedTouches[0].clientY;
   var playerX = bodyRect.width / 2 - canvasRect.width / 2 + (player.x + 50);
-  var playerY = bodyRect.height / 2 - canvasRect.height / 2 + (player.y + 124);
+  var playerY = player.y + 124;
   var buffer = 101 / 2;
 
   if (Math.abs(touchX - playerX) > Math.abs(touchY - playerY)) {
