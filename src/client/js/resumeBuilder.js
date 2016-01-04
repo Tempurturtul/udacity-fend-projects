@@ -106,11 +106,11 @@ var education = {
       'degree': 'Nanodegree',
       'majors': ['Front-End Web Developer'],
       'dates': 2016,
-      'url': 'https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001',
+      'url': 'https://www.udacity.com/nanodegree',
       'description': 'A miniature degree program developed by Udacity in ' +
       'partnership with AT&T, Google, Hack Reactor, and GitHub. Designed to ' +
       'give graduates the ability to build "beautiful, responsive websites ' +
-      'optimized for security and performance."'
+      'optimized for security and performance." You\'re currently using it!'
     }
   ],
   'onlineCourses': [
