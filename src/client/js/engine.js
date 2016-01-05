@@ -119,6 +119,15 @@ var Engine = (function(global) {
       **********************/
       // Clear the canvas prior to redrawing.
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // If a menu is active...
+      for (var menu in menus) {
+        if (menus[menu].active) {
+          // Render the menu, but nothing else.
+          drawMenu(menu);
+          return;
+        }
+      }
       /**********************
       * END My Code
       **********************/
@@ -212,7 +221,11 @@ var Engine = (function(global) {
         'images/Gem Blue.png',
         'images/Gem Green.png',
         'images/Gem Orange.png',
-        'images/Heart.png'
+        'images/Heart.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png'
         /**********************
         * END My Code
         **********************/
