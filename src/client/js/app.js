@@ -663,13 +663,12 @@
     function handleGameTouchEnd() {
       var relativeToPlayer;
 
-      var bodyRect = document.getElementsByTagName('body')[0].getBoundingClientRect();
       var canvasRect = canvas.getBoundingClientRect();
 
       var touchX = e.changedTouches[0].pageX;
       var touchY = e.changedTouches[0].pageY;
-      var playerX = bodyRect.width / 2 - canvasRect.width / 2 + (player.x + 50);
-      var playerY = player.y + 124;
+      var playerX = canvasRect.left + player.x + 50;
+      var playerY = canvasRect.top + player.y + 124;
       var buffer = 101 / 2;
 
       if (Math.abs(touchX - playerX) > Math.abs(touchY - playerY)) {
