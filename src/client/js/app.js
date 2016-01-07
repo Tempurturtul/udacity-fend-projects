@@ -116,8 +116,10 @@
 
       this.handleCollisions = function() {
         // Handle player collision.
-        if (this.y === player.y && (this.x + 101 / 2 > player.x && this.x - 101 < player.x)) {
-          player.die();
+        if (!player.suspended) {
+          if (this.y === player.y && (this.x + 101 / 2 > player.x && this.x - 101 < player.x)) {
+            player.die();
+          }
         }
       };
   };
@@ -128,18 +130,53 @@
     this.sprite = settings.playerSprite;
     this.x = 101 * 2;
     this.y = 83 * 5 - 25;
+    this.scale = 1;  // The amount by which to scale the sprite's size.
+    this.suspended = false;  // Used to suspend interaction between the player and the world.
+    this.animations = {
+      win: {
+        isPlaying: false
+      },
+      death: {
+        isPlaying: false
+      }
+    };
 
     this.update = function(dt) {
-      if (this.y <= -25) {
+      // Play animations.
+      for (var animation in this.animations) {
+        if (this.animations[animation].isPlaying) {
+          switch (animation) {
+            case 'win':
+              this.winAnimation(dt);
+              break;
+            case 'death':
+              this.deathAnimation(dt);
+              break;
+          }
+        }
+      }
+
+      // Handle collisions.
+      this.handleCollisions();
+    };
+
+    this.render = function() {
+      ctx.drawImage(Resources.get(this.sprite), this.x + (50 - 50 * this.scale), this.y + (121 - 121 * this.scale), 101 * this.scale, 171 * this.scale);
+    };
+
+    this.handleCollisions = function() {
+      // Handle collisions with the win row.
+      if (!this.suspended && this.y <= -25) {
         this.win();
       }
     };
 
-    this.render = function() {
-      ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    };
-
     this.handleInput = function(input) {
+      // Early abort if suspended.
+      if (this.suspended) {
+        return;
+      }
+
       // Early abort if a menu is active.
       for (var menu in menus) {
         if (menus[menu].active) {
@@ -180,9 +217,22 @@
     };
 
     this.win = function() {
+      this.suspended = true;
       score += 100;
       wins++;
+      this.animations.win.isPlaying = true;
+    };
 
+    this.winAnimation = function(dt) {
+      if (this.scale > 0) {
+        this.scale -= 2 * dt;
+      } else {
+        this.animations.win.isPlaying = false;
+        this.finalizeWin();
+      }
+    };
+
+    this.finalizeWin = function() {
       // Increment enemy min speed.
       if (settings.enemySpeedRange[0] + 7 < settings.limits.enemySpeedRange[0]) {
         settings.enemySpeedRange[0] += 7;
@@ -208,8 +258,25 @@
     };
 
     this.die = function() {
-      if (--lives < 0) {
-        this.reset();
+      this.suspended = true;
+      score -= 50;
+      lives--;
+      this.animations.death.origY = this.y;  // Add a property to remember the y position at animation start.
+      this.animations.death.isPlaying = true;
+    };
+
+    this.deathAnimation = function(dt) {
+      if (this.y > this.animations.death.origY - 30) {
+        this.y -= 50 * dt;
+        this.scale -= 0.3 * dt;
+      } else {
+        this.animations.death.isPlaying = false;
+        this.finalizeDeath();
+      }
+    };
+
+    this.finalizeDeath = function() {
+      if (lives < 0) {
         scores.push(score);
         // Sort scores in descending order.
         scores = scores.sort(function(a, b) {
@@ -222,16 +289,17 @@
           }
         });
         menus.scores.active = true;
-      } else {
-        score -= 75;
-        this.reset();
       }
+
+      this.reset();
     };
 
     this.reset = function() {
       this.sprite = settings.playerSprite;
       this.x = 101 * 2;
       this.y = 83 * 5 - 25;
+      this.scale = 1;
+      this.suspended = false;
     };
   };
   var Collectable = function() {
@@ -268,9 +336,11 @@
     };
 
     this.handleCollisions = function() {
-      if (this.y - 60 === player.y + 25 && (this.origX + 101 / 2 > player.x && this.origX - 101 < player.x)) {
-        score += 25;
-        this.destroy();
+      if (!player.suspended) {
+        if (this.y - 60 === player.y + 25 && (this.origX + 101 / 2 > player.x && this.origX - 101 < player.x)) {
+          score += 25;
+          this.destroy();
+        }
       }
     };
 
