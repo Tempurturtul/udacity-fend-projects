@@ -36,6 +36,9 @@ var clientImageFiles = [
 var clientHTMLFiles = [
   'src/client/**/*.html'
 ];
+var clientSoundFiles = [
+  'src/client/**/sounds/**/*'
+];
 // var bowerFiles = [
 //   'bower_components/**/*'
 // ];
@@ -93,6 +96,8 @@ gulp.task('build', ['clean'], function() {
       .pipe(gulpif('*.html', htmlmin({
         collapseWhitespace: true
       })))
+      .pipe(gulp.dest(DEST)),
+    gulp.src(clientSoundFiles)
       .pipe(gulp.dest(DEST)));
 });
 
@@ -113,6 +118,7 @@ gulp.task('serve', function() {
   gulp.watch(clientCSSFiles, browserSync.reload);
   gulp.watch(clientHTMLFiles, browserSync.reload);
   gulp.watch(clientImageFiles, browserSync.reload);
+  gulp.watch(clientSoundFiles, browserSync.reload);
 });
 
 gulp.task('serve:dist', function() {

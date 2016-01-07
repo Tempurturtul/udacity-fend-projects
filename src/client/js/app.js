@@ -69,17 +69,22 @@
   var settings = {
     numEnemies: 2,
     enemySpeedRange: [130, 300],
+    winsUntilNewEnemy: 3,
+    winsUntilNewEnemyIncrement: 3,
+    enemySpeedRangeIncrements: [10, 20],
     numCollectables: 3,
     playerSprite: playerSprites[0],
     original: {
       numEnemies: 2,
-      enemySpeedRange: [130, 300]
+      enemySpeedRange: [130, 300],
+      winsUntilNewEnemy: 3
     },
     limits: {
-      numEnemies: 6,
-      enemySpeedRange: [200, 700]
+      numEnemies: 5,
+      enemySpeedRange: [200, 600]
     }
   };
+  var sounds = {};  // Initialized in init.
   // Enemies our player must avoid
   var Enemy = function() {
       // Variables applied to each of our instances go here,
@@ -131,6 +136,7 @@
     this.x = 101 * 2;
     this.y = 83 * 5 - 25;
     this.scale = 1;  // The amount by which to scale the sprite's size.
+    this.opacity = 1;  // The opacity of the player sprite.
     this.suspended = false;  // Used to suspend interaction between the player and the world.
     this.animations = {
       win: {
@@ -161,7 +167,10 @@
     };
 
     this.render = function() {
+      ctx.save();
+      ctx.globalAlpha = this.opacity;
       ctx.drawImage(Resources.get(this.sprite), this.x + (50 - 50 * this.scale), this.y + (121 - 121 * this.scale), 101 * this.scale, 171 * this.scale);
+      ctx.restore();
     };
 
     this.handleCollisions = function() {
@@ -220,6 +229,7 @@
       this.suspended = true;
       score += 100;
       wins++;
+      sounds.won.play();
       this.animations.win.isPlaying = true;
     };
 
@@ -233,26 +243,9 @@
     };
 
     this.finalizeWin = function() {
-      // Increment enemy min speed.
-      if (settings.enemySpeedRange[0] + 7 < settings.limits.enemySpeedRange[0]) {
-        settings.enemySpeedRange[0] += 7;
-      } else {
-        settings.enemySpeedRange[0] = settings.limits.enemySpeedRange[0];
-      }
-
-      // Increment enemy max speed.
-      if (settings.enemySpeedRange[1] + 25 < settings.limits.enemySpeedRange[1]) {
-        settings.enemySpeedRange[1] += 25;
-      } else {
-        settings.enemySpeedRange[1] = settings.limits.enemySpeedRange[1];
-      }
-
-      // Increment number of enemies.
-      if (wins % 3 === 0 && settings.numEnemies < settings.limits.numEnemies) {
-        settings.numEnemies++;
-      }
-
       this.reset();
+
+      updateDifficulty();
       spawnEnemies();
       spawnCollectables();
     };
@@ -261,15 +254,17 @@
       this.suspended = true;
       score -= 50;
       lives--;
-      this.animations.death.origY = this.y;  // Add a property to remember the y position at animation start.
+      sounds.died.play();
       this.animations.death.isPlaying = true;
     };
 
     this.deathAnimation = function(dt) {
-      if (this.y > this.animations.death.origY - 30) {
+      if (this.opacity - 1 * dt > 0) {
+        this.opacity -= 1 * dt;
         this.y -= 50 * dt;
         this.scale -= 0.3 * dt;
       } else {
+        this.opacity = 0;
         this.animations.death.isPlaying = false;
         this.finalizeDeath();
       }
@@ -299,6 +294,7 @@
       this.x = 101 * 2;
       this.y = 83 * 5 - 25;
       this.scale = 1;
+      this.opacity = 1;
       this.suspended = false;
     };
   };
@@ -596,6 +592,12 @@
   }
 
   function init() {
+    sounds.died = new Audio('sounds/died.wav');
+    sounds.died.volume = 0.01;
+    sounds.died.load();
+    sounds.won = new Audio('sounds/won.wav');
+    sounds.won.volume = 0.01;
+    sounds.won.load();
     player = new Player();  // Necessary for engine.js's updateEntities function.
   }
 
@@ -811,6 +813,7 @@
   function reset() {
     settings.numEnemies = settings.original.numEnemies;
     settings.enemySpeedRange = settings.original.enemySpeedRange;
+    settings.winsUntilNewEnemy = settings.original.winsUntilNewEnemy;
     wins = 0;
     lives = 3;
     score = 0;
@@ -847,6 +850,31 @@
     for (var i = 0; i < settings.numEnemies; i++) {
       var enemy = new Enemy();
       allEnemies.push(enemy);
+    }
+  }
+
+  function updateDifficulty() {
+    // Increment enemy min speed.
+    if (settings.enemySpeedRange[0] + settings.enemySpeedRangeIncrements[0] < settings.limits.enemySpeedRange[0]) {
+      settings.enemySpeedRange[0] += settings.enemySpeedRangeIncrements[0];
+    } else {
+      settings.enemySpeedRange[0] = settings.limits.enemySpeedRange[0];
+    }
+
+    // Increment enemy max speed.
+    if (settings.enemySpeedRange[1] + settings.enemySpeedRangeIncrements[1] < settings.limits.enemySpeedRange[1]) {
+      settings.enemySpeedRange[1] += settings.enemySpeedRangeIncrements[1];
+    } else {
+      settings.enemySpeedRange[1] = settings.limits.enemySpeedRange[1];
+    }
+
+    // Increment number of enemies.
+    if (wins % settings.winsUntilNewEnemy === 0 && settings.numEnemies < settings.limits.numEnemies) {
+      // Exclude the case where we've just incremented.
+      if (wins === settings.original.winsUntilNewEnemy || wins !== settings.winsUntilNewEnemy) {
+        settings.winsUntilNewEnemy += settings.winsUntilNewEnemyIncrement;
+        settings.numEnemies++;
+      }
     }
   }
 
