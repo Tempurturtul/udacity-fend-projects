@@ -6,10 +6,18 @@
   var canvas = document.getElementsByTagName('canvas')[0];
   var lives = 3;
   var score = 0;
+  var scores = [];
   var wins = 0;
   var allEnemies = [];
   var allCollectables = [];
   var player;
+  var playerSprites = [
+    'images/char-boy.png',
+    'images/char-cat-girl.png',
+    'images/char-horn-girl.png',
+    'images/char-pink-girl.png',
+    'images/char-princess-girl.png'
+  ];
   var menus = {
     start: {
       active: true,
@@ -20,7 +28,8 @@
           width: 65,
           height: 30,
           hovered: false,
-          pressed: false
+          pressed: false,
+          action: prevPlayerSprite
         },
         right: {
           x: (canvas.width - 2) / 2 + 5,  // Canvas-relative.
@@ -28,7 +37,8 @@
           width: 65,
           height: 30,
           hovered: false,
-          pressed: false
+          pressed: false,
+          action: nextPlayerSprite
         },
         play: {
           x: (canvas.width - 2) / 2 - 50,  // Canvas-relative.
@@ -36,19 +46,31 @@
           width: 100,
           height: 40,
           hovered: false,
-          pressed: false
+          pressed: false,
+          action: play
         }
       }
     },
     scores: {
-      active: false
+      active: false,
+      buttons: {
+        continue: {
+          x: (canvas.width - 2) / 2 - 70,  // Canvas-relative.
+          y: canvas.height - 80,           // Canvas-relative.
+          width: 140,
+          height: 40,
+          hovered: false,
+          pressed: false,
+          action: restart
+        }
+      }
     }
   };
   var settings = {
     numEnemies: 2,
     enemySpeedRange: [130, 300],
     numCollectables: 3,
-    playerSprite: 'images/char-boy.png',
+    playerSprite: playerSprites[0],
     original: {
       numEnemies: 2,
       enemySpeedRange: [130, 300]
@@ -118,6 +140,13 @@
     };
 
     this.handleInput = function(input) {
+      // Early abort if a menu is active.
+      for (var menu in menus) {
+        if (menus[menu].active) {
+          return;
+        }
+      }
+
       switch (input) {
         case 'left':
           if (this.x - 101 <= 0) {
@@ -180,7 +209,19 @@
 
     this.die = function() {
       if (--lives < 0) {
-        resetGame();
+        this.reset();
+        scores.push(score);
+        // Sort scores in descending order.
+        scores = scores.sort(function(a, b) {
+          if (a < b) {
+            return 1;
+          } else if (a > b) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+        menus.scores.active = true;
       } else {
         score -= 75;
         this.reset();
@@ -188,6 +229,7 @@
     };
 
     this.reset = function() {
+      this.sprite = settings.playerSprite;
       this.x = 101 * 2;
       this.y = 83 * 5 - 25;
     };
@@ -241,18 +283,13 @@
   // This listens for key presses and sends the keys to your
   // Player.handleInput() method. You don't need to modify this.
   document.addEventListener('keyup', onKeyUp);
-
   document.addEventListener('touchend', onTouchEnd);
-
+  document.addEventListener('touchstart', onTouchStart);
   canvas.addEventListener('mousemove', onCanvasMouseMove);
-
   canvas.addEventListener('mousedown', onCanvasMouseDown);
-
   canvas.addEventListener('mouseup', onCanvasMouseUp);
 
-  player = new Player();
-  spawnEnemies();
-  spawnCollectables();
+  init();
 
   global.player = player;
   global.allEnemies = allEnemies;
@@ -272,6 +309,7 @@
 
   function drawMenu(menu) {
     ctx.save();
+    var fillStyle;
 
     if (menu === 'start') {
       // Includes a top padding of 6px.
@@ -304,13 +342,12 @@
       ctx.strokeRect((canvas.width - 2) / 2 - 50, 156 + 30, 101, 171 - 30);
       ctx.fillRect((canvas.width - 2) / 2 - 50, 156 + 30, 101, 171 - 30);
 
-      // Draw the player preview.
+      // Draw the player preview sprite.
       // The player sprite is 101 x 171.
       ctx.shadowColor = "rgba(0, 0, 0, 0)";
       ctx.drawImage(Resources.get(settings.playerSprite), (canvas.width - 2) / 2 - 50, 156);
 
       // Draw the buttons.
-      var fillStyle;
 
       // Previous player sprite button.
       // If pressed...
@@ -394,12 +431,88 @@
       ctx.textAlign = 'center';  // start, end, left, right, center
       ctx.textBaseline = 'middle';  // top, hanging, middle, alphabetic, ideographic, bottom
       ctx.fillText('Play', (canvas.width - 2) / 2, canvas.height - 100);
-
-
-
     } else if (menu === 'scores') {
+      // Includes a top padding of 6px.
+
+      // Draw the background.
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#000';
+      ctx.fillStyle = '#f5f5f5';
       ctx.fillRect(0, 6, canvas.width, canvas.height - 6);
       ctx.strokeRect(1, 6, canvas.width - 2, canvas.height - 7);
+
+      // Draw the title.
+      ctx.fillStyle = '#393';
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
+      ctx.shadowBlur = 2;
+      ctx.shadowColor = "rgba(51, 153, 51, 0.3)";  // Equivalent to #393 with 50% alpha.
+      ctx.font = '38px serif';
+      ctx.textAlign = 'center';  // start, end, left, right, center
+      ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
+      ctx.fillText('Your High Scores', (canvas.width - 2) / 2, 60);
+
+      // Draw the high scores.
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+      ctx.strokeStyle = '#666';
+      ctx.fillStyle = '#fafafa';
+      ctx.strokeRect(20, 60 + 20, canvas.width - 40, canvas.height - 80 - 80 - 20);
+      ctx.fillRect(20, 60 + 20, canvas.width - 40, canvas.height - 80 - 80 - 20);
+
+      ctx.shadowColor = "rgba(0, 0, 0, 0.0)";
+      ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
+      var scoreTableHeight = (canvas.height - 80 - 80 - 20);
+      var scoreTableWidth = canvas.width - 40;
+
+      for (var i = 0; i < 20 && i < scores.length; i++) {
+        var col = 0;
+        var row = i % 10;
+
+        if (i >= 10) {
+          col = 1;
+        }
+
+        // Ranking.
+        ctx.textAlign = 'end';  // start, end, left, right, center
+        ctx.font = '20px serif';
+        ctx.fillStyle = '#666';
+        ctx.fillText('#' + (i + 1) + ':',  20 + 70 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
+        // Amount.
+        ctx.textAlign = 'start';  // start, end, left, right, center
+        ctx.font = '20px Courier';
+        ctx.fillStyle = '#333';
+        ctx.fillText(scores[i], 20 + 70 + 5 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
+      }
+
+      // Draw the buttons.
+
+      // Continue button.
+      // If pressed...
+      if (menus.scores.buttons.continue.pressed) {
+        fillStyle = '#ddd';
+      }
+      // Else, if hovered...
+      else if (menus.scores.buttons.continue.hovered) {
+        fillStyle = '#e7e7e7';
+      }
+      // Else...
+      else {
+        fillStyle = '#fafafa';
+      }
+
+      ctx.fillStyle = fillStyle;
+      ctx.strokeStyle = '#666';
+      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+      ctx.strokeRect((canvas.width - 2) / 2 - 70, canvas.height - 80, 140, 40);
+      ctx.fillRect((canvas.width - 2) / 2 - 70, canvas.height - 80, 140, 40);
+      ctx.shadowColor = "rgba(0, 0, 0, 0)";
+      ctx.fillStyle = '#393';  // Same as title.
+      ctx.font = '24px serif';
+      ctx.textAlign = 'center';  // start, end, left, right, center
+      ctx.textBaseline = 'middle';  // top, hanging, middle, alphabetic, ideographic, bottom
+      ctx.fillText('Continue', (canvas.width - 2) / 2, canvas.height - 60);
     }
 
     ctx.restore();
@@ -410,6 +523,20 @@
     ctx.textAlign = 'end';  // start, end, left, right, center
     ctx.textBaseline = 'top';  // top, hanging, middle, alphabetic, ideographic, bottom
     ctx.fillText('Score: ' + score, 101 * 5, 20);
+  }
+
+  function init() {
+    player = new Player();  // Necessary for engine.js's updateEntities function.
+  }
+
+  function nextPlayerSprite() {
+    var i = playerSprites.indexOf(settings.playerSprite);
+
+    if (++i >= playerSprites.length) {
+      i = 0;
+    }
+
+    settings.playerSprite = playerSprites[i];
   }
 
   function onKeyUp(e) {
@@ -424,53 +551,58 @@
   }
 
   function onCanvasMouseDown(e) {
-    // Start menu...
-    if (menus.start.active) {
-      for (var button in menus.start.buttons) {
-        button = menus.start.buttons[button];
+    for (var menu in menus) {
+      if (menus[menu].active) {
+        for (var button in menus[menu].buttons) {
+          button = menus[menu].buttons[button];
 
-        // Set pressed state to false initially.
-        button.pressed = false;
+          // Set pressed state to false initially.
+          button.pressed = false;
 
-        if (button.hovered) {
-          button.pressed = true;
+          if (button.hovered) {
+            button.pressed = true;
+          }
         }
       }
     }
   }
 
   function onCanvasMouseMove(e) {
-    // Start menu...
-    if (menus.start.active) {
-      for (var button in menus.start.buttons) {
-        button = menus.start.buttons[button];
+    for (var menu in menus) {
+      if (menus[menu].active) {
+        for (var button in menus[menu].buttons) {
+          button = menus[menu].buttons[button];
 
-        // Set hovered state to false initially.
-        button.hovered = false;
-        // Check if hovered on the x-axis.
-        if (e.layerX > button.x && e.layerX <= button.x + button.width) {
-          // Check if hovered on the y-axis.
-          if (e.layerY > button.y && e.layerY <= button.y + button.height) {
-            button.hovered = true;
+          // Set hovered state to false initially.
+          button.hovered = false;
+
+          // Check if hovered on the x-axis.
+          if (e.layerX > button.x && e.layerX <= button.x + button.width) {
+            // Check if hovered on the y-axis.
+            if (e.layerY > button.y && e.layerY <= button.y + button.height) {
+              button.hovered = true;
+            }
           }
-        }
 
-        // Set pressed state to false if not hovered.
-        if (!button.hovered) {
-          button.pressed = false;
+          // Set pressed state to false if not hovered.
+          if (!button.hovered) {
+            button.pressed = false;
+          }
         }
       }
     }
   }
 
   function onCanvasMouseUp(e) {
-    // Start menu...
-    if (menus.start.active) {
-      for (var button in menus.start.buttons) {
-        button = menus.start.buttons[button];
+    for (var menu in menus) {
+      if (menus[menu].active) {
+        for (var button in menus[menu].buttons) {
+          button = menus[menu].buttons[button];
 
-        if (button.hovered && button.pressed) {
-          button.pressed = false;
+          if (button.hovered && button.pressed) {
+            button.pressed = false;
+            button.action();
+          }
         }
       }
     }
@@ -479,35 +611,135 @@
   function onTouchEnd(e) {
     e.preventDefault();  // Prevent double-touch zoom.
 
-    var relativeToPlayer;
+    var handlingMenu = false;
 
-    var bodyRect = document.getElementsByTagName('body')[0].getBoundingClientRect();
-    var canvasRect = document.getElementsByTagName('canvas')[0].getBoundingClientRect();
-
-    var touchX = e.changedTouches[0].pageX;
-    var touchY = e.changedTouches[0].pageY;
-    var playerX = bodyRect.width / 2 - canvasRect.width / 2 + (player.x + 50);
-    var playerY = player.y + 124;
-    var buffer = 101 / 2;
-
-    if (Math.abs(touchX - playerX) > Math.abs(touchY - playerY)) {
-      if (touchX > playerX + buffer) {
-        relativeToPlayer = 'right';
-      } else if (touchX < playerX - buffer) {
-        relativeToPlayer = 'left';
-      }
-    } else {
-      if (touchY > playerY + buffer) {
-        relativeToPlayer = 'down';
-      } else if (touchY < playerY - buffer) {
-        relativeToPlayer = 'up';
+    // If any menus are active...
+    for (var menu in menus) {
+      if (menus[menu].active) {
+        handlingMenu = true;
+        handleMenuTouchEnd(menu);
       }
     }
 
-    player.handleInput(relativeToPlayer);
+    if (!handlingMenu) {
+      handleGameTouchEnd();
+    }
+
+    function handleMenuTouchEnd(menu) {
+      // Early abort if the touch didn't end on the canvas.
+      if (e.target !== canvas) {
+        // Set all buttons' hovered and pressed states to false.
+        for (var menuButton in menus[menu].buttons) {
+          menus[menu].buttons[menuButton].hovered = false;
+          menus[menu].buttons[menuButton].pressed = false;
+        }
+        return;
+      }
+
+      var canvasX = e.changedTouches[0].pageX - e.target.offsetLeft;  // The touch's canvas-relative x-axis position.
+      var canvasY = e.changedTouches[0].pageY - e.target.offsetTop;   // The touch's canvas-relative y-axis poisition.
+
+      // Check if the touch ended on a button.
+      for (var button in menus[menu].buttons) {
+        button = menus[menu].buttons[button];
+
+        // If the button isn't hovered, the touch didn't start on the button;
+        // therefore we don't care if it ends on the button.
+        if (button.hovered) {
+          // Check if aligned on the x-axis.
+          if (canvasX > button.x && canvasX <= button.x + button.width) {
+            // Check if aligned on the y-axis.
+            if (canvasY > button.y && canvasY <= button.y + button.height) {
+              button.action();
+            }
+          }
+
+          // Always set hovered and pressed to false on touch end.
+          button.hovered = button.pressed = false;
+        }
+      }
+    }
+
+    function handleGameTouchEnd() {
+      var relativeToPlayer;
+
+      var bodyRect = document.getElementsByTagName('body')[0].getBoundingClientRect();
+      var canvasRect = canvas.getBoundingClientRect();
+
+      var touchX = e.changedTouches[0].pageX;
+      var touchY = e.changedTouches[0].pageY;
+      var playerX = bodyRect.width / 2 - canvasRect.width / 2 + (player.x + 50);
+      var playerY = player.y + 124;
+      var buffer = 101 / 2;
+
+      if (Math.abs(touchX - playerX) > Math.abs(touchY - playerY)) {
+        if (touchX > playerX + buffer) {
+          relativeToPlayer = 'right';
+        } else if (touchX < playerX - buffer) {
+          relativeToPlayer = 'left';
+        }
+      } else {
+        if (touchY > playerY + buffer) {
+          relativeToPlayer = 'down';
+        } else if (touchY < playerY - buffer) {
+          relativeToPlayer = 'up';
+        }
+      }
+
+      player.handleInput(relativeToPlayer);
+    }
   }
 
-  function resetGame() {
+  function onTouchStart(e) {
+    // If any menus are active...
+    for (var menu in menus) {
+      if (menus[menu].active) {
+        handleMenuTouchStart(menu);
+      }
+    }
+
+    function handleMenuTouchStart(menu) {
+      // Early abort if the touch didn't start on the canvas.
+      if (e.target !== canvas) {
+        return;
+      }
+
+      var canvasX = e.changedTouches[0].pageX - e.target.offsetLeft;  // The touch's canvas-relative x-axis position.
+      var canvasY = e.changedTouches[0].pageY - e.target.offsetTop;   // The touch's canvas-relative y-axis poisition.
+
+      // Check if the touch started on a button.
+      for (var button in menus[menu].buttons) {
+        button = menus[menu].buttons[button];
+
+        // Check if aligned on the x-axis.
+        if (canvasX > button.x && canvasX <= button.x + button.width) {
+          // Check if aligned on the y-axis.
+          if (canvasY > button.y && canvasY <= button.y + button.height) {
+            button.hovered = button.pressed = true;
+          }
+        }
+      }
+    }
+  }
+
+  function play() {
+    for (var menu in menus) {
+      menus[menu].active = false;
+    }
+    reset();
+  }
+
+  function prevPlayerSprite() {
+    var i = playerSprites.indexOf(settings.playerSprite);
+
+    if (--i < 0) {
+      i = playerSprites.length - 1;
+    }
+
+    settings.playerSprite = playerSprites[i];
+  }
+
+  function reset() {
     settings.numEnemies = settings.original.numEnemies;
     settings.enemySpeedRange = settings.original.enemySpeedRange;
     wins = 0;
@@ -516,6 +748,17 @@
     spawnEnemies();
     spawnCollectables();
     player.reset();
+  }
+
+  function restart() {
+    for (var menu in menus) {
+      if (menu === 'start') {
+        menus[menu].active = true;
+      } else {
+        menus[menu].active = false;
+      }
+    }
+    reset();
   }
 
   function spawnCollectables() {
