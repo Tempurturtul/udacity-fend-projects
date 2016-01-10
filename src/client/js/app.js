@@ -935,12 +935,12 @@
     if (sound === 'won') {
       source = sounds.won.mediaElementSource;
       sounds.won.audio.currentTime = 0;  // Reset the audio.
-      sounds.won.audio.volume = 0.1;
+      sounds.won.audio.volume = 0.01;
       sounds.won.audio.play();
     } else if (sound === 'died') {
       source = sounds.died.mediaElementSource;
       sounds.died.audio.currentTime = 0;  // Reset the audio.
-      sounds.died.audio.volume = 0.1;
+      sounds.died.audio.volume = 0.01;
       sounds.died.audio.play();
     }
 
