@@ -295,11 +295,10 @@
 
     this.finalizeDeath = function() {
       if (lives < 0) {
-        updateScores();
-        menus.scores.active = true;
+        gameOver();
+      } else {
+        this.reset();
       }
-
-      this.reset();
     };
 
     this.reset = function() {
@@ -397,270 +396,11 @@
   }
 
   function drawMenu(menu) {
-    ctx.save();
-    var fillStyle;
-
     if (menu === 'start') {
-      // Includes a top padding of 6px.
-
-      // Draw the background.
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = '#000';
-      ctx.fillStyle = '#f5f5f5';
-      ctx.fillRect(0, 6, canvas.width, canvas.height - 6);
-      ctx.strokeRect(1, 6, canvas.width - 2, canvas.height - 7);
-
-      // Draw the title.
-      ctx.fillStyle = '#393';
-      ctx.shadowOffsetX = 2;
-      ctx.shadowOffsetY = 2;
-      ctx.shadowBlur = 2;
-      ctx.shadowColor = "rgba(51, 153, 51, 0.3)";  // Equivalent to #393 with 50% alpha.
-      ctx.font = '38px serif';
-      ctx.textAlign = 'center';  // start, end, left, right, center
-      ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
-      ctx.fillText('Escape By Water!', (canvas.width - 2) / 2, 86);
-
-
-      // Draw the player preview.
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-      ctx.strokeStyle = '#666';
-      ctx.fillStyle = '#fafafa';
-      ctx.strokeRect((canvas.width - 2) / 2 - 50, 156 + 30, 101, 171 - 30);
-      ctx.fillRect((canvas.width - 2) / 2 - 50, 156 + 30, 101, 171 - 30);
-
-      // Draw the player preview sprite.
-      // The player sprite is 101 x 171.
-      ctx.shadowColor = "rgba(0, 0, 0, 0)";
-      ctx.drawImage(Resources.get(settings.playerSprite), (canvas.width - 2) / 2 - 50, 156);
-
-      // Draw the buttons.
-
-      // Previous player sprite button.
-      // If pressed...
-      if (menus.start.buttons.left.pressed) {
-        fillStyle = '#ddd';
-      }
-      // Else, if hovered...
-      else if (menus.start.buttons.left.hovered) {
-        fillStyle = '#e7e7e7';
-      }
-      // Else...
-      else {
-        fillStyle = '#fafafa';
-      }
-
-      ctx.fillStyle = fillStyle;
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-      ctx.strokeRect((canvas.width - 2) / 2 - 50 - 20, 327 + 10, 65, 30);
-      ctx.fillRect((canvas.width - 2) / 2 - 50 - 20, 327 + 10, 65, 30);
-      ctx.strokeStyle = '#000';
-      ctx.shadowColor = "rgba(0, 0, 0, 0)";
-      ctx.beginPath();
-      ctx.moveTo((canvas.width - 2) / 2 - 50 - 20 + 45, 327 + 10 + 15);  // Base of arrow.
-      ctx.lineTo((canvas.width - 2) / 2 - 50 - 20 + 20, 327 + 10 + 15);  // Tip of arrow.
-      ctx.lineTo((canvas.width - 2) / 2 - 50 - 20 + 30, 327 + 10 + 10);  // Top angle of arrow.
-      ctx.moveTo((canvas.width - 2) / 2 - 50 - 20 + 20, 327 + 10 + 15);  // Tip of arrow.
-      ctx.lineTo((canvas.width - 2) / 2 - 50 - 20 + 30, 327 + 10 + 20);  // Bottom angle of arrow.
-      ctx.stroke();
-
-      // Next player sprite button.
-      // If pressed...
-      if (menus.start.buttons.right.pressed) {
-        fillStyle = '#ddd';
-      }
-      // Else, if hovered...
-      else if (menus.start.buttons.right.hovered) {
-        fillStyle = '#e7e7e7';
-      }
-      // Else...
-      else {
-        fillStyle = '#fafafa';
-      }
-
-      ctx.fillStyle = fillStyle;
-      ctx.strokeStyle = '#666';
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-      ctx.strokeRect((canvas.width - 2) / 2 + 5, 327 + 10, 65, 30);
-      ctx.fillRect((canvas.width - 2) / 2 + 5, 327 + 10, 65, 30);
-      ctx.strokeStyle = '#000';
-      ctx.shadowColor = "rgba(0, 0, 0, 0)";
-      ctx.beginPath();
-      ctx.moveTo((canvas.width - 2) / 2 + 5 + 20, 327 + 10 + 15);  // Base of arrow.
-      ctx.lineTo((canvas.width - 2) / 2 + 5 + 45, 327 + 10 + 15);  // Tip of arrow.
-      ctx.lineTo((canvas.width - 2) / 2 + 5 + 35, 327 + 10 + 10);  // Top angle of arrow.
-      ctx.moveTo((canvas.width - 2) / 2 + 5 + 45, 327 + 10 + 15);  // Tip of arrow.
-      ctx.lineTo((canvas.width - 2) / 2 + 5 + 35, 327 + 10 + 20);  // Bottom angle of arrow.
-      ctx.stroke();
-
-      // Play button.
-      // If pressed...
-      if (menus.start.buttons.play.pressed) {
-        fillStyle = '#ddd';
-      }
-      // Else, if hovered...
-      else if (menus.start.buttons.play.hovered) {
-        fillStyle = '#e7e7e7';
-      }
-      // Else...
-      else {
-        fillStyle = '#fafafa';
-      }
-
-      ctx.fillStyle = fillStyle;
-      ctx.strokeStyle = '#666';
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-      ctx.strokeRect((canvas.width - 2) / 2 - 50, canvas.height - 120, 100, 40);
-      ctx.fillRect((canvas.width - 2) / 2 - 50, canvas.height - 120, 100, 40);
-      ctx.shadowColor = "rgba(0, 0, 0, 0)";
-      ctx.fillStyle = '#393';  // Same as title.
-      ctx.font = '24px serif';
-      ctx.textAlign = 'center';  // start, end, left, right, center
-      ctx.textBaseline = 'middle';  // top, hanging, middle, alphabetic, ideographic, bottom
-      ctx.fillText('Play', (canvas.width - 2) / 2, canvas.height - 100);
-
-      // Bug Report button.
-      // If pressed...
-      if (menus.start.buttons.issues.pressed) {
-        fillStyle = '#ddd';
-      }
-      // Else, if hovered...
-      else if (menus.start.buttons.issues.hovered) {
-        fillStyle = '#e7e7e7';
-      }
-      // Else...
-      else {
-        fillStyle = '#fafafa';
-      }
-
-      ctx.fillStyle = fillStyle;
-      ctx.strokeStyle = '#666';
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-      ctx.strokeRect(10, canvas.height - 30, 20, 20);
-      ctx.fillRect(10, canvas.height - 30, 20, 20);
-
-      // Draw a little bug :)
-      ctx.beginPath();
-      // The body.
-      ctx.arc(20, canvas.height - 20, 5, 0, Math.PI, true);
-      ctx.lineTo(15, canvas.height - 18);
-      ctx.arc(20, canvas.height - 18, 5, Math.PI, 0, true);
-      ctx.lineTo(25, canvas.height - 20);
-      ctx.fillStyle = '#111';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0)';
-      ctx.fill();
-      // The antennae.
-      ctx.moveTo(17, canvas.height - 24);
-      ctx.lineTo(15, canvas.height - 27);
-      ctx.moveTo(23, canvas.height - 24);
-      ctx.lineTo(25, canvas.height - 27);
-      // The legs.
-      // Left middle.
-      ctx.moveTo(15, canvas.height - 19);
-      ctx.lineTo(12, canvas.height - 19);
-      // Right middle.
-      ctx.moveTo(25, canvas.height - 19);
-      ctx.lineTo(28, canvas.height - 19);
-      // Left bottom.
-      ctx.moveTo(16, canvas.height - 16);
-      ctx.lineTo(13, canvas.height - 15);
-      // Right bottom.
-      ctx.moveTo(24, canvas.height - 16);
-      ctx.lineTo(27, canvas.height - 15);
-
-      ctx.stroke();
-
+      drawStartMenu();
     } else if (menu === 'scores') {
-      // Includes a top padding of 6px.
-
-      // Draw the background.
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = '#000';
-      ctx.fillStyle = '#f5f5f5';
-      ctx.fillRect(0, 6, canvas.width, canvas.height - 6);
-      ctx.strokeRect(1, 6, canvas.width - 2, canvas.height - 7);
-
-      // Draw the title.
-      ctx.fillStyle = '#393';
-      ctx.shadowOffsetX = 2;
-      ctx.shadowOffsetY = 2;
-      ctx.shadowBlur = 2;
-      ctx.shadowColor = "rgba(51, 153, 51, 0.3)";  // Equivalent to #393 with 50% alpha.
-      ctx.font = '38px serif';
-      ctx.textAlign = 'center';  // start, end, left, right, center
-      ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
-      ctx.fillText('Your High Scores', (canvas.width - 2) / 2, 60);
-
-      // Draw the high scores.
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-      ctx.strokeStyle = '#666';
-      ctx.fillStyle = '#fafafa';
-      ctx.strokeRect(20, 60 + 20, canvas.width - 40, canvas.height - 80 - 80 - 20);
-      ctx.fillRect(20, 60 + 20, canvas.width - 40, canvas.height - 80 - 80 - 20);
-
-      ctx.shadowColor = "rgba(0, 0, 0, 0.0)";
-      ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
-      var scoreTableHeight = (canvas.height - 80 - 80 - 20);
-      var scoreTableWidth = canvas.width - 40;
-
-      for (var i = 0; i < 20 && i < scores.length; i++) {
-        var col = 0;
-        var row = i % 10;
-
-        if (i >= 10) {
-          col = 1;
-        }
-
-        // Ranking.
-        ctx.textAlign = 'end';  // start, end, left, right, center
-        ctx.font = '16px serif';
-        ctx.fillStyle = '#666';
-        ctx.fillText('#' + (i + 1) + ':',  20 + 40 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
-        // Amount.
-        ctx.textAlign = 'start';  // start, end, left, right, center
-        ctx.font = '20px Courier';
-        ctx.fillStyle = '#333';
-        ctx.fillText(scores[i].amount, 20 + 40 + 5 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
-        // Level.
-        ctx.font = '14px Courier';
-        ctx.fillStyle = '#777';
-        ctx.fillText('level ' + scores[i].level, 20 + 110 + 5 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
-      }
-
-      // Draw the buttons.
-
-      // Continue button.
-      // If pressed...
-      if (menus.scores.buttons.continue.pressed) {
-        fillStyle = '#ddd';
-      }
-      // Else, if hovered...
-      else if (menus.scores.buttons.continue.hovered) {
-        fillStyle = '#e7e7e7';
-      }
-      // Else...
-      else {
-        fillStyle = '#fafafa';
-      }
-
-      ctx.fillStyle = fillStyle;
-      ctx.strokeStyle = '#666';
-      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-      ctx.strokeRect((canvas.width - 2) / 2 - 70, canvas.height - 80, 140, 40);
-      ctx.fillRect((canvas.width - 2) / 2 - 70, canvas.height - 80, 140, 40);
-      ctx.shadowColor = "rgba(0, 0, 0, 0)";
-      ctx.fillStyle = '#393';  // Same as title.
-      ctx.font = '24px serif';
-      ctx.textAlign = 'center';  // start, end, left, right, center
-      ctx.textBaseline = 'middle';  // top, hanging, middle, alphabetic, ideographic, bottom
-      ctx.fillText('Continue', (canvas.width - 2) / 2, canvas.height - 60);
+      drawScoresMenu();
     }
-
-    ctx.restore();
   }
 
   function drawScore() {
@@ -670,6 +410,284 @@
     ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
     ctx.fillText('Score: ' + score, 101 * 5, 45);
     ctx.restore();
+  }
+
+  function drawScoresMenu() {
+    // Includes a top padding of 6px.
+    ctx.save();
+
+    var fillStyle;
+
+    // Draw the background.
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#000';
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fillRect(0, 6, canvas.width, canvas.height - 6);
+    ctx.strokeRect(1, 6, canvas.width - 2, canvas.height - 7);
+
+    // Draw the title.
+    ctx.fillStyle = '#393';
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = "rgba(51, 153, 51, 0.3)";  // Equivalent to #393 with 50% alpha.
+    ctx.font = '38px serif';
+    ctx.textAlign = 'center';  // start, end, left, right, center
+    ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
+    ctx.fillText('Your High Scores', (canvas.width - 2) / 2, 60);
+
+    // Draw the high scores.
+    ctx.shadowOffsetX = 1;
+    ctx.shadowOffsetY = 1;
+    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    ctx.strokeStyle = '#666';
+    ctx.fillStyle = '#fafafa';
+    ctx.strokeRect(20, 60 + 20, canvas.width - 40, canvas.height - 80 - 80 - 20);
+    ctx.fillRect(20, 60 + 20, canvas.width - 40, canvas.height - 80 - 80 - 20);
+
+    ctx.shadowColor = "rgba(0, 0, 0, 0.0)";
+    ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
+    var scoreTableHeight = (canvas.height - 80 - 80 - 20);
+    var scoreTableWidth = canvas.width - 40;
+
+    for (var i = 0; i < 20 && i < scores.length; i++) {
+      var col = 0;
+      var row = i % 10;
+
+      if (i >= 10) {
+        col = 1;
+      }
+
+      // Ranking.
+      ctx.textAlign = 'end';  // start, end, left, right, center
+      ctx.font = '16px serif';
+      ctx.fillStyle = '#666';
+      ctx.fillText('#' + (i + 1) + ':',  20 + 40 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
+      // Amount.
+      ctx.textAlign = 'start';  // start, end, left, right, center
+      ctx.font = '20px Courier';
+      ctx.fillStyle = '#333';
+      ctx.fillText(scores[i].amount, 20 + 40 + 5 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
+      // Level.
+      ctx.font = '14px Courier';
+      ctx.fillStyle = '#777';
+      ctx.fillText('level ' + scores[i].level, 20 + 110 + 5 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
+    }
+
+    // Draw the buttons.
+
+    // Continue button.
+    // If pressed...
+    if (menus.scores.buttons.continue.pressed) {
+      fillStyle = '#ddd';
+    }
+    // Else, if hovered...
+    else if (menus.scores.buttons.continue.hovered) {
+      fillStyle = '#e7e7e7';
+    }
+    // Else...
+    else {
+      fillStyle = '#fafafa';
+    }
+
+    ctx.fillStyle = fillStyle;
+    ctx.strokeStyle = '#666';
+    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    ctx.strokeRect((canvas.width - 2) / 2 - 70, canvas.height - 80, 140, 40);
+    ctx.fillRect((canvas.width - 2) / 2 - 70, canvas.height - 80, 140, 40);
+    ctx.shadowColor = "rgba(0, 0, 0, 0)";
+    ctx.fillStyle = '#393';  // Same as title.
+    ctx.font = '24px serif';
+    ctx.textAlign = 'center';  // start, end, left, right, center
+    ctx.textBaseline = 'middle';  // top, hanging, middle, alphabetic, ideographic, bottom
+    ctx.fillText('Continue', (canvas.width - 2) / 2, canvas.height - 60);
+
+    ctx.restore();
+  }
+
+  function drawStartMenu() {
+    ctx.save();
+    var fillStyle;
+
+    // Includes a top padding of 6px.
+
+    // Draw the background.
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#000';
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fillRect(0, 6, canvas.width, canvas.height - 6);
+    ctx.strokeRect(1, 6, canvas.width - 2, canvas.height - 7);
+
+    // Draw the title.
+    ctx.fillStyle = '#393';
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = "rgba(51, 153, 51, 0.3)";  // Equivalent to #393 with 50% alpha.
+    ctx.font = '38px serif';
+    ctx.textAlign = 'center';  // start, end, left, right, center
+    ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
+    ctx.fillText('Escape By Water!', (canvas.width - 2) / 2, 86);
+
+
+    // Draw the player preview.
+    ctx.shadowOffsetX = 1;
+    ctx.shadowOffsetY = 1;
+    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    ctx.strokeStyle = '#666';
+    ctx.fillStyle = '#fafafa';
+    ctx.strokeRect((canvas.width - 2) / 2 - 50, 156 + 30, 101, 171 - 30);
+    ctx.fillRect((canvas.width - 2) / 2 - 50, 156 + 30, 101, 171 - 30);
+
+    // Draw the player preview sprite.
+    // The player sprite is 101 x 171.
+    ctx.shadowColor = "rgba(0, 0, 0, 0)";
+    ctx.drawImage(Resources.get(settings.playerSprite), (canvas.width - 2) / 2 - 50, 156);
+
+    // Draw the buttons.
+
+    // Previous player sprite button.
+    // If pressed...
+    if (menus.start.buttons.left.pressed) {
+      fillStyle = '#ddd';
+    }
+    // Else, if hovered...
+    else if (menus.start.buttons.left.hovered) {
+      fillStyle = '#e7e7e7';
+    }
+    // Else...
+    else {
+      fillStyle = '#fafafa';
+    }
+
+    ctx.fillStyle = fillStyle;
+    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    ctx.strokeRect((canvas.width - 2) / 2 - 50 - 20, 327 + 10, 65, 30);
+    ctx.fillRect((canvas.width - 2) / 2 - 50 - 20, 327 + 10, 65, 30);
+    ctx.strokeStyle = '#000';
+    ctx.shadowColor = "rgba(0, 0, 0, 0)";
+    ctx.beginPath();
+    ctx.moveTo((canvas.width - 2) / 2 - 50 - 20 + 45, 327 + 10 + 15);  // Base of arrow.
+    ctx.lineTo((canvas.width - 2) / 2 - 50 - 20 + 20, 327 + 10 + 15);  // Tip of arrow.
+    ctx.lineTo((canvas.width - 2) / 2 - 50 - 20 + 30, 327 + 10 + 10);  // Top angle of arrow.
+    ctx.moveTo((canvas.width - 2) / 2 - 50 - 20 + 20, 327 + 10 + 15);  // Tip of arrow.
+    ctx.lineTo((canvas.width - 2) / 2 - 50 - 20 + 30, 327 + 10 + 20);  // Bottom angle of arrow.
+    ctx.stroke();
+
+    // Next player sprite button.
+    // If pressed...
+    if (menus.start.buttons.right.pressed) {
+      fillStyle = '#ddd';
+    }
+    // Else, if hovered...
+    else if (menus.start.buttons.right.hovered) {
+      fillStyle = '#e7e7e7';
+    }
+    // Else...
+    else {
+      fillStyle = '#fafafa';
+    }
+
+    ctx.fillStyle = fillStyle;
+    ctx.strokeStyle = '#666';
+    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    ctx.strokeRect((canvas.width - 2) / 2 + 5, 327 + 10, 65, 30);
+    ctx.fillRect((canvas.width - 2) / 2 + 5, 327 + 10, 65, 30);
+    ctx.strokeStyle = '#000';
+    ctx.shadowColor = "rgba(0, 0, 0, 0)";
+    ctx.beginPath();
+    ctx.moveTo((canvas.width - 2) / 2 + 5 + 20, 327 + 10 + 15);  // Base of arrow.
+    ctx.lineTo((canvas.width - 2) / 2 + 5 + 45, 327 + 10 + 15);  // Tip of arrow.
+    ctx.lineTo((canvas.width - 2) / 2 + 5 + 35, 327 + 10 + 10);  // Top angle of arrow.
+    ctx.moveTo((canvas.width - 2) / 2 + 5 + 45, 327 + 10 + 15);  // Tip of arrow.
+    ctx.lineTo((canvas.width - 2) / 2 + 5 + 35, 327 + 10 + 20);  // Bottom angle of arrow.
+    ctx.stroke();
+
+    // Play button.
+    // If pressed...
+    if (menus.start.buttons.play.pressed) {
+      fillStyle = '#ddd';
+    }
+    // Else, if hovered...
+    else if (menus.start.buttons.play.hovered) {
+      fillStyle = '#e7e7e7';
+    }
+    // Else...
+    else {
+      fillStyle = '#fafafa';
+    }
+
+    ctx.fillStyle = fillStyle;
+    ctx.strokeStyle = '#666';
+    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    ctx.strokeRect((canvas.width - 2) / 2 - 50, canvas.height - 120, 100, 40);
+    ctx.fillRect((canvas.width - 2) / 2 - 50, canvas.height - 120, 100, 40);
+    ctx.shadowColor = "rgba(0, 0, 0, 0)";
+    ctx.fillStyle = '#393';  // Same as title.
+    ctx.font = '24px serif';
+    ctx.textAlign = 'center';  // start, end, left, right, center
+    ctx.textBaseline = 'middle';  // top, hanging, middle, alphabetic, ideographic, bottom
+    ctx.fillText('Play', (canvas.width - 2) / 2, canvas.height - 100);
+
+    // Bug Report button.
+    // If pressed...
+    if (menus.start.buttons.issues.pressed) {
+      fillStyle = '#ddd';
+    }
+    // Else, if hovered...
+    else if (menus.start.buttons.issues.hovered) {
+      fillStyle = '#e7e7e7';
+    }
+    // Else...
+    else {
+      fillStyle = '#fafafa';
+    }
+
+    ctx.fillStyle = fillStyle;
+    ctx.strokeStyle = '#666';
+    ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    ctx.strokeRect(10, canvas.height - 30, 20, 20);
+    ctx.fillRect(10, canvas.height - 30, 20, 20);
+
+    // Draw a little bug :)
+    ctx.beginPath();
+    // The body.
+    ctx.arc(20, canvas.height - 20, 5, 0, Math.PI, true);
+    ctx.lineTo(15, canvas.height - 18);
+    ctx.arc(20, canvas.height - 18, 5, Math.PI, 0, true);
+    ctx.lineTo(25, canvas.height - 20);
+    ctx.fillStyle = '#111';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+    ctx.fill();
+    // The antennae.
+    ctx.moveTo(17, canvas.height - 24);
+    ctx.lineTo(15, canvas.height - 27);
+    ctx.moveTo(23, canvas.height - 24);
+    ctx.lineTo(25, canvas.height - 27);
+    // The legs.
+    // Left middle.
+    ctx.moveTo(15, canvas.height - 19);
+    ctx.lineTo(12, canvas.height - 19);
+    // Right middle.
+    ctx.moveTo(25, canvas.height - 19);
+    ctx.lineTo(28, canvas.height - 19);
+    // Left bottom.
+    ctx.moveTo(16, canvas.height - 16);
+    ctx.lineTo(13, canvas.height - 15);
+    // Right bottom.
+    ctx.moveTo(24, canvas.height - 16);
+    ctx.lineTo(27, canvas.height - 15);
+
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function gameOver() {
+    updateScores();
+    menus.scores.active = true;
+    allEnemies.length = 0;
+    allCollectables.length = 0;
   }
 
   function init() {
