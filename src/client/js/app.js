@@ -4,6 +4,9 @@
   var Resources = global.Resources;
   var document = global.document;
   var canvas = document.getElementsByTagName('canvas')[0];
+  var audioCtx;  // Initialized in init.
+  var sounds;    // Initialized in init.
+  var audioPrimed = false;  // Primed by onTouchEnd or onKeyUp.
   var lives = 3;
   var level = 1;
   var score = 0;
@@ -96,7 +99,6 @@
       enemySpeedRange: [200, 500]
     }
   };
-  var sounds = {};  // Initialized in init.
   // Enemies our player must avoid
   var Enemy = function() {
       // Variables applied to each of our instances go here,
@@ -253,7 +255,7 @@
       score += settings.winValue;
       wins++;
       level++;
-      sounds.won.play();
+      playSound('won');
       this.animations.win.isPlaying = true;
     };
 
@@ -277,7 +279,7 @@
     this.die = function() {
       this.suspended = true;
       lives--;
-      sounds.died.play();
+      playSound('died');
       this.animations.death.isPlaying = true;
     };
 
@@ -691,12 +693,25 @@
   }
 
   function init() {
-    sounds.died = new Audio('sounds/died.wav');
-    sounds.died.volume = 0.01;
-    sounds.died.load();
-    sounds.won = new Audio('sounds/won.wav');
-    sounds.won.volume = 0.01;
-    sounds.won.load();
+    audioCtx = new global.window.AudioContext();
+    var died = new Audio('sounds/died.wav');
+    var won = new Audio('sounds/won.wav');
+    died.volume = 0;  // Initialize with 0 volume.
+    won.volume = 0;   // Initialize with 0 volume.
+    var diedMediaElementSource = audioCtx.createMediaElementSource(died);
+    var wonMediaElementSource = audioCtx.createMediaElementSource(won);
+
+    sounds = {
+      died: {
+        audio: died,
+        mediaElementSource: diedMediaElementSource
+      },
+      won: {
+        audio: won,
+        mediaElementSource: wonMediaElementSource
+      }
+    };
+
     player = new Player();  // Necessary for engine.js's updateEntities function.
 
     // Load scores from local storage or cookie if present.
@@ -714,6 +729,10 @@
   }
 
   function onKeyUp(e) {
+    if (!audioPrimed) {
+      primeAudio();
+    }
+
     var allowedKeys = {
         37: 'left',
         38: 'up',
@@ -784,6 +803,10 @@
 
   function onTouchEnd(e) {
     e.preventDefault();  // Prevent double-touch zoom.
+
+    if (!audioPrimed) {
+      primeAudio();
+    }
 
     var handlingMenu = false;
 
@@ -906,6 +929,24 @@
     reset();
   }
 
+  function playSound(sound) {
+    var source;
+
+    if (sound === 'won') {
+      source = sounds.won.mediaElementSource;
+      sounds.won.audio.currentTime = 0;  // Reset the audio.
+      sounds.won.audio.volume = 0.1;
+      sounds.won.audio.play();
+    } else if (sound === 'died') {
+      source = sounds.died.mediaElementSource;
+      sounds.died.audio.currentTime = 0;  // Reset the audio.
+      sounds.died.audio.volume = 0.1;
+      sounds.died.audio.play();
+    }
+
+    source.connect(audioCtx.destination);
+  }
+
   function prevPlayerSprite() {
     var i = playerSprites.indexOf(settings.playerSprite);
 
@@ -914,6 +955,15 @@
     }
 
     settings.playerSprite = playerSprites[i];
+  }
+
+  function primeAudio() {
+    // Many mobile devices prevent sounds from being played except as a
+    // response to a user event action.
+    for (var sound in sounds) {
+      sounds[sound].audio.play();
+    }
+    audioPrimed = true;
   }
 
   function reset() {
