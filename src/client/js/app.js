@@ -72,7 +72,7 @@
     enemySpeedRange: [130, 300],
     winsUntilNewEnemy: 3,
     winsUntilNewEnemyIncrement: 3,
-    enemySpeedRangeIncrements: [10, 20],
+    enemySpeedRangeIncrements: [5, 20],
     numCollectables: 3,
     collectableValue: 50,
     winValue: 200,
@@ -84,7 +84,7 @@
     },
     limits: {
       numEnemies: 5,
-      enemySpeedRange: [200, 600]
+      enemySpeedRange: [200, 500]
     }
   };
   var sounds = {};  // Initialized in init.
@@ -98,7 +98,7 @@
       this.sprite = 'images/enemy-bug.png';
       this.x = util.randomRange(0, 101 * 4);
       this.y = 83 * util.randomRange(1, 3) - 25;
-      this.speed = util.randomRange(settings.enemySpeedRange[0], settings.enemySpeedRange[1]);
+      this.speed = getSpeed();
 
       // Update the enemy's position, required method for game
       // Parameter: dt, a time delta between ticks
@@ -111,7 +111,7 @@
         if (this.x >= 101 * 5) {
           this.x = -101;
           this.y = 83 * util.randomRange(1, 3) - 25;
-          this.speed = util.randomRange(settings.enemySpeedRange[0], settings.enemySpeedRange[1]);
+          this.speed = getSpeed();
         }
 
         this.handleCollisions();
@@ -130,6 +130,17 @@
           }
         }
       };
+
+      // Biased towards lower speeds.
+      function getSpeed() {
+        // Retrieve a random speed within the allowable range.
+        var s = util.randomRange(settings.enemySpeedRange[0], settings.enemySpeedRange[1]);
+
+        // Reduce the random speed by a percentage of 0% to 50% without reducing it below the allowable range.
+        s = Math.max(Math.round(s * util.randomRange(50, 100) * 0.01), settings.enemySpeedRange[0]);
+
+        return s;
+      }
   };
   // Now write your own player class
   // This class requires an update(), render() and
