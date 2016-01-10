@@ -734,10 +734,14 @@
     }
 
     var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
+        37: 'left',  // left arrow
+        65: 'left',  // a
+        38: 'up',    // up arrow
+        87: 'up',    // w
+        39: 'right', // right arrow
+        68: 'right', // d
+        40: 'down',  // down arrow
+        83: 'down'   // s
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
