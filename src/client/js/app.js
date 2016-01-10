@@ -5,6 +5,7 @@
   var document = global.document;
   var canvas = document.getElementsByTagName('canvas')[0];
   var lives = 3;
+  var level = 1;
   var score = 0;
   var scores = [];
   var wins = 0;
@@ -73,6 +74,8 @@
     winsUntilNewEnemyIncrement: 3,
     enemySpeedRangeIncrements: [10, 20],
     numCollectables: 3,
+    collectableValue: 50,
+    winValue: 200,
     playerSprite: playerSprites[0],
     original: {
       numEnemies: 2,
@@ -227,8 +230,9 @@
 
     this.win = function() {
       this.suspended = true;
-      score += 100;
+      score += settings.winValue;
       wins++;
+      level++;
       sounds.won.play();
       this.animations.win.isPlaying = true;
     };
@@ -252,7 +256,6 @@
 
     this.die = function() {
       this.suspended = true;
-      score -= 50;
       lives--;
       sounds.died.play();
       this.animations.death.isPlaying = true;
@@ -272,17 +275,7 @@
 
     this.finalizeDeath = function() {
       if (lives < 0) {
-        scores.push(score);
-        // Sort scores in descending order.
-        scores = scores.sort(function(a, b) {
-          if (a < b) {
-            return 1;
-          } else if (a > b) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
+        updateScores();
         menus.scores.active = true;
       }
 
@@ -334,7 +327,7 @@
     this.handleCollisions = function() {
       if (!player.suspended) {
         if (this.y - 60 === player.y + 25 && (this.origX + 101 / 2 > player.x && this.origX - 101 < player.x)) {
-          score += 25;
+          score += settings.collectableValue;
           this.destroy();
         }
       }
@@ -362,8 +355,18 @@
   global.allCollectables = allCollectables;
   global.drawScore = drawScore;
   global.drawLives = drawLives;
+  global.drawLevel = drawLevel;
   global.drawMenu = drawMenu;
   global.menus = menus;
+
+  function drawLevel() {
+    ctx.save();
+    ctx.font = '20px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Level - ' + level, 101 * 2.5, 45);
+    ctx.restore();
+  }
 
   function drawLives() {
     var x = 0;
@@ -542,14 +545,18 @@
 
         // Ranking.
         ctx.textAlign = 'end';  // start, end, left, right, center
-        ctx.font = '20px serif';
+        ctx.font = '16px serif';
         ctx.fillStyle = '#666';
-        ctx.fillText('#' + (i + 1) + ':',  20 + 70 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
+        ctx.fillText('#' + (i + 1) + ':',  20 + 40 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
         // Amount.
         ctx.textAlign = 'start';  // start, end, left, right, center
         ctx.font = '20px Courier';
         ctx.fillStyle = '#333';
-        ctx.fillText(scores[i], 20 + 70 + 5 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
+        ctx.fillText(scores[i].amount, 20 + 40 + 5 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
+        // Level.
+        ctx.font = '14px Courier';
+        ctx.fillStyle = '#777';
+        ctx.fillText('level ' + scores[i].level, 20 + 110 + 5 + (Math.floor(scoreTableWidth / 2) * col), 80 + 25 + Math.floor((scoreTableHeight - 35) / 9) * row);
       }
 
       // Draw the buttons.
@@ -585,10 +592,12 @@
   }
 
   function drawScore() {
-    ctx.font = '28px serif';
+    ctx.save();
+    ctx.font = '24px serif';
     ctx.textAlign = 'end';  // start, end, left, right, center
-    ctx.textBaseline = 'top';  // top, hanging, middle, alphabetic, ideographic, bottom
-    ctx.fillText('Score: ' + score, 101 * 5, 20);
+    ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
+    ctx.fillText('Score: ' + score, 101 * 5, 45);
+    ctx.restore();
   }
 
   function init() {
@@ -599,6 +608,9 @@
     sounds.won.volume = 0.01;
     sounds.won.load();
     player = new Player();  // Necessary for engine.js's updateEntities function.
+
+    // Load scores from local storage or cookie if present.
+    scores = retrieveScores();
   }
 
   function nextPlayerSprite() {
@@ -816,6 +828,7 @@
     settings.winsUntilNewEnemy = settings.original.winsUntilNewEnemy;
     wins = 0;
     lives = 3;
+    level = 1;
     score = 0;
     spawnEnemies();
     spawnCollectables();
@@ -831,6 +844,28 @@
       }
     }
     reset();
+  }
+
+  function retrieveScores() {
+    // Return sorted scores from local storage, otherwise return empty array.
+
+    if (util.storageAvailable('localStorage')) {
+      var retrievedScores = JSON.parse(global.window.localStorage.getItem('scores')) || [];
+      return retrievedScores;
+    } else {
+      console.warn('Unable to retrieve high scores; local storage is unavailable.');
+      return [];
+    }
+  }
+
+  function saveScores() {
+    // Save sorted scores to local storage.
+
+    if (util.storageAvailable('localStorage')) {
+      global.window.localStorage.setItem('scores', JSON.stringify(scores));
+    } else {
+      console.warn('High scores not saved; local storage is unavailable.');
+    }
   }
 
   function spawnCollectables() {
@@ -876,6 +911,26 @@
         settings.numEnemies++;
       }
     }
+  }
+
+  function updateScores() {
+    scores.push({
+      'amount': score,
+      'level': level
+    });
+
+    // Sort scores in descending order.
+    scores = scores.sort(function(a, b) {
+      if (a.amount < b.amount) {
+        return 1;
+      } else if (a.amount > b.amount) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
+    saveScores();
   }
 
 })(this);

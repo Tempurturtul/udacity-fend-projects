@@ -170,6 +170,7 @@ var Engine = (function(global) {
         // Draw the score.
         drawScore();
         drawLives();
+        drawLevel();
 
         // Draw the collectables.
         allCollectables.forEach(function(collectable) {

@@ -1,7 +1,8 @@
 (function(global) {
   global.util = {
     compareRanges: compareRanges,
-    randomRange: randomRange
+    randomRange: randomRange,
+    storageAvailable: storageAvailable
   };
 
   /**
@@ -25,5 +26,22 @@
   // Returns random number between min (included) and max (included).
   function randomRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // Detects whether localStorage is both supported and available.
+  // Courtesy of MDN: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+  function storageAvailable(type) {
+    try {
+      var storage = global.window[type];
+      var x = '__storage_test__';
+
+      storage.setItem(x, x);
+      storage.removeItem(x);
+
+      return true;
+    }
+    catch(e) {
+      return false;
+    }
   }
 })(this);
