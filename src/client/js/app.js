@@ -452,7 +452,7 @@
     var scoreTableHeight = (canvas.height - 80 - 80 - 20);
     var scoreTableWidth = canvas.width - 40;
 
-    for (var i = 0; i < 20 && i < scores.length; i++) {
+    for (var i = 0, len = scores.length; i < 20 && i < len; i++) {
       var col = 0;
       var row = i % 10;
 
