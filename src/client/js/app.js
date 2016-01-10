@@ -49,6 +49,15 @@
           hovered: false,
           pressed: false,
           action: play
+        },
+        issues: {
+          x: 10,                 // Canvas-relative.
+          y: canvas.height - 30, // Canvas-relative.
+          width: 20,
+          height: 20,
+          hovered: false,
+          pressed: false,
+          action: openBugTacker
         }
       }
     },
@@ -511,6 +520,58 @@
       ctx.textAlign = 'center';  // start, end, left, right, center
       ctx.textBaseline = 'middle';  // top, hanging, middle, alphabetic, ideographic, bottom
       ctx.fillText('Play', (canvas.width - 2) / 2, canvas.height - 100);
+
+      // Bug Report button.
+      // If pressed...
+      if (menus.start.buttons.issues.pressed) {
+        fillStyle = '#ddd';
+      }
+      // Else, if hovered...
+      else if (menus.start.buttons.issues.hovered) {
+        fillStyle = '#e7e7e7';
+      }
+      // Else...
+      else {
+        fillStyle = '#fafafa';
+      }
+
+      ctx.fillStyle = fillStyle;
+      ctx.strokeStyle = '#666';
+      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+      ctx.strokeRect(10, canvas.height - 30, 20, 20);
+      ctx.fillRect(10, canvas.height - 30, 20, 20);
+
+      // Draw a little bug :)
+      ctx.beginPath();
+      // The body.
+      ctx.arc(20, canvas.height - 20, 5, 0, Math.PI, true);
+      ctx.lineTo(15, canvas.height - 18);
+      ctx.arc(20, canvas.height - 18, 5, Math.PI, 0, true);
+      ctx.lineTo(25, canvas.height - 20);
+      ctx.fillStyle = '#111';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+      ctx.fill();
+      // The antennae.
+      ctx.moveTo(17, canvas.height - 24);
+      ctx.lineTo(15, canvas.height - 27);
+      ctx.moveTo(23, canvas.height - 24);
+      ctx.lineTo(25, canvas.height - 27);
+      // The legs.
+      // Left middle.
+      ctx.moveTo(15, canvas.height - 19);
+      ctx.lineTo(12, canvas.height - 19);
+      // Right middle.
+      ctx.moveTo(25, canvas.height - 19);
+      ctx.lineTo(28, canvas.height - 19);
+      // Left bottom.
+      ctx.moveTo(16, canvas.height - 16);
+      ctx.lineTo(13, canvas.height - 15);
+      // Right bottom.
+      ctx.moveTo(24, canvas.height - 16);
+      ctx.lineTo(27, canvas.height - 15);
+
+      ctx.stroke();
+
     } else if (menu === 'scores') {
       // Includes a top padding of 6px.
 
@@ -814,6 +875,10 @@
         }
       }
     }
+  }
+
+  function openBugTacker() {
+    global.window.open('https://github.com/Tempurturtul/fend-frogger/issues', '_blank');
   }
 
   function play() {
