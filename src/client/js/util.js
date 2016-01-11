@@ -1,7 +1,11 @@
+/* util.js
+ * This file provides utility functions for use by other aspects of the program.
+ */
+
 (function(global) {
   global.util = {
     compareRanges: compareRanges,
-    randomRange: randomRange,
+    randomFromRange: randomFromRange,
     storageAvailable: storageAvailable
   };
 
@@ -23,13 +27,20 @@
     }
   }
 
-  // Returns random number between min (included) and max (included).
-  function randomRange(min, max) {
+  /**
+   * Returns random integer between min (included) and max (included).
+   * @returns {number} A random integer between min and max (inclusive).
+   */
+  function randomFromRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  // Detects whether localStorage is both supported and available.
-  // Courtesy of MDN: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+  /**
+   * Detects whether localStorage is both supported and available.
+   * Courtesy of MDN: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+   * @param {string} type - The type of storage to check ('localStorage' for example).
+   * @returns {boolean} True if storage is available, false otherwise.
+   */
   function storageAvailable(type) {
     try {
       var storage = global.window[type];

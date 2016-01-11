@@ -1,20 +1,64 @@
+/* app.js
+ * This file handles the game state, sounds, logic, menus, and necessary event
+ * listeners. It relies on engine.js for the game loop and for initiating calls
+ * to appropriate render, update, and draw methods.
+ */
+
 (function(global) {
-  var util = global.util;
-  var ctx = global.ctx;
-  var Resources = global.Resources;
+  // The global properties we'll use.
+  var window = global.window;
   var document = global.document;
   var canvas = document.getElementsByTagName('canvas')[0];
-  var audioCtx;  // Initialized in init.
-  var sounds;    // Initialized in init.
-  var audioPrimed = false;  // Primed by onTouchEnd or onKeyUp.
-  var lives = 3;
-  var level = 1;
-  var score = 0;
-  var scores = [];
-  var wins = 0;
+  var util = global.util;  // Exposed by util.js.
+  var ctx = global.ctx;  // Exposed by engine.js.
+  var Resources = global.Resources;  // Exposed by resources.js.
+
+  var audioCtx = new window.AudioContext();
+  var sounds = {
+    died: {
+      audio: new Audio('sounds/died.wav'),
+      mediaElementSource: null  // Created in init.
+    },
+    won: {
+      audio: new Audio('sounds/won.wav'),
+      mediaElementSource: null  // Created in init.
+    },
+    collectablePickup: {
+      audio: new Audio('sounds/collectable-pickup.wav'),
+      mediaElementSource: null  // Created in init.
+    },
+    buttonPress: {
+      audio: new Audio('sounds/button-press.wav'),
+      mediaElementSource: null  // Created in init.
+    }
+  };
+  // Audio needs to be primed by a user event on mobile devices.
+  var audioPrimed = false;
+  var player;
   var allEnemies = [];
   var allCollectables = [];
-  var player;
+  // The user's past scores.
+  var scores = [];
+  // Track the game state.
+  var gameState = {
+    lives: 3,
+    level: 1,
+    score: 0,
+    numEnemies: 2,
+    enemySpeedRange: [130, 300],
+    newEnemyLevel: 5,
+    numCollectables: 3,
+    original: {
+      lives: 3,
+      level: 1,
+      score: 0,
+      numEnemies: 2,
+      enemySpeedRange: [130, 300],
+      newEnemyLevel: 5,
+      numCollectables: 3
+    }
+  };
+  // The available player sprites.
   var playerSprites = [
     'images/char-boy.png',
     'images/char-cat-girl.png',
@@ -79,87 +123,75 @@
       }
     }
   };
+  // User-modifiable settings.
   var settings = {
-    numEnemies: 2,
-    enemySpeedRange: [130, 300],
-    winsUntilNewEnemy: 3,
-    winsUntilNewEnemyIncrement: 3,
-    enemySpeedRangeIncrements: [5, 20],
-    numCollectables: 3,
-    collectableValue: 50,
-    winValue: 200,
-    playerSprite: playerSprites[0],
-    original: {
-      numEnemies: 2,
-      enemySpeedRange: [130, 300],
-      winsUntilNewEnemy: 3
-    },
-    limits: {
-      numEnemies: 5,
-      enemySpeedRange: [200, 500]
+    playerSprite: playerSprites[0]
+  };
+
+  // The base class for all entities (enemies, collectables, player...).
+  var Entity = function(sprite, x, y) {
+    this.sprite = sprite;
+    this.x = x;
+    this.y = y;
+
+    // The basic render method.
+    this.render = function() {
+      ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    };
+  };
+  var Enemy = function() {
+    var sprite = 'images/enemy-bug.png';
+    var x = util.randomFromRange(0, 101 * 4);
+    var y = 83 * util.randomFromRange(1, 3) - 25;
+
+    Entity.call(this, sprite, x, y);
+
+    this.speed = getSpeed();
+
+    this.update = function(dt) {
+      this.x += this.speed * dt;
+
+      if (this.x >= 101 * 5) {
+        this.x = -101;
+        this.y = 83 * util.randomFromRange(1, 3) - 25;
+        this.speed = getSpeed();
+      }
+
+      this.handleCollisions();
+    };
+
+    this.handleCollisions = function() {
+      // Handle player collision.
+      if (!player.suspended) {
+        if (this.y === player.y && (this.x + 101 / 2 > player.x && this.x - 101 < player.x)) {
+          player.die();
+        }
+      }
+    };
+
+    // Returns a semi-random speed within the currently allowable speed range
+    // with a bias applied in favor of lower speeds.
+    function getSpeed() {
+      // Retrieve a random speed within the allowable range.
+      var s = util.randomFromRange(gameState.enemySpeedRange[0], gameState.enemySpeedRange[1]);
+
+      // Reduce the random speed by a percentage of 0% to 50% without reducing it below the allowable range.
+      s = Math.max(Math.round(s * util.randomFromRange(50, 100) * 0.01), gameState.enemySpeedRange[0]);
+
+      return s;
     }
   };
-  // Enemies our player must avoid
-  var Enemy = function() {
-      // Variables applied to each of our instances go here,
-      // we've provided one for you to get started
-
-      // The image/sprite for our enemies, this uses
-      // a helper we've provided to easily load images
-      this.sprite = 'images/enemy-bug.png';
-      this.x = util.randomRange(0, 101 * 4);
-      this.y = 83 * util.randomRange(1, 3) - 25;
-      this.speed = getSpeed();
-
-      // Update the enemy's position, required method for game
-      // Parameter: dt, a time delta between ticks
-      this.update = function(dt) {
-        // You should multiply any movement by the dt parameter
-        // which will ensure the game runs at the same speed for
-        // all computers.
-        this.x += this.speed * dt;
-
-        if (this.x >= 101 * 5) {
-          this.x = -101;
-          this.y = 83 * util.randomRange(1, 3) - 25;
-          this.speed = getSpeed();
-        }
-
-        this.handleCollisions();
-      };
-
-      // Draw the enemy on the screen, required method for game
-      this.render = function() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-      };
-
-      this.handleCollisions = function() {
-        // Handle player collision.
-        if (!player.suspended) {
-          if (this.y === player.y && (this.x + 101 / 2 > player.x && this.x - 101 < player.x)) {
-            player.die();
-          }
-        }
-      };
-
-      // Biased towards lower speeds.
-      function getSpeed() {
-        // Retrieve a random speed within the allowable range.
-        var s = util.randomRange(settings.enemySpeedRange[0], settings.enemySpeedRange[1]);
-
-        // Reduce the random speed by a percentage of 0% to 50% without reducing it below the allowable range.
-        s = Math.max(Math.round(s * util.randomRange(50, 100) * 0.01), settings.enemySpeedRange[0]);
-
-        return s;
-      }
-  };
-  // Now write your own player class
-  // This class requires an update(), render() and
-  // a handleInput() method.
+  // Make Enemy.prototype inherit from Entity.prototype.
+  Enemy.prototype = Object.create(Entity.prototype);
+  // Set the constructor property appropriately.
+  Enemy.prototype.constructor = Enemy;
   var Player = function() {
-    this.sprite = settings.playerSprite;
-    this.x = 101 * 2;
-    this.y = 83 * 5 - 25;
+    var sprite = settings.playerSprite;
+    var x = 101 * 2;
+    var y = 83 * 5 - 25;
+
+    Entity.call(this, sprite, x, y);
+
     this.scale = 1;  // The amount by which to scale the sprite's size.
     this.opacity = 1;  // The opacity of the player sprite.
     this.suspended = false;  // Used to suspend interaction between the player and the world.
@@ -191,9 +223,11 @@
       this.handleCollisions();
     };
 
+    // Overwrite the basic Entity.render method.
     this.render = function() {
       ctx.save();
       ctx.globalAlpha = this.opacity;
+      // Draw the sprite and adjust its size by the scale percentage while keeping it centered.
       ctx.drawImage(Resources.get(this.sprite), this.x + (50 - 50 * this.scale), this.y + (121 - 121 * this.scale), 101 * this.scale, 171 * this.scale);
       ctx.restore();
     };
@@ -252,9 +286,8 @@
 
     this.win = function() {
       this.suspended = true;
-      score += settings.winValue;
-      wins++;
-      level++;
+      gameState.score += 200;
+      gameState.level++;
       playSound('won');
       this.animations.win.isPlaying = true;
     };
@@ -278,25 +311,24 @@
 
     this.die = function() {
       this.suspended = true;
-      lives--;
+      gameState.lives--;
       playSound('died');
       this.animations.death.isPlaying = true;
     };
 
     this.deathAnimation = function(dt) {
-      if (this.opacity - 1 * dt > 0) {
+      if (this.opacity - 1 * dt > 0 && this.scale > 0) {
         this.opacity -= 1 * dt;
         this.y -= 50 * dt;
         this.scale -= 0.3 * dt;
       } else {
-        this.opacity = 0;
         this.animations.death.isPlaying = false;
         this.finalizeDeath();
       }
     };
 
     this.finalizeDeath = function() {
-      if (lives < 0) {
+      if (gameState.lives < 0) {
         gameOver();
       } else {
         this.reset();
@@ -305,52 +337,65 @@
 
     this.reset = function() {
       this.sprite = settings.playerSprite;
+
+      // The starting position.
       this.x = 101 * 2;
       this.y = 83 * 5 - 25;
+
       this.scale = 1;
       this.opacity = 1;
       this.suspended = false;
     };
   };
+  Player.prototype = Object.create(Entity.prototype);
+  Player.prototype.constructor = Player;
   var Collectable = function() {
     var colors = ['Blue', 'Green', 'Orange'];
-    var randomColor = colors[util.randomRange(0, 2)];
+    var randomColor = colors[util.randomFromRange(0, 2)];
+    var sprite = 'images/Gem ' + randomColor + '.png';
+    var x = 101 * util.randomFromRange(0, 4) + 38;
+    var y = 83 * util.randomFromRange(1, 3) + 60;
 
-    this.sprite = 'images/Gem ' + randomColor + '.png';
-    this.x = 101 * util.randomRange(0, 4) + 38;
-    this.y = 83 * util.randomRange(1, 3) + 60;
-    this.origX = this.x;
-    this.origY = this.y;
-    this.velocity = util.randomRange(15, 35);
+    Entity.call(this, sprite, x, y);
 
+    this.velocity = util.randomFromRange(15, 35);
+    this.points = 50;
+
+    // Randomize the initial velocity direction.
     if (Math.random() > 0.5) {
       this.velocity = -this.velocity;
     }
 
+    // Overwrite Entity's render method to introduce scaling.
     this.render = function() {
       ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 25, 43);
     };
 
     this.update = function (dt) {
-      if (this.x < this.origX - 8) {
-        this.velocity = -this.velocity;
-        this.x = this.origX - 8;
-      } else if (this.x > this.origX + 8) {
-        this.velocity = -this.velocity;
-        this.x = this.origX + 8;
-      } else {
-        this.x += this.velocity * dt;
-      }
-
+      this.idleAnimation(dt);
       this.handleCollisions();
     };
 
     this.handleCollisions = function() {
+      // Handle collisions with the player.
       if (!player.suspended) {
-        if (this.y - 60 === player.y + 25 && (this.origX + 101 / 2 > player.x && this.origX - 101 < player.x)) {
-          score += settings.collectableValue;
+        if (this.y - 60 === player.y + 25 && (x + 101 / 2 > player.x && x - 101 < player.x)) {
+          gameState.score += this.points;
+          playSound('collectablePickup');
           this.destroy();
         }
+      }
+    };
+
+    this.idleAnimation = function(dt) {
+      if (this.x < x - 8) {
+        this.velocity = -this.velocity;
+        this.x = x - 8;
+      } else if (this.x > x + 8) {
+        this.velocity = -this.velocity;
+        this.x = x + 8;
+      } else {
+        this.x += this.velocity * dt;
       }
     };
 
@@ -359,9 +404,9 @@
       allCollectables.splice(index, 1);
     };
   };
+  Collectable.prototype = Object.create(Entity.prototype);
+  Collectable.prototype.constructor = Collectable;
 
-  // This listens for key presses and sends the keys to your
-  // Player.handleInput() method. You don't need to modify this.
   document.addEventListener('keyup', onKeyUp);
   document.addEventListener('touchend', onTouchEnd);
   document.addEventListener('touchstart', onTouchStart);
@@ -371,6 +416,7 @@
 
   init();
 
+  // Expose the objects used by engine.js.
   global.player = player;
   global.allEnemies = allEnemies;
   global.allCollectables = allCollectables;
@@ -380,23 +426,32 @@
   global.drawMenu = drawMenu;
   global.menus = menus;
 
+  /**
+   * Draws the level text on the canvas.
+   */
   function drawLevel() {
     ctx.save();
     ctx.font = '20px serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
-    ctx.fillText('Level - ' + level, 101 * 2.5, 45);
+    ctx.fillText('Level - ' + gameState.level, 101 * 2.5, 45);
     ctx.restore();
   }
 
+  /**
+   * Draws the hearts (indicating lives remaining) on the canvas.
+   */
   function drawLives() {
     var x = 0;
-    for (var i = 0; i < lives; i++) {
+    for (var i = 0, len = gameState.lives; i < len; i++) {
       ctx.drawImage(Resources.get('images/Heart.png'), x, 10, 25, 43);
       x += 30;
     }
   }
 
+  /**
+   * Draws the specified menu on the canvas.
+   */
   function drawMenu(menu) {
     if (menu === 'start') {
       drawStartMenu();
@@ -405,15 +460,21 @@
     }
   }
 
+  /**
+   * Draws the score text on the canvas.
+   */
   function drawScore() {
     ctx.save();
     ctx.font = '24px serif';
     ctx.textAlign = 'end';  // start, end, left, right, center
     ctx.textBaseline = 'alphabetic';  // top, hanging, middle, alphabetic, ideographic, bottom
-    ctx.fillText('Score: ' + score, 101 * 5, 45);
+    ctx.fillText('Score: ' + gameState.score, 101 * 5, 45);
     ctx.restore();
   }
 
+  /**
+   * Draws the scores menu on the canvas.
+   */
   function drawScoresMenu() {
     // Includes a top padding of 6px.
     ctx.save();
@@ -507,6 +568,9 @@
     ctx.restore();
   }
 
+  /**
+   * Draws the start menu on the canvas.
+   */
   function drawStartMenu() {
     ctx.save();
     var fillStyle;
@@ -679,12 +743,15 @@
     // Right bottom.
     ctx.moveTo(24, canvas.height - 16);
     ctx.lineTo(27, canvas.height - 15);
-
     ctx.stroke();
 
     ctx.restore();
   }
 
+  /**
+   * Called on game over. Updates the high scores, activates the scores menu
+   * and removes all enemies and collectables from play.
+   */
   function gameOver() {
     updateScores();
     menus.scores.active = true;
@@ -692,32 +759,26 @@
     allCollectables.length = 0;
   }
 
+  /**
+   * Initializes the game.
+   */
   function init() {
-    audioCtx = new global.window.AudioContext();
-    var died = new Audio('sounds/died.wav');
-    var won = new Audio('sounds/won.wav');
-    died.volume = 0;  // Initialize with 0 volume.
-    won.volume = 0;   // Initialize with 0 volume.
-    var diedMediaElementSource = audioCtx.createMediaElementSource(died);
-    var wonMediaElementSource = audioCtx.createMediaElementSource(won);
+    // Create the media element sources.
+    for (var sound in sounds) {
+      sounds[sound].mediaElementSource = audioCtx.createMediaElementSource(sounds[sound].audio);
+    }
 
-    sounds = {
-      died: {
-        audio: died,
-        mediaElementSource: diedMediaElementSource
-      },
-      won: {
-        audio: won,
-        mediaElementSource: wonMediaElementSource
-      }
-    };
+    // Create the player.
+    player = new Player();
 
-    player = new Player();  // Necessary for engine.js's updateEntities function.
-
-    // Load scores from local storage or cookie if present.
+    // Load the scores from local storage.
     scores = retrieveScores();
   }
 
+  /**
+   * Sets the player sprite to the next sprite in the list, or the first if
+   * none remain.
+   */
   function nextPlayerSprite() {
     var i = playerSprites.indexOf(settings.playerSprite);
 
@@ -728,6 +789,10 @@
     settings.playerSprite = playerSprites[i];
   }
 
+  /**
+   * Handles the keyup event.
+   * @param {object} e - The event.
+   */
   function onKeyUp(e) {
     if (!audioPrimed) {
       primeAudio();
@@ -747,6 +812,10 @@
     player.handleInput(allowedKeys[e.keyCode]);
   }
 
+  /**
+   * Handles the canvas's mousedown event.
+   * @param {object} e - The event.
+   */
   function onCanvasMouseDown(e) {
     for (var menu in menus) {
       if (menus[menu].active) {
@@ -764,6 +833,10 @@
     }
   }
 
+  /**
+   * Handles the canvas's mousemove event.
+   * @param {object} e - The event.
+   */
   function onCanvasMouseMove(e) {
     for (var menu in menus) {
       if (menus[menu].active) {
@@ -790,6 +863,10 @@
     }
   }
 
+  /**
+   * Handles the canvas's mouseup event.
+   * @param {object} e - The event.
+   */
   function onCanvasMouseUp(e) {
     for (var menu in menus) {
       if (menus[menu].active) {
@@ -798,6 +875,7 @@
 
           if (button.hovered && button.pressed) {
             button.pressed = false;
+            playSound('buttonPress');
             button.action();
           }
         }
@@ -805,6 +883,10 @@
     }
   }
 
+  /**
+   * Handles the touchend event.
+   * @param {object} e - The event.
+   */
   function onTouchEnd(e) {
     e.preventDefault();  // Prevent double-touch zoom.
 
@@ -851,6 +933,7 @@
           if (canvasX > button.x && canvasX <= button.x + button.width) {
             // Check if aligned on the y-axis.
             if (canvasY > button.y && canvasY <= button.y + button.height) {
+              playSound('buttonPress');
               button.action();
             }
           }
@@ -890,6 +973,10 @@
     }
   }
 
+  /**
+   * Handles the touchstart event.
+   * @param {object} e - The event.
+   */
   function onTouchStart(e) {
     // If any menus are active...
     for (var menu in menus) {
@@ -922,10 +1009,16 @@
     }
   }
 
+  /**
+   * Opens the bug tracker for this app.
+   */
   function openBugTacker() {
-    global.window.open('https://github.com/Tempurturtul/fend-frogger/issues', '_blank');
+    window.open('https://github.com/Tempurturtul/fend-frogger/issues', '_blank');
   }
 
+  /**
+   * Called to play the game. Ensures no menus are active then resets the game.
+   */
   function play() {
     for (var menu in menus) {
       menus[menu].active = false;
@@ -933,24 +1026,32 @@
     reset();
   }
 
+  /**
+   * Plays the sound using the audio context.
+   * @param {string} sound - The name of the appropriate property in sounds.
+   */
   function playSound(sound) {
-    var source;
-
-    if (sound === 'won') {
-      source = sounds.won.mediaElementSource;
-      sounds.won.audio.currentTime = 0;  // Reset the audio.
-      sounds.won.audio.volume = 0.01;
-      sounds.won.audio.play();
-    } else if (sound === 'died') {
-      source = sounds.died.mediaElementSource;
-      sounds.died.audio.currentTime = 0;  // Reset the audio.
-      sounds.died.audio.volume = 0.01;
-      sounds.died.audio.play();
+    // Early abort if sound not in sounds.
+    if (!sounds[sound]) {
+      return;
     }
 
-    source.connect(audioCtx.destination);
+    sound = sounds[sound];
+    // Reset the track.
+    sound.audio.currentTime = 0;
+    // Set the track volume.
+    sound.audio.volume = 0.01;
+    // Play the track.
+    sound.audio.play();
+
+    // Connect the sound's audio context source to the audio context's destination.
+    sound.mediaElementSource.connect(audioCtx.destination);
   }
 
+  /**
+  * Sets the player sprite to the previous sprite in the list, or the last if
+  * none remain.
+   */
   function prevPlayerSprite() {
     var i = playerSprites.indexOf(settings.playerSprite);
 
@@ -961,28 +1062,39 @@
     settings.playerSprite = playerSprites[i];
   }
 
+  /**
+   * Called in response to a user-triggered event; silently plays every sound.
+   */
   function primeAudio() {
     // Many mobile devices prevent sounds from being played except as a
     // response to a user event action.
     for (var sound in sounds) {
-      sounds[sound].audio.play();
+      var audio = sounds[sound].audio;
+      audio.volume = 0;
+      audio.play();
     }
     audioPrimed = true;
   }
 
+  /**
+   * Resets the game.
+   */
   function reset() {
-    settings.numEnemies = settings.original.numEnemies;
-    settings.enemySpeedRange = settings.original.enemySpeedRange;
-    settings.winsUntilNewEnemy = settings.original.winsUntilNewEnemy;
-    wins = 0;
-    lives = 3;
-    level = 1;
-    score = 0;
+    gameState.numEnemies = gameState.original.numEnemies;
+    gameState.enemySpeedRange = gameState.original.enemySpeedRange;
+    gameState.newEnemyLevel = gameState.original.newEnemyLevel;
+    gameState.lives = 3;
+    gameState.level = 1;
+    gameState.score = 0;
     spawnEnemies();
     spawnCollectables();
     player.reset();
   }
 
+  /**
+   * Restarts the game. (Differs from reset in that it sets the active menu to
+   * the start menu, whereas reset does not effect the menus.)
+   */
   function restart() {
     for (var menu in menus) {
       if (menu === 'start') {
@@ -994,11 +1106,14 @@
     reset();
   }
 
+  /**
+   * Returns the high scores stored in local storage, or an empty array if none
+   * are found.
+   * @returns {object[]|array} The stored high scores or an empty array.
+   */
   function retrieveScores() {
-    // Return sorted scores from local storage, otherwise return empty array.
-
     if (util.storageAvailable('localStorage')) {
-      var retrievedScores = JSON.parse(global.window.localStorage.getItem('scores')) || [];
+      var retrievedScores = JSON.parse(window.localStorage.getItem('scores')) || [];
       return retrievedScores;
     } else {
       console.warn('Unable to retrieve high scores; local storage is unavailable.');
@@ -1006,68 +1121,87 @@
     }
   }
 
+  /**
+   * Attempts to save the high scores to local storage.
+   */
   function saveScores() {
-    // Save sorted scores to local storage.
-
     if (util.storageAvailable('localStorage')) {
-      global.window.localStorage.setItem('scores', JSON.stringify(scores));
+      window.localStorage.setItem('scores', JSON.stringify(scores));
     } else {
       console.warn('High scores not saved; local storage is unavailable.');
     }
   }
 
+  /**
+   * Removes existing collectables and spawns new ones.
+   */
   function spawnCollectables() {
     // Clear the collectables array while preserving references to it.
     allCollectables.length = 0;
 
-    for (var i = 0; i < settings.numCollectables; i++) {
+    for (var i = 0, len = gameState.numCollectables; i < len; i++) {
       var collectable = new Collectable();
       allCollectables.push(collectable);
     }
   }
 
+  /**
+   * Removes existing enemies and spawns new ones.
+   */
   function spawnEnemies() {
     // Empty the array without damaging references to it.
     allEnemies.length = 0;
 
-    for (var i = 0; i < settings.numEnemies; i++) {
+    for (var i = 0, len = gameState.numEnemies; i < len; i++) {
       var enemy = new Enemy();
       allEnemies.push(enemy);
     }
   }
 
+  /**
+   * Updates the game difficulty (after a level increase, for example).
+   */
   function updateDifficulty() {
-    // Increment enemy min speed.
-    if (settings.enemySpeedRange[0] + settings.enemySpeedRangeIncrements[0] < settings.limits.enemySpeedRange[0]) {
-      settings.enemySpeedRange[0] += settings.enemySpeedRangeIncrements[0];
-    } else {
-      settings.enemySpeedRange[0] = settings.limits.enemySpeedRange[0];
-    }
+    // Increase enemy speed.
+    var range = gameState.enemySpeedRange;
+    var minLimit = 200;
+    var maxLimit = 500;
+    var minIncrement = 5;
+    var maxIncrement = 20;
 
-    // Increment enemy max speed.
-    if (settings.enemySpeedRange[1] + settings.enemySpeedRangeIncrements[1] < settings.limits.enemySpeedRange[1]) {
-      settings.enemySpeedRange[1] += settings.enemySpeedRangeIncrements[1];
-    } else {
-      settings.enemySpeedRange[1] = settings.limits.enemySpeedRange[1];
-    }
+    range[0] = range[0] + minIncrement > minLimit ? minLimit : range[0] + minIncrement;
+    range[1] = range[1] + maxIncrement > maxLimit ? maxLimit : range[1] + maxIncrement;
 
-    // Increment number of enemies.
-    if (wins % settings.winsUntilNewEnemy === 0 && settings.numEnemies < settings.limits.numEnemies) {
-      // Exclude the case where we've just incremented.
-      if (wins === settings.original.winsUntilNewEnemy || wins !== settings.winsUntilNewEnemy) {
-        settings.winsUntilNewEnemy += settings.winsUntilNewEnemyIncrement;
-        settings.numEnemies++;
-      }
+    gameState.enemySpeedRange = range;
+
+    // Increase number of enemies if the limit hasn't been reached, and set the
+    // new newEnemyLevel.
+    var enemyCap = 5;
+    var newEnemyLevel = gameState.newEnemyLevel;
+
+    if (gameState.numEnemies < enemyCap && gameState.level === newEnemyLevel) {
+      allEnemies.push(new Enemy());
+      gameState.numEnemies++;
+
+      // Set the newEnemyLevel to the lesser of double the current newEnemyLevel
+      // and 30 + the current newEnemyLevel.
+      var double = newEnemyLevel * 2;
+      var maxIncrease = newEnemyLevel + 30;
+      gameState.newEnemyLevel = Math.min(double, maxIncrease);
     }
   }
 
+  /**
+   * Updates the high scores with the current score and level, then sorts and
+   * saves them.
+   */
   function updateScores() {
     scores.push({
-      'amount': score,
-      'level': level
+      'amount': gameState.score,
+      'level': gameState.level
     });
 
-    // Sort scores in descending order.
+    // Sort scores in descending order based on the score amount.
     scores = scores.sort(function(a, b) {
       if (a.amount < b.amount) {
         return 1;
