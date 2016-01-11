@@ -8,10 +8,10 @@ var bio = {
     'twitter' : 'https://twitter.com/tempurturtul',
     'location' : 'Massena, NY'
   },
-  'welcomeMessage' : 'Hello and thank you for viewing my online resume! I\'m ' +
-  'currently seeking employment as a front-end web developer and am happy to ' +
-  'relocate as necessary within the United States. This resume was last ' +
-  'updated in January of 2016. Please don\'t hesitate to contact me!',
+  'welcomeMessage' : 'I\'m currently seeking employment as a front-end web ' +
+  'developer and am happy to relocate as necessary within the United States. ' +
+  'This resume was last updated in January of 2016. Please don\'t hesitate to ' +
+  'contact me!',
   'skills' : [
     'HTML',
     'CSS',
@@ -81,6 +81,23 @@ var projects = {
       ],
       'github': 'https://github.com/Tempurturtul/fend-resume',
       'url': 'http://tempurturtul.github.io/fend-resume/'
+    },
+    {
+      'title': 'Frogger Clone',
+      'dates': 'January 2016',
+      'description': 'A simple clone of the popular frogger game built using ' +
+      'a barebones game engine provided by Udacity. I worked heavily with the ' +
+      'HTML5 canvas element in this project, and also used JavaScript ' +
+      'inheritance, the browser\'s local storage, and the Web Audio API. The ' +
+      'game features a persistent (until the browser cache is cleared) ' +
+      'scoreboard, menus, canvas-drawn buttons, and mobile support.',
+      'images': [
+        'img/fend-frogger-start.png',
+        'img/fend-frogger-gameplay.png',
+        'img/fend-frogger-scores.png'
+      ],
+      'github': 'https://github.com/Tempurturtul/fend-frogger',
+      'url': 'http://tempurturtul.github.io/fend-frogger/'
     }
   ]
 };
@@ -114,13 +131,6 @@ var education = {
     }
   ],
   'onlineCourses': [
-    {
-      'title': 'Learn Python The Hard Way',
-      'school': 'Zed A. Shaw',
-      'date': 2013,
-      'url': 'http://learnpythonthehardway.org/book/',
-      'description': '"Learn Python by slowly building and establishing skills through techniques like practice and memorization, then applying them to increasingly difficult problems. By the end of the book you will have the tools needed to begin learning more complex programming topics. I like to tell people that my book gives you your \'programming black belt.\' What this means is that you know the basics well enough to now start learning programming."'
-    },
     {
       'title': 'HTML5 and CSS3 Fundamentals',
       'school': 'Microsoft Virtual Academy',
