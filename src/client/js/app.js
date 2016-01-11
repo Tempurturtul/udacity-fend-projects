@@ -13,7 +13,7 @@
   var ctx = global.ctx;  // Exposed by engine.js.
   var Resources = global.Resources;  // Exposed by resources.js.
 
-  var audioCtx = new window.AudioContext();
+  var audioCtx;  // Defined in init.
   var sounds = {
     died: {
       audio: new Audio('sounds/died.wav'),
@@ -763,9 +763,14 @@
    * Initializes the game.
    */
   function init() {
-    // Create the media element sources.
-    for (var sound in sounds) {
-      sounds[sound].mediaElementSource = audioCtx.createMediaElementSource(sounds[sound].audio);
+    // Set up the audio context if supported.
+    if (window.AudioContext) {
+      audioCtx = new window.AudioContext();
+
+      // Create the media element sources if using audio context.
+      for (var sound in sounds) {
+        sounds[sound].mediaElementSource = audioCtx.createMediaElementSource(sounds[sound].audio);
+      }
     }
 
     // Create the player.
@@ -1044,8 +1049,11 @@
     // Play the track.
     sound.audio.play();
 
-    // Connect the sound's audio context source to the audio context's destination.
-    sound.mediaElementSource.connect(audioCtx.destination);
+    // If audio context is defined...
+    if (audioCtx) {
+      // Connect the sound's audio context source to the audio context's destination.
+      sound.mediaElementSource.connect(audioCtx.destination);
+    }
   }
 
   /**
