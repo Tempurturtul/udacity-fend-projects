@@ -843,18 +843,23 @@
    * @param {object} e - The event.
    */
   function onCanvasMouseMove(e) {
+    var rect = canvas.getBoundingClientRect();
+
     for (var menu in menus) {
       if (menus[menu].active) {
         for (var button in menus[menu].buttons) {
           button = menus[menu].buttons[button];
 
+          var relX = e.clientX - rect.left;  // x-axis position relative to canvas.
+          var relY = e.clientY - rect.top;   // y-axis position relative to canvas.
+
           // Set hovered state to false initially.
           button.hovered = false;
 
           // Check if hovered on the x-axis.
-          if (e.layerX > button.x && e.layerX <= button.x + button.width) {
+          if (relX > button.x && relX <= button.x + button.width) {
             // Check if hovered on the y-axis.
-            if (e.layerY > button.y && e.layerY <= button.y + button.height) {
+            if (relY > button.y && relY <= button.y + button.height) {
               button.hovered = true;
             }
           }
