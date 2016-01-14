@@ -163,7 +163,8 @@
     this.handleCollisions = function() {
       // Handle player collision.
       if (!player.suspended) {
-        if (this.y === player.y && (this.x + 101 / 2 > player.x && this.x - 101 < player.x)) {
+        // if (this.y === player.y && (this.x + 101 / 2 > player.x && this.x - 101 < player.x)) {
+        if (this.y === player.y && (this.x + 101 / 2 > player.x && this.x - 101 / 1.5 < player.x)) {
           player.die();
         }
       }
