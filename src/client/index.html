@@ -18,7 +18,7 @@
     <div class="container">
       <header>
         <a href="https://www.udacity.com/" target="_blank">
-          <img src="content/img/udacity-logo.jpg" alt="Udacity logo.">
+          <img src="content/img/udacity-logo.png" alt="Udacity logo.">
         </a>
         <div class="col">
           <h1>Matthew Feidt</h1>
@@ -38,12 +38,23 @@
         <h2>Who Am I?</h2>
         <p>My name is Matthew. I strive to build elegant, modern, highly functional websites. Let me know how I'm doing if you have time.</p>
         <p>I began as a web developer in mid-2015 by joining a relatively new program called <a href="http://www.freecodecamp.com/" target="_blank">FreeCodeCamp</a>. After a few months I felt that I'd reached the end of FreeCodeCamp's thoroughly developed content, and transitioned to a <a href="https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001" target="_blank">nanodegree program</a> offered by Udacity. So far I've found Udacity's program to offer a greater depth of content, as well as much needed access to professional reviews of my work.</p>
-        <p>I have experience programming in various languages including Ruby, Python, C#, and JavaScript. I've worked with jQuery, Angular, Polymer, Node, Gulp, Grunt, Bower, and other web development technologies. I plan to bring my front-end development skills up to par with what's expected of industry profressionals by taking full advantage of Udacity's nanodegree program.</p>
+        <p>I have experience programming in various languages including Ruby, Python, C#, and JavaScript. I've worked with jQuery, AngularJS, Polymer, Node.js, Gulp, Grunt, Bower, Vagrant, and other web development technologies. I plan to bring my front-end development skills up to par with what's expected of industry profressionals by taking full advantage of Udacity's nanodegree program.</p>
         <p>I have a bachelor's degree in Security Management and am currently employed full-time in my field. I've grown fundamentally dissatisfied with my career choice and am in the process of transforming my programming hobby into a programming career. If you'd like to help, have a look at my work and give me some feedback. I'm always looking to improve. Thanks for reading!</p>
       </section>
       <section id="work" class="nav-target">
         <h2>Featured Work</h2>
         <div class="article-container">
+          <article>
+            <h3>Escape By Water!</h3>
+            <time datetime="2015-12">January 2016</time>
+            <a href="http://tempurturtul.github.io/fend-frogger" target="_blank">
+              <img class="work-preview" src="content/img/frogger-600x600.png" srcset="content/img/frogger-600x600.png 600w, content/img/frogger-300x300.png 300w" sizes="(min-width: 700px) 300px, 600px" alt="A preview image for the Escape By Water! game.">
+            </a>
+            <a href="https://github.com/Tempurturtul/fend-frogger" target="_blank">
+              <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
+            </a>
+            <p>A clone of the popular frogger game built using a barebones game engine provided by Udacity. I worked heavily with the HTML5 canvas element in this project, and used JavaScript inheritance, the browser's local storage, and the Web Audio API while implementing various features. The game features a persistent scoreboard, menus, canvas-drawn buttons, and mobile support.</p>
+          </article>
           <article>
             <h3>Resume</h3>
             <time datetime="2015-12">December 2015</time>
@@ -53,7 +64,7 @@
             <a href="https://github.com/Tempurturtul/fend-resume" target="_blank">
               <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
             </a>
-            <p>The second project in Udacity's nanodegree program, this site acts as my online resume for web development. It dynamically pulls JSON data to fill the page content and includes a google map created by interfacing with Google's API. It also contains simple usage of a polymer component (iron-collapse) and a custom-built popup notification displayed when the user clicks on a work experience title.</p>
+            <p>My online resume for web development. It dynamically creates page content with data retrieved from a JSON object and utilizes CSS transitions, a Polymer element, and Google Maps' API to provide additional functionality. I also expanded my workflow options with this project by learning to use Bower and by refining my usage of Gulp.</p>
           </article>
           <article>
             <h3>Pomodoro Clock</h3>
@@ -64,7 +75,7 @@
             <a href="https://github.com/Tempurturtul/fcc-pomodoro-clock" target="_blank">
               <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
             </a>
-            <p>Based on the <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique" target="_blank">Pomodoro Technique</a>, this site provides a time management clock with customizable work and break cycles, including a long-break cycle which occurs at a specified frequency.  I use the canvas element to programmatically draw the clock itself, and use a browser notification combined with an audible alarm (toggleable) to alert the user of the end of a clock cycle.</p>
+            <p>Based on the <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique" target="_blank">Pomodoro Technique</a>, this site provides a time management clock with customizable work and break cycles. I used the canvas element to programmatically draw the clock itself, and used a browser notification combined with an audible alarm to alert the user of the end of a clock cycle.</p>
           </article>
           <article>
             <h3>Local Weather</h3>
@@ -75,7 +86,7 @@
             <a href="https://github.com/Tempurturtul/fcc-local-weather" target="_blank">
               <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
             </a>
-            <p>This site uses your browser's location services to display local weather information gathered from Yahoo's weather API. If you happen to be in the USA, it also collects information from epa.gov's API to display the UV index high for the day.  Supports manual location searching and both imperial and metric units of measure.  Also includes a dynamic background based on local sunrise and sunset times plus current weather conditions.</p>
+            <p>Uses your browser's location services to display local weather information gathered from Yahoo's weather API. If you happen to be in the USA, it also collects information from epa.gov's API to display the UV index high for the day. It supports manual location searching and both imperial and metric units of measure. Also included is a dynamic background based on time and weather conditions.</p>
           </article>
           <article>
             <h3>Quote Machine</h3>
@@ -86,7 +97,7 @@
             <a href="https://github.com/Tempurturtul/fcc-quote-machine" target="_blank">
               <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
             </a>
-            <p>My second completed site, this displays a random quote from a collection.  The challenge was in providing a tweet button that updates with the currently displayed quote instead of constantly using the first displayed quote, then handling cases where the quote exceeded Twitter's character limit.</p>
+            <p>Displays a random quote from a collection. The challenge was in providing a tweet button that updates with the currently displayed quote instead of constantly using the first displayed quote, then handling cases where the quote exceeds Twitter's character limit.</p>
           </article>
           <article>
             <h3>Twitch Streamers</h3>
@@ -97,7 +108,7 @@
             <a href="https://github.com/Tempurturtul/fcc-twitch-streamers" target="_blank">
               <img class="github-logo" src="content/img/GitHub-Mark-32px.png" alt="A GitHub icon.">
             </a>
-            <p>The first site I ever completed.  It interfaces with twitch.tv's public API to retrieve and display information on a list of streamers.  Provides options for sorting and filtering.</p>
+            <p>My first project. It interfaces with <a href="https://github.com/justintv/Twitch-API" target="_blank">twitch.tv's public API</a> to retrieve and display information on a list of streamers. Provides options for sorting and filtering. Also included in the Github repository is an incomplete but functional <a href="https://github.com/Tempurturtul/fcc-twitch-streamers/tree/angular-refactor" target="_blank">AngularJS refactor</a>, in which I learned AngularJS best practices by following <a href="https://github.com/johnpapa/angular-styleguide" target="_blank">John Papa's Angular Style Guide</a>.</p>
           </article>
         </div>
       </section>

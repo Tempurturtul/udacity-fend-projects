@@ -11,6 +11,7 @@ body {
 }
 
 body {
+  background: #f7f7f7;
   font-family: "Open Sans", sans-serif;
 }
 
@@ -102,7 +103,7 @@ nav ul li a {
   height: 100%;
   color: #d17e13;
   font-size: 0.9em;
-  background: white;
+  background: #f7f7f7;
 }
 
 nav ul li a:hover {
@@ -114,15 +115,16 @@ nav ul li a:hover {
  The sections and their content.
 ******************************/
 section {
-  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-section:not(last-of-type) {
+section:not(:last-of-type) {
   border-bottom: solid 1px #bbb;
+  padding-bottom: 40px;
+  margin-bottom: 40px;
 }
 
 #about p {
@@ -161,10 +163,14 @@ section a:hover {
 /******************************
  The contact form.
 ******************************/
+#contact-form {
+  min-height: 100%;
+}
+
 form {
   text-align: center;
   position: relative;
-  width: 600px;
+  width: 800px;
   max-width: 90%;
   padding: 10px;
   display: flex;
@@ -194,7 +200,7 @@ form input:first-of-type {
 form textarea {
   width: 100%;
   padding: 4px;
-  height: 12em;
+  height: 20em;
   resize: none;
 }
 
@@ -297,7 +303,7 @@ form button:disabled {
 
 /* Used by elements the nav links to. */
 .nav-target {
-  /* Offset anchor by nav height. */
+  /* Offset anchor by nav height (45px). */
   padding-top: 45px;
   margin-top: -45px;
 }
