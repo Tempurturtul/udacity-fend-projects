@@ -17,14 +17,14 @@ var bio = {
     'CSS',
     'JavaScript',
     'jQuery',
-    'NodeJS',
     'AngularJS',
-    // 'Polymer',
+    'Polymer',
+    'Node.js',
     'Gulp',
-    // 'Grunt',
-    // 'Bower',
-    // 'Vagrant',
-    'Git'
+    'Bower',
+    'Vagrant',
+    'Git',
+    'Gimp'
   ],
   'biopic' : 'img/self.png'
 };
@@ -50,9 +50,42 @@ var work = {
 var projects = {
   'projects': [
     {
+      'title': 'Frogger Clone',
+      'dates': 'January 2016',
+      'description': 'A clone of the popular frogger game built using ' +
+      'a barebones game engine provided by Udacity. I worked heavily with ' +
+      'the HTML5 canvas element and used JavaScript inheritance, the ' +
+      'browser\'s local storage, and the Web Audio API. The game features a ' +
+      'persistent scoreboard, menus, canvas-drawn buttons, and mobile support.',
+      'images': [
+        'img/fend-frogger-start.png',
+        'img/fend-frogger-gameplay.png',
+        'img/fend-frogger-scores.png'
+      ],
+      'github': 'https://github.com/Tempurturtul/fend-frogger',
+      'url': 'http://tempurturtul.github.io/fend-frogger/'
+    },
+    {
+      'title': 'Resume',
+      'dates': 'December 2015',
+      'description': 'My online resume for web development (which you are ' +
+      'currently viewing). It dynamically creates page content with data ' +
+      'retrieved from a JSON object. I utilized CSS transitions, a Polymer ' +
+      'element, and Google Maps\' API to provide additional functionality. I ' +
+      'also expanded my workflow options with this project by learning to ' +
+      'use Bower and by refining my usage of Gulp.',
+      'images': [
+        'img/fend-resume-top.png',
+        'img/fend-resume-mid.png',
+        'img/fend-resume-bot.png'
+      ],
+      'github': 'https://github.com/Tempurturtul/fend-resume',
+      'url': 'http://tempurturtul.github.io/fend-resume/'
+    },
+    {
       'title': 'Portfolio',
       'dates': 'November 2015',
-      'description': 'This is a web development portfolio built as the first ' +
+      'description': 'A web development portfolio built as the first ' +
       'project in Udacity\'s Front-End Web Development Nanodegree program. ' +
       'It features a navigation bar that docks to the top of the window and ' +
       'indicates the section currently being viewed, and a contact form that ' +
@@ -66,57 +99,24 @@ var projects = {
       'url': 'http://tempurturtul.github.io/fend-portfolio/'
     },
     {
-      'title': 'Resume',
-      'dates': 'December 2015',
-      'description': 'My online resume for web development (which you are ' +
-      'currently using). It dynamically creates page content with data ' +
-      'retrieved from a JSON object and utilizes CSS transitions, a Polymer ' +
-      'element, and Google Maps\' API to provide additional functionality. I ' +
-      'also expanded my workflow options with this project by learning to ' +
-      'use Bower and by refining my usage of Gulp.',
-      'images': [
-        'img/fend-resume-top.png',
-        'img/fend-resume-mid.png',
-        'img/fend-resume-bot.png'
-      ],
-      'github': 'https://github.com/Tempurturtul/fend-resume',
-      'url': 'http://tempurturtul.github.io/fend-resume/'
-    },
-    {
-      'title': 'Frogger Clone',
-      'dates': 'January 2016',
-      'description': 'A simple clone of the popular frogger game built using ' +
-      'a barebones game engine provided by Udacity. I worked heavily with the ' +
-      'HTML5 canvas element in this project, and also used JavaScript ' +
-      'inheritance, the browser\'s local storage, and the Web Audio API. The ' +
-      'game features a persistent (until the browser cache is cleared) ' +
-      'scoreboard, menus, canvas-drawn buttons, and mobile support.',
-      'images': [
-        'img/fend-frogger-start.png',
-        'img/fend-frogger-gameplay.png',
-        'img/fend-frogger-scores.png'
-      ],
-      'github': 'https://github.com/Tempurturtul/fend-frogger',
-      'url': 'http://tempurturtul.github.io/fend-frogger/'
+      'title': 'Twitch Streamers - Angular Refactor',
+      'dates': 'October 2015',
+      'description': 'An old project refactored to use AngularJS, incomplete ' +
+      'but functional. Features the ability to add, remove, sort, and filter ' +
+      'tracked streamers. I learned AngularJS best practices by following ' +
+      'John Papa\'s Angular Style Guide while working on this project. ' +
+      'I also experimented with a testing framework using Karma, Mocha, and ' +
+      'PhantomJS; and used Vagrant to create a portable, reproducible ' +
+      'development environment.',
+      'images': [],
+      'github': 'https://github.com/Tempurturtul/fcc-twitch-streamers/tree/angular-refactor',
+      'url': ''
     }
   ]
 };
 
 var education = {
   'schools': [
-    {
-      'name': 'Central Penn College',
-      'location': 'Harrisburg, PA',
-      'degree': 'BS',
-      'majors': ['Security Management'],
-      'dates': 2011,
-      'url': 'http://www.centralpenn.edu/',
-      'description': 'An accelerated four-year degree program focusing on ' +
-      'intelligence analysis, management, and police work. Obtained an ' +
-      'Intelligence Analysis certificate and completed a 400-hour internship ' +
-      'with a local police department as part of the degree program. ' +
-      'Graduated Magna Cum Laude with a 3.7 GPA.'
-    },
     {
       'name': 'Udacity',
       'location': 'Online',
@@ -128,39 +128,59 @@ var education = {
       'partnership with AT&T, Google, Hack Reactor, and GitHub. Designed to ' +
       'give graduates the ability to build "beautiful, responsive websites ' +
       'optimized for security and performance."'
+    },
+    {
+      'name': 'Central Penn College',
+      'location': 'Harrisburg, PA',
+      'degree': 'BS',
+      'majors': ['Security Management'],
+      'dates': 2011,
+      'url': 'http://www.centralpenn.edu/',
+      'description': 'An accelerated four-year degree program focusing on ' +
+      'intelligence analysis, management, and police work. I obtained an ' +
+      'Intelligence Analysis certificate and completed a 400-hour internship ' +
+      'with a local police department as part of the degree program. ' +
+      'Graduated Magna Cum Laude with a 3.7 GPA.'
     }
   ],
   'onlineCourses': [
     {
-      'title': 'HTML5 and CSS3 Fundamentals',
-      'school': 'Microsoft Virtual Academy',
-      'date': 2014,
-      'url': 'https://mva.microsoft.com/en-US/training-courses/html5-css3-fundamentals-development-for-absolute-beginners-14207',
-      'description': 'Learn the fundamentals of web development with HTML5 and CSS3.'
-    },
-    {
-      'title': 'Programming Languages',
-      'school': 'Univeristy of Washington',
-      'date': 2014,
-      'url': 'https://www.coursera.org/course/proglang',
-      'description': '"Learn many of the concepts that underlie all programming languages. Use functional programming and contrast it with object-oriented programming. Through experience writing programs and studying three different languages, learn the key issues in designing and using programming languages, such as modularity and the complementary benefits of static and dynamic typing. This course is neither particularly theoretical nor just about programming specifics – it will give you a framework for understanding how to use language constructs effectively and how to design correct and elegant programs. By using different languages, you learn to think more deeply than in terms of the particular syntax of one language. The emphasis on functional programming is essential for learning how to write robust, reusable, composable, and elegant programs – in any language."'
+      'title': 'JavaScript Basics',
+      'school': 'Udacity',
+      'date': 2015,
+      'url': 'https://www.udacity.com/course/javascript-basics--ud804',
+      'description': 'Required as part of Udacity\'s Front-End Web Developer ' +
+      'nanodegree. Focused on data types and flow control, and directed the ' +
+      'development of this resume site.'
     },
     {
       'title': 'Workshoppers',
       'school': 'NodeSchool',
       'date': 2015,
       'url': 'http://nodeschool.io/#workshopper-list',
-      'description': 'Learn essential skills for working with Node.js. Various topics covered such as Git and Github, asynchronous i/o, http, npm modules, streams, express.js framework basics, promises, MongoDB basics, debugging skills, and testing.'
+      'description': 'Learned essential skills for working with Node.js. ' +
+      'Various topics covered such as Git and Github, asynchronous i/o, ' +
+      'npm modules, streams, express.js framework basics, promises, MongoDB ' +
+      'basics, debugging skills, and testing.'
     },
     {
-      'title': 'JavaScript Basics',
-      'school': 'Udacity',
-      'date': 2015,
-      'url': 'https://www.udacity.com/course/javascript-basics--ud804',
-      'description': 'Develop an interactive resume application that reads ' +
-      'resume content from a JSON object and dynamically displays that ' +
-      'content within a provided template. Focus on data types and flow ' +
-      'control.'
+      'title': 'Programming Languages',
+      'school': 'Univeristy of Washington',
+      'date': 2014,
+      'url': 'https://www.coursera.org/course/proglang',
+      'description': 'Learned many of the concepts fundamental to all ' +
+      'programming languages. Used both functional programming and ' +
+      'object-oriented programming, and worked with SML, Racket, and Ruby. ' +
+      'Explored the key issues in designing and using programming languages, ' +
+      'including discussions on modularity and both static and dynamic ' +
+      'typing.'
+    },
+    {
+      'title': 'HTML5 and CSS3 Fundamentals',
+      'school': 'Microsoft Virtual Academy',
+      'date': 2014,
+      'url': 'https://mva.microsoft.com/en-US/training-courses/html5-css3-fundamentals-development-for-absolute-beginners-14207',
+      'description': 'Learned the fundamentals of web development with HTML5 and CSS3.'
     }
   ]
 };
