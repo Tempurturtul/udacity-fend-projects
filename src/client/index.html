@@ -27,6 +27,18 @@
     <script>window.WebComponents || document.write('<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"><\/script>')</script>
 
     <link rel="import" href="elements/elements.html">
+
+    <!-- jQuery. -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <!-- jQuery fallback. -->
+    <script>window.jquery || document.write('<script src="bower_components/jquery/dist/jquery.min.js"><\/script>');</script>
+
+    <!-- My scripts. -->
+    <!-- build:js app.min.js -->
+    <script src="js/helper.js"></script>
+    <script src="js/resumeBuilder.js"></script>
+    <script src="js/app.js"></script>
+    <!-- endbuild -->
   </head>
   <body>
     <div id="main-container">
@@ -51,17 +63,5 @@
         </ul>
       </footer>
     </div>
-
-    <!-- jQuery. -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <!-- jQuery fallback. -->
-    <script>window.jquery || document.write('<script src="bower_components/jquery/dist/jquery.min.js"><\/script>');</script>
-
-    <!-- My scripts. -->
-    <!-- build:js app.min.js -->
-    <script src="js/helper.js"></script>
-    <script src="js/resumeBuilder.js"></script>
-    <script src="js/app.js"></script>
-    <!-- endbuild -->
   </body>
 </html>
