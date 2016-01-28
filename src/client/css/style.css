@@ -9,10 +9,11 @@ body {
   padding: 0;
 }
 
-body {
+main {
   align-items: center;
   display: flex;
   justify-content: center;
+  min-height: 100%;
 }
 
 canvas {
