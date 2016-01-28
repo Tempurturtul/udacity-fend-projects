@@ -81,9 +81,10 @@ ul {
   border-left: solid #444 1px;
   border-top: solid #444 1px;
   border-radius: 50%;
-  flex: 0 0 auto;
+  flex: 0 0;
   margin: 10px 0;
   width: 150px;
+  height: 150px;
 }
 
 .collapse-button {
