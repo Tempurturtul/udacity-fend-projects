@@ -306,19 +306,19 @@ header .row {
   border-radius: 3px;
   color: #333;
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   font-size: 0.8em;
   height: 2em;
   justify-content: center;
   padding: 5px;
+  max-width: 2em;
   overflow: hidden;
-  transition: flex 0.7s;
-  width: 2em;
+  transition: all 0.3s;
 }
 
 .contacts-list li:hover {
-  flex: 1 0 auto;
-  transition: flex 0.7s;
+  max-width: 100%;
+  transition: all 0.7s;
 }
 
 .contacts-list li:not(:last-of-type) {
