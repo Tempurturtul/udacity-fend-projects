@@ -313,7 +313,8 @@ header .row {
   padding: 5px;
   max-width: 2em;
   overflow: hidden;
-  transition: all 0.3s;
+  transition: all 0.5s;
+  transition-delay: 0.1s;
 }
 
 .contacts-list li:hover {
