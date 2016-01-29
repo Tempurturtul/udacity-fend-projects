@@ -323,7 +323,7 @@ header .row {
 }
 
 .contacts-list li:not(:last-of-type) {
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .contacts-list li span {
