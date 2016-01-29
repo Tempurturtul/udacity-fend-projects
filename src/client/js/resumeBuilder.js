@@ -18,13 +18,8 @@ var bio = {
     'JavaScript',
     'jQuery',
     'AngularJS',
-    'Polymer',
     'Node.js',
-    'Gulp',
-    'Bower',
-    'Vagrant',
-    'Git',
-    'Gimp'
+    'Gulp'
   ],
   'biopic' : 'img/self.png'
 };
