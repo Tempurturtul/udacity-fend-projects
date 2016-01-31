@@ -8,10 +8,14 @@
     <title>Cameron Pittman: Portfolio</title>
 
     <!-- Hmm, what is the impact of web fonts on speed? Measure it... -->
-    <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
 
+    <!-- build:css style.css -->
     <link href="css/style.css" rel="stylesheet">
+    <!-- endbuild -->
+    <!-- build:css print.css -->
     <link href="css/print.css" rel="stylesheet">
+    <!-- endbuild -->
 
     <script>
       (function(w,g){w['GoogleAnalyticsObject']=g;
@@ -22,12 +26,15 @@
       ga('send', 'pageview');
     </script>
     <script src="http://www.google-analytics.com/analytics.js"></script>
+
+    <!-- build:js async.js async -->
     <script async src="js/perfmatters.js"></script>
+    <!-- endbuild -->
   </head>
 
   <body>
     <header>
-      <a href="/"><img src="img/profilepic.jpg"></a>
+      <a href="/"><img src="image/profilepic.jpg"></a>
       <p>Cameron Pittman<br><span>Course Developer</span></p>
     </header>
 
@@ -57,7 +64,7 @@
           </li>
 
           <li>
-            <img style="width: 100px;" src="views/images/pizzeria.jpg">
+            <img style="width: 100px;" src="views/image/pizzeria.jpg">
             <a href="views/pizza.html">Cam's Pizzeria</a>
             <p>Who wants a performant pizza?</p>
           </li>
