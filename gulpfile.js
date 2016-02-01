@@ -20,6 +20,8 @@
  *      - Insert gulp-useref build blocks around external .js and .css resources
  *        that need to be included in the production files. (See gulp-useref for
  *        details.)
+ *        - NOTE: Use absolute paths when using build:js or build:css in html
+ *          not in the top level of the SRC folder.
  *        - Included custom gulp-useref build blocks:
  *          - build:jschanged, build:csschanged
  *            - Updates html with the new name/location of the file(s). Does not
@@ -275,6 +277,10 @@ gulp.task('serve:tunnelled', function(cb) {
   browserSync.init({
     server: {
       baseDir: DIST
+      // baseDir: SRC,
+      // routes: {
+      //   '/bower_components': './bower_components'
+      // }
     },
     notify: false,  // Prevents pop-over notifications in the browser.
     minify: false,  // Prevents minification of client-side JS.
