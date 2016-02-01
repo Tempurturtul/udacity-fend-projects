@@ -4,9 +4,9 @@ This is the fourth project in Udacity's [Front-End Web Developer Nanodegree](htt
 
 ## Project Notes
 
-Source code may be found in the `src` directory.
+Source code may be found in the `src` directory. Distribution files are created automatically in a `dist` directory by the `gulp build` task. See `gulpfile.js` for details regarding gulp tasks.
 
-I heavily automate optimization with [Gulp](http://gulpjs.com/). See `gulpfile.js` for details.
+Distribution files may also be viewed on the [gh-pages](https://github.com/Tempurturtul/fend-optimization/tree/gh-pages) branch, or by inspecting the [live site](http://tempurturtul.github.io/fend-optimization/).
 
 ## Optimization Process
 
