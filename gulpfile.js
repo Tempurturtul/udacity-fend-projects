@@ -291,6 +291,7 @@ gulp.task('serve:tunnelled', function(cb) {
 
 gulp.task('psi:desktop', ['serve:tunnelled'], function() {
   var site = browserSync.instance.tunnel.url;
+  site = site.replace(/^https?/, 'http');
 
   return psi.output(site, {
     nokey: 'true',
@@ -301,6 +302,7 @@ gulp.task('psi:desktop', ['serve:tunnelled'], function() {
 
 gulp.task('psi:mobile', ['serve:tunnelled'], function() {
   var site = browserSync.instance.tunnel.url;
+  site = site.replace(/^https?/, 'http');
 
   return psi.output(site, {
     nokey: 'true',
