@@ -291,6 +291,7 @@ gulp.task('serve:tunnelled', function(cb) {
 
 gulp.task('psi:desktop', ['serve:tunnelled'], function() {
   var site = browserSync.instance.tunnel.url;
+  // Ensure http protocol is used to avoid breaking resources.
   site = site.replace(/^https?/, 'http');
 
   return psi.output(site, {
@@ -302,6 +303,7 @@ gulp.task('psi:desktop', ['serve:tunnelled'], function() {
 
 gulp.task('psi:mobile', ['serve:tunnelled'], function() {
   var site = browserSync.instance.tunnel.url;
+  // Ensure http protocol is used to avoid breaking resources.
   site = site.replace(/^https?/, 'http');
 
   return psi.output(site, {
