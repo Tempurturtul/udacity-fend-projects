@@ -56,6 +56,26 @@ Distribution files may also be viewed on the [gh-pages](https://github.com/Tempu
   Minimize render blocking resources         | 6 (24 mobile)
   Optimize images                            | 0 [-0.98]
   ```
-1. ...
+1. Separated print.css into media="print" style, applied async to appropriate js. Moved google analytics scripts to end of body. Corrected missing div closing tag. Removed unused css.
   ```
+  Speed:     92 (79 mobile)
+  (Usability: 100 mobile)
+
+  CSS size                                   | 2.87 kB [+0.2]
+  HTML size                                  | 4.34 kB [-0.74] (4.34 kB mobile [-0.47])
+  Image size                                 | 19.53 kB
+  JavaScript size                            | 164.53 kB
+  CSS resources                              | 3 [+1]
+  Hosts                                      | 7
+  JS resources                               | 3
+  Resources                                  | 28 [-6] (28 mobile [-5])
+  Static resources                           | 5
+  Other size                                 | 42.57 kB (29.75 kB mobile [-0.29])
+  Total size of request bytes sent           | 3.63 kB [-1.11] (3.63 kB mobile [-0.9])
+
+  Enable GZIP compression                    | 0.11 [-0.01]
+  Leverage browser caching                   | 0.5 (0.75 mobile)
+  Minify JavaScript                          | 0.3
+  Minimize render blocking resources         | 6 (24 mobile)
+  Optimize images                            | 0 [-0.98]
   ```

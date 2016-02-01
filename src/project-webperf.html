@@ -12,19 +12,10 @@
 
     <!-- build:csschanged styles.min.css -->
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/print.css" rel="stylesheet">
     <!-- endbuild -->
-
-
-    <script>
-      (function(w,g){w['GoogleAnalyticsObject']=g;
-      w[g]=w[g]||function(){(w[g].q=w[g].q||[]).push(arguments)};w[g].l=1*new Date();})(window,'ga');
-
-      // TODO: replace with your Google Analytics profile ID.
-      ga('create', 'UA-XXXX-Y');
-      ga('send', 'pageview');
-    </script>
-    <script src="http://www.google-analytics.com/analytics.js"></script>
+    <!-- build:csschanged print.min.css media="print" -->
+    <link href="css/print.css" rel="stylesheet" media="print">
+    <!-- endbuild -->
 
     <!-- build:jschanged async.min.js async -->
     <script async src="js/perfmatters.js"></script>
@@ -52,10 +43,22 @@
 
         <p>Venison spare ribs dolor tri-tip duis turkey. Ut chicken proident ribeye est flank, sed frankfurter. Kielbasa exercitation ullamco leberkas. Landjaeger turkey culpa, tail short loin consectetur salami venison in corned beef eiusmod qui ad leberkas. Tri-tip adipisicing frankfurter ut sirloin rump consectetur. Chuck sint filet mignon labore eiusmod nulla. Venison shankle pork, consectetur nisi bacon spare ribs anim meatball sausage ball tip labore aute reprehenderit adipisicing.</p>
 
+      </div>
+
     </div>
 
     <footer>
       <p>&copy; Web Performance 2014 <span id="crp-stats"></span></p>
     </footer>
+
+    <script>
+      (function(w,g){w['GoogleAnalyticsObject']=g;
+      w[g]=w[g]||function(){(w[g].q=w[g].q||[]).push(arguments)};w[g].l=1*new Date();})(window,'ga');
+
+      // TODO: replace with your Google Analytics profile ID.
+      ga('create', 'UA-XXXX-Y');
+      ga('send', 'pageview');
+    </script>
+    <script async src="http://www.google-analytics.com/analytics.js"></script>
   </body>
 </html>

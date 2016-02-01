@@ -58,26 +58,27 @@
  */
 
 
- /* Plugins. */
- var gulp = require('gulp');
- var browserSync = require('browser-sync').create();
- // var critical = require('critical').stream;
- var cssnano = require('gulp-cssnano');
- var del = require('del');
- var ghPages = require('gulp-gh-pages');
- var gulpif = require('gulp-if');
- var htmlmin = require('gulp-htmlmin');
- var imagemin = require('gulp-imagemin');
- var jshint = require('gulp-jshint');
- var jsonlint = require('gulp-jsonlint');
- var merge = require('merge-stream');
- var plumber = require('gulp-plumber');
- var pngquant = require('imagemin-pngquant');
- var psi = require('psi');
- // var responsive = require('gulp-responsive');
- var runSequence = require('run-sequence');
- var uglify = require('gulp-uglify');
- var useref = require('gulp-useref');
+/* Plugins. */
+var gulp = require('gulp');
+var browserSync = require('browser-sync').create();
+// var critical = require('critical').stream;
+var cssnano = require('gulp-cssnano');
+var del = require('del');
+var ghPages = require('gulp-gh-pages');
+var gulpif = require('gulp-if');
+var htmlmin = require('gulp-htmlmin');
+var imagemin = require('gulp-imagemin');
+var jshint = require('gulp-jshint');
+var jsonlint = require('gulp-jsonlint');
+var merge = require('merge-stream');
+var plumber = require('gulp-plumber');
+var pngquant = require('imagemin-pngquant');
+var psi = require('psi');
+// var responsive = require('gulp-responsive');
+var runSequence = require('run-sequence');
+var uglify = require('gulp-uglify');
+var uncss = require('gulp-uncss');
+var useref = require('gulp-useref');
 
 
 /* Directories. */
@@ -196,6 +197,9 @@ gulp.task('build:minify', function() {
       }))
       .pipe(gulp.dest(TMP)),
     gulp.src(TMP + cssFiles)
+      .pipe(uncss({
+        html: [TMP + htmlFiles]
+      }))
       .pipe(cssnano())
       .pipe(gulp.dest(TMP)),
     gulp.src(TMP + jsFiles)
