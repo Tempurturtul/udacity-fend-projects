@@ -79,3 +79,4 @@ Distribution files may also be viewed on the [gh-pages](https://github.com/Tempu
   Minimize render blocking resources         | 6 (24 mobile)
   Optimize images                            | 0 [-0.98]
   ```
+1. 

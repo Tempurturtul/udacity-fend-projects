@@ -1,3 +1,4 @@
+// TODO: Set cache-control headers on local server.
 // TODO: Optimize images with responsiveness.
 // TODO: Optimize audio and video.
 // TODO: Inline critical css.
@@ -127,6 +128,21 @@ function jschanged(content, target, options, alternateSearchPath) {
 }
 
 
+/* Custom middleware for setting cache-control headers on local server. */
+function middleware(req, res, cb) {
+  // TODO: Determine desired cache-control values for different resources.
+  // TODO: Consider thumbprinting resources.
+  var htmlCache = '';
+  var cssCache = '';
+  var jsCache = '';
+  var mediaCache = '';
+
+  console.log(req.url);
+  // res.setHeader('cache-control', 'max-age=31536000');  // One year.
+  cb();
+}
+
+
 /* Gulp tasks. */
 gulp.task('lint:js', function() {
   return gulp.src(lintableJS)
@@ -251,7 +267,8 @@ gulp.task('serve', function(cb) {
       baseDir: SRC,
       routes: {
         '/bower_components': './bower_components'
-      }
+      },
+      middleware: middleware
     },
     notify: false,  // Prevents pop-over notifications in the browser.
     minify: false   // Prevents minification of client-side JS.
@@ -268,7 +285,8 @@ gulp.task('serve', function(cb) {
 gulp.task('serve:dist', function(cb) {
   browserSync.init({
     server: {
-      baseDir: DIST
+      baseDir: DIST,
+      middleware: middleware
     },
     notify: false,  // Prevents pop-over notifications in the browser.
     minify: false   // Prevents minification of client-side JS.
@@ -280,11 +298,12 @@ gulp.task('serve:dist', function(cb) {
 gulp.task('serve:tunnelled', function(cb) {
   browserSync.init({
     server: {
-      baseDir: DIST
+      baseDir: DIST,
       // baseDir: SRC,
       // routes: {
       //   '/bower_components': './bower_components'
-      // }
+      // },
+      middleware: middleware
     },
     notify: false,  // Prevents pop-over notifications in the browser.
     minify: false,  // Prevents minification of client-side JS.
