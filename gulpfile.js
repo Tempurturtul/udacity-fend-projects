@@ -1,4 +1,4 @@
-// TODO: Set cache-control headers on local server.
+// TODO: Refactor variables.
 // TODO: Optimize images with responsiveness.
 // TODO: Optimize audio and video.
 // TODO: Inline critical css.
@@ -6,8 +6,9 @@
 /*  gulpfile.js
  *
  *  This is Tempurturtul's gulpfile. It makes a few assumptions about folder
- *  structure and requires some markup on html files. Currently handles
- *  automation of front-end tasks only.
+ *  structure and requires some markup on html files. Variables for making
+ *  project-specific modifications are included below these comments. Currently
+ *  handling automation of front-end tasks only.
  *
  *  Requirements:
  *    Folder Structure:
@@ -59,27 +60,26 @@
  */
 
 
-/* Plugins. */
-var gulp = require('gulp');
-var browserSync = require('browser-sync').create();
-// var critical = require('critical').stream;
-var cssnano = require('gulp-cssnano');
-var del = require('del');
-var ghPages = require('gulp-gh-pages');
-var gulpif = require('gulp-if');
-var htmlmin = require('gulp-htmlmin');
-var imagemin = require('gulp-imagemin');
-var jshint = require('gulp-jshint');
-var jsonlint = require('gulp-jsonlint');
-var merge = require('merge-stream');
-var plumber = require('gulp-plumber');
-var pngquant = require('imagemin-pngquant');
-var psi = require('psi');
-// var responsive = require('gulp-responsive');
-var runSequence = require('run-sequence');
-var uglify = require('gulp-uglify');
-var uncss = require('gulp-uncss');
-var useref = require('gulp-useref');
+/* Project-specific variables. */
+// Cache-control values for local server.
+var cacheControlValues = {
+  // Set value by path to resource. Overrides type.
+  //  Example: '/views/foo.jpg': 'max-age="600"'
+  path: {},
+  // Set value by resource file extension.
+  //  Example: 'jpg': 'max-age=31536000'
+  ext: {
+    'jpg': 'max-age=31536000',
+    'png': 'max-age=31536000',
+    'html': 'max-age=31536000',
+    'css': 'max-age=31536000',
+    'js': 'max-age=31536000'
+  }
+};
+// CSS selectors ignored by uncss.
+var uncssIgnoredSelectors = [
+  '.mover'
+];
 
 
 /* Directories. */
@@ -108,6 +108,31 @@ var lintableJSON = [
 ];
 
 
+/* Plugins. */
+var gulp = require('gulp');
+var browserSync = require('browser-sync').create();
+// var critical = require('critical').stream;
+var cssnano = require('gulp-cssnano');
+var del = require('del');
+var ghPages = require('gulp-gh-pages');
+var gulpif = require('gulp-if');
+var htmlmin = require('gulp-htmlmin');
+var imagemin = require('gulp-imagemin');
+var jshint = require('gulp-jshint');
+var jsonlint = require('gulp-jsonlint');
+var merge = require('merge-stream');
+var path = require('path');
+var plumber = require('gulp-plumber');
+var pngquant = require('imagemin-pngquant');
+var psi = require('psi');
+// var responsive = require('gulp-responsive');
+var runSequence = require('run-sequence');
+var uglify = require('gulp-uglify');
+var uncss = require('gulp-uncss');
+var url = require('url');
+var useref = require('gulp-useref');
+
+
 /* Custom useref blocks. */
 function csschanged(content, target, options, alternateSearchPath) {
   // TODO: Handle alternateSearchPath.
@@ -130,15 +155,22 @@ function jschanged(content, target, options, alternateSearchPath) {
 
 /* Custom middleware for setting cache-control headers on local server. */
 function middleware(req, res, cb) {
-  // TODO: Determine desired cache-control values for different resources.
-  // TODO: Consider thumbprinting resources.
-  var htmlCache = '';
-  var cssCache = '';
-  var jsCache = '';
-  var mediaCache = '';
+  // The path to the requested file.
+  var filePath = url.parse(req.url).pathname;
+  // The extension of the requested file (if no extension, assume .html).
+  var fileExt = path.extname(req.url) || '.html';
 
-  console.log(req.url);
-  // res.setHeader('cache-control', 'max-age=31536000');  // One year.
+  // Set cache-control value by path if specified.
+  if (cacheControlValues.path.hasOwnProperty(filePath)) {
+    res.setHeader('cache-control', cacheControlValues.path[filePath]);
+  }
+  // Else, set by extension if specified (with or without prefixed dot).
+  else if (cacheControlValues.ext.hasOwnProperty(fileExt) ||
+           cacheControlValues.ext.hasOwnProperty(fileExt.slice(1))) {
+    res.setHeader('cache-control', cacheControlValues.ext[fileExt] ||
+                                   cacheControlValues.ext[fileExt.slice(1)]);
+  }
+
   cb();
 }
 
@@ -214,7 +246,8 @@ gulp.task('build:minify', function() {
       .pipe(gulp.dest(TMP)),
     gulp.src(TMP + cssFiles)
       .pipe(uncss({
-        html: [TMP + htmlFiles]
+        html: [TMP + htmlFiles],
+        ignore: uncssIgnoredSelectors
       }))
       .pipe(cssnano())
       .pipe(gulp.dest(TMP)),
@@ -305,10 +338,13 @@ gulp.task('serve:tunnelled', function(cb) {
       // },
       middleware: middleware
     },
-    notify: false,  // Prevents pop-over notifications in the browser.
-    minify: false,  // Prevents minification of client-side JS.
     open: false,    // Prevents opening in browser.
-    tunnel: true    // Tunnel the server through a random public url.
+    tunnel: true,    // Tunnel the server through a random public url.
+    snippetOptions: {
+      rule: {
+        match: /^qq0qqQ5qqQqq5qq1qQqq\.qqq\)Qqq$/  // Prevents snippet injection (match should never be found).
+      }
+    }
   }, cb);
 });
 
