@@ -1,4 +1,3 @@
-// TODO: Refactor variables.
 // TODO: Optimize images with responsiveness.
 // TODO: Optimize audio and video.
 // TODO: Inline critical css.
@@ -13,10 +12,14 @@
  *  Requirements:
  *    Folder Structure:
  *      - Client-side files placed in directory defined by SRC.
- *      - Images placed in arbitrarily deep subdirectory named 'image'.
- *      - Audio placed in arbitrarily deep subdirectory named 'audio'.
- *      - Videos placed in arbitrarily deep subdirectory named 'video'.
- *      - NOTE: Folders defined by DIST and TMP will be automatically created
+ *      - Images placed in arbitrarily deep subdirectory defined by IMAGE.
+ *      - Audio placed in arbitrarily deep subdirectory defined by AUDIO.
+ *      - Videos placed in arbitrarily deep subdirectory defined by VIDEO.
+ *      - Non-bower vendor files placed in arbitrarily deep subdirectory defined
+ *        by VENDOR. (This is only necessary if you want to prevent them from
+ *        being linted.)
+ *      - If using bower, default bower_components directory used.
+ *      - NOTE: Folders defined by DEST and TMP will be automatically created
  *        and subject to automated deletion.
  *    HTML Markup:
  *      - Insert gulp-useref build blocks around external .js and .css resources
@@ -43,21 +46,34 @@
  *    lint:json         (Lint JSON.)
  *    lint              (Run all lint tasks, then watch for files to re-lint.)
  *    clean:tmp         (Delete TMP folder.)
- *    clean:dist        (Delete DIST folder.)
+ *    clean:dist        (Delete DEST folder.)
  *    clean             (Run all clean tasks.)
  *    build:prep        (Clean, then output useref-modified and unmodified SRC files to TMP.)
  *    build:minify      (Minify TMP files.)
- *    build:output      (Copy TMP files and bower_components to DIST.)
+ *    build:output      (Copy TMP files and bower_components to DEST.)
  *    build             (Run all build tasks, then clean TMP.)
  *    serve             (Serve SRC files, then watch for files to reload.)
- *    serve:dist        (Serve DIST files, then watch for files to reload.)
- *    serve:tunnelled   (Serve DIST files tunnelled to a random public url.)
+ *    serve:dist        (Serve DEST files, then watch for files to reload.)
+ *    serve:tunnelled   (Serve DEST files tunnelled to a random public url.)
  *    psi:desktop       (Test desktop performance and report results.)
  *    psi:mobile        (Test mobile performance and report results.)
  *    psi               (Run all psi tasks.)
- *    deploy:gh-pages   (Deploy DIST files to gh-pages.)
+ *    deploy:gh-pages   (Deploy DEST files to gh-pages.)
  *    default           (Lint and serve.)
  */
+
+
+/* Base directories. */
+var SRC = 'src/';
+var DEST = 'dist/';
+var TMP = '.tmp/';
+
+
+/* File directories. */
+var IMAGE = 'image';
+var AUDIO = 'audio';
+var VIDEO = 'video';
+var VENDOR = 'vendor';
 
 
 /* Project-specific variables. */
@@ -82,29 +98,25 @@ var uncssIgnoredSelectors = [
 ];
 
 
-/* Directories. */
-var SRC = 'src/';
-var TMP = '.tmp/';
-var DIST = 'dist/';
-
-
 /* File globs. */
 var htmlFiles = '**/*.html';
 var cssFiles = '**/*.css';
 var jsFiles = '**/*.js';
-var imageFiles = '**/image/**';
-var audioFiles = '**/audio/**';
-var videoFiles = '**/video/**';
+var imageFiles = '**/' + IMAGE + '/**';
+var audioFiles = '**/' + AUDIO + '/**';
+var videoFiles = '**/' + VIDEO + '/**';
+var vendorFiles = '**/' + VENDOR + '/**';
 var bowerFiles = 'bower_components/**';
 var lintableJS = [
   'gulpfile.js',
   SRC + jsFiles,
-  '!**/vendor/**'
+  '!' + SRC + vendorFiles
 ];
 var lintableJSON = [
   'package.json',
   'bower.json',
-  SRC + '**/*.json'
+  SRC + '**/*.json',
+  '!' + SRC + vendorFiles
 ];
 
 
@@ -197,11 +209,11 @@ gulp.task('clean:tmp', function() {
   return del([TMP]);
 });
 
-gulp.task('clean:dist', function() {
-  return del([DIST]);
+gulp.task('clean:dest', function() {
+  return del([DEST]);
 });
 
-gulp.task('clean', ['clean:tmp', 'clean:dist']);
+gulp.task('clean', ['clean:tmp', 'clean:dest']);
 
 gulp.task('build:prep', ['clean'], function() {
   return merge(
@@ -270,10 +282,10 @@ gulp.task('build:minify', function() {
 
 gulp.task('build:output', function() {
   return merge(
-    gulp.src(TMP + '/**')
-      .pipe(gulp.dest(DIST)),
+    gulp.src(TMP + '**')
+      .pipe(gulp.dest(DEST)),
     gulp.src(bowerFiles)
-      .pipe(gulp.dest(DIST + '/bower_components'))
+      .pipe(gulp.dest(DEST + 'bower_components/'))
   );
 });
 
@@ -287,11 +299,11 @@ gulp.task('build', ['build:prep'], function(cb) {
 /***** WiP *****/
 // // TODO: Need a method for automating usage of the images once made.
 // gulp.task('res', function() {
-//   return gulp.src(imageFiles)
+//   return gulp.src(TMP + imageFiles)
 //     .pipe(responsive({
 //       // TODO
 //     }))
-//     .pipe(gulp.dest(DIST));
+//     .pipe(gulp.dest(DEST));
 // });
 
 gulp.task('serve', function(cb) {
@@ -307,31 +319,27 @@ gulp.task('serve', function(cb) {
     minify: false   // Prevents minification of client-side JS.
   }, cb);
 
-  gulp.watch(htmlFiles, browserSync.reload);
-  gulp.watch(cssFiles, browserSync.reload);
-  gulp.watch(jsFiles, browserSync.reload);
-  gulp.watch(imageFiles, browserSync.reload);
-  gulp.watch(audioFiles, browserSync.reload);
-  gulp.watch(videoFiles, browserSync.reload);
+  gulp.watch([SRC + '**', bowerFiles], browserSync.reload);
 });
 
 gulp.task('serve:dist', function(cb) {
   browserSync.init({
     server: {
-      baseDir: DIST,
+      baseDir: DEST,
       middleware: middleware
     },
     notify: false,  // Prevents pop-over notifications in the browser.
     minify: false   // Prevents minification of client-side JS.
   }, cb);
 
-  gulp.watch([DIST + '/**'], browserSync.reload);
+  gulp.watch(DEST + '**', browserSync.reload);
 });
 
 gulp.task('serve:tunnelled', function(cb) {
   browserSync.init({
     server: {
-      baseDir: DIST,
+      baseDir: DEST,
+      // Uncomment below to serve SRC files instead.
       // baseDir: SRC,
       // routes: {
       //   '/bower_components': './bower_components'
@@ -379,7 +387,7 @@ gulp.task('psi', ['psi:desktop', 'psi:mobile'], function() {
 });
 
 gulp.task('deploy:gh-pages', function() {
-  return gulp.src(DIST + '/**')
+  return gulp.src(DEST + '**')
     .pipe(ghPages());
 });
 
