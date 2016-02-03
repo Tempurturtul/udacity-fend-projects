@@ -76,6 +76,10 @@ var VIDEO = 'video';
 var VENDOR = 'vendor';
 
 
+/* Browsers. */
+var browsers = ['google-chrome', 'firefox'];
+
+
 /* Project-specific variables. */
 // Cache-control values for local server.
 var cacheControlValues = {
@@ -315,6 +319,7 @@ gulp.task('serve', function(cb) {
       },
       middleware: middleware
     },
+    browser: browsers,
     notify: false,  // Prevents pop-over notifications in the browser.
     minify: false   // Prevents minification of client-side JS.
   }, cb);
@@ -328,6 +333,7 @@ gulp.task('serve:dist', function(cb) {
       baseDir: DEST,
       middleware: middleware
     },
+    browser: browsers,
     notify: false,  // Prevents pop-over notifications in the browser.
     minify: false   // Prevents minification of client-side JS.
   }, cb);
