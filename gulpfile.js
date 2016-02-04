@@ -89,18 +89,16 @@ var cacheControlValues = {
   // Set value by resource file extension.
   //  Example: 'jpg': 'max-age=31536000'
   ext: {
-    'jpg': 'max-age=31536000',
     'png': 'max-age=31536000',
-    'html': 'max-age=31536000',
-    'css': 'max-age=31536000',
-    'js': 'max-age=31536000'
+    'jpg': 'max-age=31536000'
   }
 };
 // CSS selectors ignored by uncss.
 var uncssIgnoredSelectors = [
   '.mover'
 ];
-
+// Path to page tested by psi.
+var psiPath = '/';
 
 /* File globs. */
 var htmlFiles = '**/*.html';
@@ -253,6 +251,7 @@ gulp.task('build:prep', ['clean'], function() {
 gulp.task('build:minify', function() {
   return merge(
     gulp.src(TMP + htmlFiles)
+      .pipe(plumber())
       .pipe(htmlmin({
         removeComments: true,
         collapseWhitespace: true,
@@ -261,6 +260,7 @@ gulp.task('build:minify', function() {
       }))
       .pipe(gulp.dest(TMP)),
     gulp.src(TMP + cssFiles)
+      .pipe(plumber())
       .pipe(uncss({
         html: [TMP + htmlFiles],
         ignore: uncssIgnoredSelectors
@@ -268,9 +268,11 @@ gulp.task('build:minify', function() {
       .pipe(cssnano())
       .pipe(gulp.dest(TMP)),
     gulp.src(TMP + jsFiles)
+      .pipe(plumber())
       .pipe(uglify())
       .pipe(gulp.dest(TMP)),
     gulp.src(TMP + imageFiles)
+      .pipe(plumber())
       .pipe(imagemin({
         use: [pngquant()]  // Better compression than optipng.
       }))
@@ -366,6 +368,8 @@ gulp.task('psi:desktop', ['serve:tunnelled'], function() {
   var site = browserSync.instance.tunnel.url;
   // Ensure http protocol is used to avoid breaking resources.
   site = site.replace(/^https?/, 'http');
+  // Add user-defined path.
+  site = site + (psiPath || '');
 
   return psi.output(site, {
     nokey: 'true',
@@ -378,6 +382,8 @@ gulp.task('psi:mobile', ['serve:tunnelled'], function() {
   var site = browserSync.instance.tunnel.url;
   // Ensure http protocol is used to avoid breaking resources.
   site = site.replace(/^https?/, 'http');
+  // Add user-defined path.
+  site = site + (psiPath || '');
 
   return psi.output(site, {
     nokey: 'true',
