@@ -48,9 +48,13 @@
  *    clean:tmp         (Delete TMP folder.)
  *    clean:dist        (Delete DEST folder.)
  *    clean             (Run all clean tasks.)
- *    build:prep        (Clean, then output useref-modified and unmodified SRC files to TMP.)
- *    build:minify      (Minify TMP files.)
- *    build:output      (Copy TMP files and bower_components to DEST.)
+ *    prep              (Clean, then output useref-modified and unmodified SRC files to TMP.)
+ *    minify:html       (Minify TMP .html files.)
+ *    minify:css        (Minify TMP .css files.)
+ *    minify:js         (Minify TMP .js files.)
+ *    minify:images     (Minify TMP image files.)
+ *    minify            (Run all minify tasks.)
+ *    build:finalize    (Fingerprint TMP files and replace references, then output them and bower_components to DEST.)
  *    build             (Run all build tasks, then clean TMP.)
  *    serve             (Serve SRC files, then watch for files to reload.)
  *    serve:dist        (Serve DEST files, then watch for files to reload.)
@@ -90,7 +94,10 @@ var cacheControlValues = {
   //  Example: 'jpg': 'max-age=31536000'
   ext: {
     'png': 'max-age=31536000',
-    'jpg': 'max-age=31536000'
+    'jpg': 'max-age=31536000',
+    'js': 'max-age=31536000',
+    'css': 'max-age=31536000',
+    'html': 'no-cache'
   }
 };
 // CSS selectors ignored by uncss.
@@ -140,6 +147,7 @@ var plumber = require('gulp-plumber');
 var pngquant = require('imagemin-pngquant');
 var psi = require('psi');
 // var responsive = require('gulp-responsive');
+var RevAll = require('gulp-rev-all');
 var runSequence = require('run-sequence');
 var uglify = require('gulp-uglify');
 var uncss = require('gulp-uncss');
@@ -217,7 +225,7 @@ gulp.task('clean:dest', function() {
 
 gulp.task('clean', ['clean:tmp', 'clean:dest']);
 
-gulp.task('build:prep', ['clean'], function() {
+gulp.task('prep', ['clean'], function() {
   return merge(
     gulp.src(SRC + htmlFiles)
       .pipe(useref({
@@ -227,90 +235,99 @@ gulp.task('build:prep', ['clean'], function() {
         jschanged: jschanged
       }))
       .pipe(gulp.dest(TMP)),
-    gulp.src(SRC + imageFiles)
-      .pipe(gulp.dest(TMP)),
-    gulp.src(SRC + audioFiles)
-      .pipe(gulp.dest(TMP)),
-    gulp.src(SRC + videoFiles)
+    gulp.src([SRC + imageFiles, SRC + audioFiles, SRC + videoFiles])
       .pipe(gulp.dest(TMP))
   );
 });
 
-/***** WiP *****/
-// // NOTE: Use the vinyl branch until merged (addyosmani/critical#vinyl).
-// // Currently causing worse PSI scores.
-// gulp.task('build:critical', function() {
-//   return gulp.src(TMP + htmlFiles)
-//     .pipe(plumber())
-//     .pipe(critical({
-//       inline: true
-//     }))
+gulp.task('minify:html', function() {
+  return gulp.src(TMP + htmlFiles)
+    .pipe(plumber())
+    .pipe(htmlmin({
+      removeComments: true,
+      collapseWhitespace: true,
+      minifyJS: true,  // uglify
+      minifyCSS: true  // clean-css
+    }))
+    .pipe(gulp.dest(TMP))
+});
+
+gulp.task('minify:css', function() {
+  return gulp.src(TMP + cssFiles)
+    .pipe(plumber())
+    .pipe(uncss({
+      html: [TMP + htmlFiles],
+      ignore: uncssIgnoredSelectors
+    }))
+    .pipe(cssnano())
+    .pipe(gulp.dest(TMP));
+});
+
+gulp.task('minify:js', function() {
+  return gulp.src(TMP + jsFiles)
+    .pipe(plumber())
+    .pipe(uglify())
+    .pipe(gulp.dest(TMP));
+});
+
+gulp.task('minify:images', function() {
+  return gulp.src(TMP + imageFiles)
+    .pipe(plumber())
+    .pipe(imagemin({
+      use: [pngquant()]  // Better compression than optipng.
+    }))
+    .pipe(gulp.dest(TMP));
+});
+
+// gulp.task('minify:audio', function() {
+//   return gulp.src(TMP + audioFiles)
+//     // TODO: Optimize audio files.
 //     .pipe(gulp.dest(TMP));
 // });
 
-gulp.task('build:minify', function() {
-  return merge(
-    gulp.src(TMP + htmlFiles)
-      .pipe(plumber())
-      .pipe(htmlmin({
-        removeComments: true,
-        collapseWhitespace: true,
-        minifyJS: true,  // uglify
-        minifyCSS: true  // clean-css
-      }))
-      .pipe(gulp.dest(TMP)),
-    gulp.src(TMP + cssFiles)
-      .pipe(plumber())
-      .pipe(uncss({
-        html: [TMP + htmlFiles],
-        ignore: uncssIgnoredSelectors
-      }))
-      .pipe(cssnano())
-      .pipe(gulp.dest(TMP)),
-    gulp.src(TMP + jsFiles)
-      .pipe(plumber())
-      .pipe(uglify())
-      .pipe(gulp.dest(TMP)),
-    gulp.src(TMP + imageFiles)
-      .pipe(plumber())
-      .pipe(imagemin({
-        use: [pngquant()]  // Better compression than optipng.
-      }))
-      .pipe(gulp.dest(TMP))
-    // gulp.src(TMP + audioFiles)
-    //   // TODO: Optimize audio files.
-    //   .pipe(gulp.dest(TMP)),
-    // gulp.src(TMP + videoFiles)
-    //   // TODO: Optimize video files.
-    //   .pipe(gulp.dest(TMP))
+// gulp.task('minify:video', function() {
+//   return gulp.src(TMP + videoFiles)
+//     // TODO: Optimize video files.
+//     .pipe(gulp.dest(TMP));
+// });
+
+gulp.task('minify', function(cb) {
+  runSequence(
+    ['minify:html', 'minify:css', 'minify:js'],
+    'minify:images',
+    cb
   );
 });
 
-gulp.task('build:output', function() {
+gulp.task('build:finalize', function() {
+  var revAll = new RevAll({
+    dontRenameFile: [
+      /^\/favicon\.ico$/g,  // Don't fingerprint the favicon.ico file.
+      '.html'               // Don't fingerprint .html files.
+    ],
+    dontUpdateReference: [
+      /^\/favicon\.ico$/g,  // Don't update references to the favicon.ico file.
+      '.html'               // Don't update references to .html files.
+    ]
+  });
+
   return merge(
     gulp.src(TMP + '**')
+      .pipe(revAll.revision())
       .pipe(gulp.dest(DEST)),
     gulp.src(bowerFiles)
       .pipe(gulp.dest(DEST + 'bower_components/'))
   );
 });
 
-gulp.task('build', ['build:prep'], function(cb) {
-  runSequence('build:minify',
-              'build:output',
-              'clean:tmp',
-              cb);
+gulp.task('build', ['prep'], function(cb) {
+  runSequence(
+    'minify',
+    'build:finalize',
+    'clean:tmp',
+    cb
+  );
 });
-
-/***** WiP *****/
-// // TODO: Need a method for automating usage of the images once made.
-// gulp.task('res', function() {
-//   return gulp.src(TMP + imageFiles)
-//     .pipe(responsive({
-//       // TODO
-//     }))
-//     .pipe(gulp.dest(DEST));
-// });
 
 gulp.task('serve', function(cb) {
   browserSync.init({
