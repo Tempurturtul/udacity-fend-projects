@@ -20,3 +20,5 @@ Distribution files may also be viewed on the [gh-pages](https://github.com/Tempu
 1. Replaced remotely hosted thumbnails with locally hosted versions. (Allowing image optimization and manipulation of cache-control.)
 1. Set cache-control max-age to 1 year for locally hosted, non-html resources.
 1. Applied finger-prints to cached locally hosted, non-html resources.
+1. Inlined critical and other appropriate css.
+1. Removed use of google fonts.

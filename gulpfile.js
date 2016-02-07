@@ -1,3 +1,8 @@
+// TODO:
+//  Fix bug where absolute paths point to username.github.io instead of
+//  username.github.io/repo-name when deployed to Github Pages. Consider using
+//  gift to retrieve the repository name, as is done in gulp-gh-pages.
+
 // TODO: Optimize images with responsiveness.
 // TODO: Optimize audio and video.
 // TODO: Inline critical css.
@@ -146,6 +151,7 @@ var path = require('path');
 var plumber = require('gulp-plumber');
 var pngquant = require('imagemin-pngquant');
 var psi = require('psi');
+var replace = require('gulp-replace');
 // var responsive = require('gulp-responsive');
 var RevAll = require('gulp-rev-all');
 var runSequence = require('run-sequence');
@@ -249,7 +255,7 @@ gulp.task('minify:html', function() {
       minifyJS: true,  // uglify
       minifyCSS: true  // clean-css
     }))
-    .pipe(gulp.dest(TMP))
+    .pipe(gulp.dest(TMP));
 });
 
 gulp.task('minify:css', function() {
@@ -336,7 +342,7 @@ gulp.task('serve', function(cb) {
       routes: {
         '/bower_components': './bower_components'
       },
-      middleware: middleware
+      // middleware: middleware
     },
     browser: browsers,
     notify: false,  // Prevents pop-over notifications in the browser.
@@ -417,6 +423,10 @@ gulp.task('psi', ['psi:desktop', 'psi:mobile'], function() {
 
 gulp.task('deploy:gh-pages', function() {
   return gulp.src(DEST + '**')
+    // Absolute urls in Github Pages point to username.github.io instead of
+    // username.github.io/project-name. This is a bit of a hack to remedy that
+    // issue.
+    .pipe(gulpif(['**/*.html', '**/*.css', '**/*.js'], replace(/('|"|=)\//g, '$1' + '/fend-optimization/')))
     .pipe(ghPages());
 });
 
