@@ -1,18 +1,14 @@
-// TODO:
-//  Fix bug where absolute paths point to username.github.io instead of
-//  username.github.io/repo-name when deployed to Github Pages. Consider using
-//  gift to retrieve the repository name, as is done in gulp-gh-pages.
-
 // TODO: Optimize images with responsiveness.
 // TODO: Optimize audio and video.
-// TODO: Inline critical css.
 
 /*  gulpfile.js
  *
  *  This is Tempurturtul's gulpfile. It makes a few assumptions about folder
- *  structure and requires some markup on html files. Variables for making
- *  project-specific modifications are included below these comments. Currently
- *  handling automation of front-end tasks only.
+ *  structure and requires some markup on html files. Additionally, relative
+ *  paths should be used whenever possible. (See the deploy:gh-pages task for
+ *  an explanation, and Requirements: HTML Markup for the exception.) Variables
+ *  for making project-specific modifications are included below these comments.
+ *  Currently handling automation of front-end tasks only.
  *
  *  Requirements:
  *    Folder Structure:
@@ -67,7 +63,7 @@
  *    psi:desktop       (Test desktop performance and report results.)
  *    psi:mobile        (Test mobile performance and report results.)
  *    psi               (Run all psi tasks.)
- *    deploy:gh-pages   (Deploy DEST files to gh-pages.)
+ *    deploy:gh-pages   (Modify detected absolute links and deploy DEST files to gh-pages.)
  *    default           (Lint and serve.)
  */
 
@@ -90,6 +86,14 @@ var browsers = ['google-chrome', 'firefox'];
 
 
 /* Project-specific variables. */
+// Path to root url for gh-pages (/project-name).
+var ghRoot = '/fend-optimization';
+// CSS selectors ignored by uncss.
+var uncssIgnoredSelectors = [
+  '.mover'
+];
+// Path to page tested by psi.
+var psiPath = '/';
 // Cache-control values for local server.
 var cacheControlValues = {
   // Set value by path to resource. Overrides type.
@@ -105,12 +109,7 @@ var cacheControlValues = {
     'html': 'no-cache'
   }
 };
-// CSS selectors ignored by uncss.
-var uncssIgnoredSelectors = [
-  '.mover'
-];
-// Path to page tested by psi.
-var psiPath = '/';
+
 
 /* File globs. */
 var htmlFiles = '**/*.html';
@@ -137,7 +136,6 @@ var lintableJSON = [
 /* Plugins. */
 var gulp = require('gulp');
 var browserSync = require('browser-sync').create();
-// var critical = require('critical').stream;
 var cssnano = require('gulp-cssnano');
 var del = require('del');
 var ghPages = require('gulp-gh-pages');
@@ -152,7 +150,6 @@ var plumber = require('gulp-plumber');
 var pngquant = require('imagemin-pngquant');
 var psi = require('psi');
 var replace = require('gulp-replace');
-// var responsive = require('gulp-responsive');
 var RevAll = require('gulp-rev-all');
 var runSequence = require('run-sequence');
 var uglify = require('gulp-uglify');
@@ -422,11 +419,26 @@ gulp.task('psi', ['psi:desktop', 'psi:mobile'], function() {
 });
 
 gulp.task('deploy:gh-pages', function() {
+  // Github Pages resolves absolute urls to username.github.io instead of
+  // username.github.io/project-name. Resolved by appending the project-name to
+  // any absolute urls to resources found in .html files.
+  //   This resolution only applies to src="" and href="" urls. Any other urls
+  //   will still need to be relative.
+
+  var resources = /(href|src)=('|")([^'|"]+)\2/gi;
+
   return gulp.src(DEST + '**')
-    // Absolute urls in Github Pages point to username.github.io instead of
-    // username.github.io/project-name. This is a bit of a hack to remedy that
-    // issue.
-    .pipe(gulpif(['**/*.html', '**/*.css', '**/*.js'], replace(/('|"|=)\//g, '$1' + '/fend-optimization/')))
+    .pipe(gulpif('**/*.html', replace(resources, function(match, attribute, quotes, url, offset, string) {
+      // If the path isn't absolute, don't modify anything.
+      if (!path.isAbsolute(url)) {
+        return match;
+      }
+
+      // Append the desired root to the beginning of the absolute path.
+      var newUrl = path.join(ghRoot, url);
+
+      return match.replace(url, newUrl);
+    })))
     .pipe(ghPages());
 });
 
