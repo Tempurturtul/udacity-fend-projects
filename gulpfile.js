@@ -47,7 +47,7 @@
  *    lint:json         (Lint JSON.)
  *    lint              (Run all lint tasks, then watch for files to re-lint.)
  *    clean:tmp         (Delete TMP folder.)
- *    clean:dist        (Delete DEST folder.)
+ *    clean:dest        (Delete DEST folder.)
  *    clean             (Run all clean tasks.)
  *    prep              (Clean, then output useref-modified and unmodified SRC files to TMP.)
  *    minify:html       (Minify TMP .html files.)
@@ -58,7 +58,7 @@
  *    build:finalize    (Fingerprint TMP files and replace references, then output them and bower_components to DEST.)
  *    build             (Run all build tasks, then clean TMP.)
  *    serve             (Serve SRC files, then watch for files to reload.)
- *    serve:dist        (Serve DEST files, then watch for files to reload.)
+ *    serve:dest        (Serve DEST files, then watch for files to reload.)
  *    serve:tunnelled   (Serve DEST files tunnelled to a random public url.)
  *    psi:desktop       (Test desktop performance and report results.)
  *    psi:mobile        (Test mobile performance and report results.)
@@ -349,7 +349,7 @@ gulp.task('serve', function(cb) {
   gulp.watch([SRC + '**', bowerFiles], browserSync.reload);
 });
 
-gulp.task('serve:dist', function(cb) {
+gulp.task('serve:dest', function(cb) {
   browserSync.init({
     server: {
       baseDir: DEST,
