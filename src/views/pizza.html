@@ -38,6 +38,9 @@
       position: fixed;
       width: 256px;
       z-index: -1;
+      /* Promote these elements since we plan to animate them. */
+      will-change: transform;
+      transform: translateZ(0);
     }
 
     .randomPizzaContainer {

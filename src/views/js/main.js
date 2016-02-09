@@ -511,8 +511,13 @@ function updatePositions() {
   var items = document.querySelectorAll('.mover');
   var scrollTop = document.body.scrollTop;
   for (var i = 0; i < items.length; i++) {
+    // Instead of changing style.left on every element, change style.translate
+    // because it can be handled by the compositor alone. This means we avoid
+    // layout and paint operations.
     var phase = Math.sin((scrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    var translateX = Math.floor(items[i].basicLeft + 100 * phase) - 1000;
+    // items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    items[i].style.transform = 'translate(' + translateX + 'px, 0)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
