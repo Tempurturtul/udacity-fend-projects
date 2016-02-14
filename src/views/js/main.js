@@ -402,19 +402,20 @@ var pizzaElementGenerator = function(i) {
 var resizePizzas = function(size) {
   window.performance.mark("mark_start_resize");   // User Timing API function
   var randomPizzasElem = document.getElementById("randomPizzas");
+  var allRandomPizzaContainers = document.getElementsByClassName("randomPizzaContainer");
 
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
         document.getElementById("pizzaSize").innerHTML = "Small";
-        return;
+        break;
       case "2":
         document.getElementById("pizzaSize").innerHTML = "Medium";
-        return;
+        break;
       case "3":
         document.getElementById("pizzaSize").innerHTML = "Large";
-        return;
+        break;
       default:
         console.log("bug in changeSliderLabel");
     }
@@ -451,14 +452,12 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    var allRandomPizzaContainers = document.getElementsByClassName("randomPizzaContainer");
     // Offset width is the same for all random pizza containers.
     var offsetW = allRandomPizzaContainers[0].offsetWidth;
     // Result of determineDx is the same for all random pizza containers.
     var dx = determineDx(allRandomPizzaContainers[0], size);
     var newwidth = (offsetW + dx) + 'px';
-    console.log(newwidth);
-
+    
     for (var i = 0; i < allRandomPizzaContainers.length; i++) {
       allRandomPizzaContainers[i].style.width = newwidth;
     }
