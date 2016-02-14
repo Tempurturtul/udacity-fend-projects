@@ -457,7 +457,7 @@ var resizePizzas = function(size) {
     // Result of determineDx is the same for all random pizza containers.
     var dx = determineDx(allRandomPizzaContainers[0], size);
     var newwidth = (offsetW + dx) + 'px';
-    
+
     for (var i = 0; i < allRandomPizzaContainers.length; i++) {
       allRandomPizzaContainers[i].style.width = newwidth;
     }
@@ -542,15 +542,18 @@ document.addEventListener('DOMContentLoaded', function() {
   // resolutions up to 2048x2048 instead of the original 2048x51200.
   var cols = 8;
   var s = 256;
+  var elem;
+  var movingPizzas = document.getElementById("movingPizzas1");
+
   for (var i = 0; i < 64; i++) {
-    var elem = document.createElement('img');
+    elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "image/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    movingPizzas.appendChild(elem);
   }
   updatePositions();
 });
