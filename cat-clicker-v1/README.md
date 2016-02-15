@@ -4,8 +4,23 @@ This is the first version of the "Cat Clicker" application, created before worki
 
 Included for comparison.
 
+![Preview](docs/preview.png "A preview screenshot.")
+
 ## Project Requirements
 
 - Displays a picture of a cat.
 - Displays a number representing clicks.
 - The number of clicks increments when the cat picture is clicked.
+
+## Local Setup
+
+**Prerequisites:**
+- [Node](https://nodejs.org/en/)
+- [Gulp](http://gulpjs.com/)
+
+**Install dependencies.**
+- In cat-clicker-v1 directory: `npm install`.
+
+**Run desired Gulp task.**
+- `gulp` *(To serve source files.)*
+- `gulp build; gulp serve:dest` *(To build and serve distribution files.)*
