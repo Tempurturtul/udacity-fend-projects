@@ -1,0 +1,42 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: #333;
+  color: #e0e0e0;
+}
+
+#app {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100%;
+  padding: 10px;
+}
+
+#counter {
+  font-size: 1.5em;
+  padding: 10px;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+img {
+  border-radius: 8px;
+  width: 100%;
+}
+
+img:hover {
+  box-shadow: 0 0 2px 2px rgba(255,255,255,0.25);
+}
+
+img:active {
+  box-shadow: 0 0 2px 1px rgba(255,255,255,1);
+}
