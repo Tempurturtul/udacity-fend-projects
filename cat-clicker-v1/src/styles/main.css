@@ -12,14 +12,6 @@ body {
   color: #e0e0e0;
 }
 
-#app {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  height: 100%;
-  padding: 5%;
-}
-
 #counter {
   background: #333;
   font-size: 1.5em;
@@ -29,10 +21,16 @@ body {
   top: 0;
 }
 
+.grid {
+
+}
+
+.row {
+
+}
+
 img {
   border-radius: 8px;
-  max-height: 100%;
-  max-width: 100%;
 }
 
 img:hover {

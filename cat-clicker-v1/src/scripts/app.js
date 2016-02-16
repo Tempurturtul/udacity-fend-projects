@@ -1,3 +1,5 @@
+// TODO: Working on grid creation.
+
 /**
  * app.js
  * Core functionality for the Cat Clicker application.
@@ -8,8 +10,8 @@
       win = global.window,
       util = global.util,
       counter = doc.getElementById('counter'),
-      count,
-      cat,
+      count,  // Number of cat clicks.
+      catCount = 12,  // Number of cat <img> elements.
       catImages = [
         {
           width: '1920w',
@@ -60,27 +62,9 @@
           ]
         }
       ],
-      numberOfCats = 11;
+      catImagesCount = catImages[0].urls.length;
 
   initialize();
-
-  /**
-   * Initializes the application. Should only be called once.
-   */
-  function initialize() {
-    // Set the count.
-    count = retrieveCount();
-    // Set the counter.
-    counter.innerHTML = count;
-    // Get data for the cat <img> element.
-    var data = getCatData();
-    // Create the cat <img> element.
-    cat = createImage(doc, data);
-    // Add the onclick event handler to the cat <img> element.
-    cat.onclick = catClicked;
-    // Append the cat <img> element to the container.
-    doc.getElementById('app').appendChild(cat);
-  }
 
   /**
    * Increments the counter and changes the image to the next cat.
@@ -88,18 +72,106 @@
   function catClicked() {
     counter.innerHTML = ++count;
 
-    var data = getCatData();
+    var data = getNextCatData();
 
-    changeImage(cat, data);
+    changeImage(this, data);
     saveCount();
   }
 
   /**
-   * Returns an object containing data for use in an <img> element.
+   * Changes an <img> element.
+   * @param {object} elem - HTML <img> element.
+   * @param {sting|object} data - Path to image, or object containing image data.
+   * @param {string} data.src
+   * @param {string} data.alt
+   * @param {string} data.srcset
+   * @param {string} data.sizes
+   * @returns {object} - The changed <img> element.
+   */
+  function changeImage(elem, data) {
+    if (typeof data === 'string') {
+      elem.src = data;
+      elem.alt = undefined;
+      elem.srcset = undefined;
+      elem.sizes = undefined;
+    } else {
+      elem.src = data.src;
+      elem.alt = data.alt;
+      elem.srcset = data.srcset;
+      elem.sizes = data.sizes;
+    }
+
+    return elem;
+  }
+
+  /**
+   * Creates a <div class="grid"> element, along with child <div class="row">
+   * elements and the content elements, in the given document and returns it.
+   * @param {object} doc - The document.
+   * @param {number} rows - The number of rows in the grid.
+   * @param {object[]} contents - An array of the content elements.
+   * @returns {object} - The grid element.
+   */
+  function createGrid(doc, rows, contents) {
+    var grid = doc.createElement('div');
+    grid.classList.add('grid');
+
+    // Create the row elements.
+    for (var i = 0; i < data.rows; i++) {
+      var row = doc.createElement('div');
+      row.classList.add('row');
+      grid.appendChild(row);
+    }
+
+    // Add the contents.
+    var containingRow,
+        containingRowIndex = -1;
+    for (var i = 0; i < contents.length; i++) {
+      // Check if containingRow needs to change.
+      var contentsPerRow = Math.ceil(contents.length / rows);
+      if (i % contentsPerRow === 0) {
+        containingRowIndex++;
+        containingRow = grid.getElementsByClassname('row')[containingRowIndex]
+      }
+
+      // Append the element to the containingRow.
+      containingRow.appendChild(contents[i]);
+    }
+
+    return grid;
+  }
+
+  /**
+   * Creates an <img> element in the given document and returns it.
+   * @param {object} doc - The document.
+   * @param {string|object} data - Path to image, or object containing image data.
+   * @param {string} data.src
+   * @param {string} data.alt
+   * @param {string} data.srcset
+   * @param {string} data.sizes
    * @returns {object}
    */
-  function getCatData() {
-    var id = (count % numberOfCats) + 1;
+  function createImage(doc, data) {
+    var elem = doc.createElement('img');
+
+    if (typeof data === 'string') {
+      elem.src = data;
+    } else {
+      elem.src = data.src;
+      elem.alt = data.alt;
+      elem.srcset = data.srcset;
+      elem.sizes = data.sizes;
+    }
+
+    return elem;
+  }
+
+  /**
+   * Returns an object containing data for use in an <img> element.
+   * @param {number} id - The id of the image the data should represent.
+   * @returns {object}
+   */
+  function getCatData(id) {
     var re = new RegExp('cat-' + id);
 
     var filteredCatImages = catImages.map(function(set) {
@@ -141,6 +213,80 @@
   }
 
   /**
+   * Returns data for the next cat image (based on latest displayed image).
+   * @returns {object}
+   */
+  function getNextCatData() {
+    var id = (count % catImages[0].urls.length) + 1;
+    return getCatData(id);
+  }
+
+  /**
+   * Returns data for a random cat image.
+   * @returns {object}
+   */
+  function getRandomCatData() {
+    var id = util.randomFromRange(1, catImages[0].urls.length);
+    return getCatData(id);
+  }
+
+  /**
+   * Returns data for generating a grid capable of housing n elements within the
+   * specified dimensions.
+   * @param {number} n - The number of elements (square dimensions).
+   * @param {number} x - The width of the grid.
+   * @param {number} y - The height of the grid.
+   * @returns {object} - Object containing rows and size properties.
+   */
+  function gridData(n, x, y) {
+    var rows = 1,
+        size = Math.min(x, y),
+        step = 0.1;  // The percentage by which to reduce size each time it's found to be too large.
+
+    while (x < size * Math.ceil(n / rows)) {
+      // Generate a new row if there's room.
+      if (y >= size * (rows + 1)) {
+        rows++;
+      }
+      // Otherwise, shrink size.
+      else {
+        size -= Math.floor(size * step);
+      }
+    }
+
+    return {
+      rows: rows,
+      size: size
+    };
+  }
+
+  /**
+   * Initializes the application. Should only be called once.
+   */
+  function initialize() {
+    // Set the count.
+    count = retrieveCount();
+    // Set the counter.
+    counter.innerHTML = count;
+
+    // Create the grid.
+    var grid = createGrid(doc,
+                          gridData(catImagesCount, win.innerWidth, win.innerHeight));
+    doc.body.appendChild(grid);
+
+    // Create the cat <img> elements.
+    for (var i = 0; i < catCount; i++) {
+      // Get data for the element.
+      var data = getRandomCatData();
+      // Create the element.
+      var elem = createImage(doc, data);
+      // Add the onclick event handler to the element.
+      elem.onclick = catClicked;
+      // TODO:  Add the element to the grid.
+    }
+  }
+
+  /**
    * Returns the count stored in local storage, or zero if no count is found.
    * @returns {number} The stored count or zero.
    */
@@ -162,53 +308,6 @@
       win.localStorage.setItem('count', count);
     } else {
       console.warn('Count not saved; local storage is unavailable.');
-    }
-  }
-
-  /**
-   * Creates an <img> element in the given document and returns it.
-   * @param {string|object} data - Path to image, or object containing image data.
-   * @param {string} data.src
-   * @param {string} data.alt
-   * @param {string} data.srcset
-   * @param {string} data.sizes
-   * @returns {object}
-   */
-  function createImage(doc, data) {
-    var elem = doc.createElement('img');
-
-    if (typeof data === 'string') {
-      elem.src = data;
-    } else {
-      elem.src = data.src;
-      elem.alt = data.alt;
-      elem.srcset = data.srcset;
-      elem.sizes = data.sizes;
-    }
-
-    return elem;
-  }
-
-  /**
-   * Changes an <img> element.
-   * @param {object} elem - HTML <img> element.
-   * @param {sting|object} data - Path to image, or object containing image data.
-   * @param {string} data.src
-   * @param {string} data.alt
-   * @param {string} data.srcset
-   * @param {string} data.sizes
-   */
-  function changeImage(elem, data) {
-    if (typeof data === 'string') {
-      elem.src = data;
-      elem.alt = undefined;
-      elem.srcset = undefined;
-      elem.sizes = undefined;
-    } else {
-      elem.src = data.src;
-      elem.alt = data.alt;
-      elem.srcset = data.srcset;
-      elem.sizes = data.sizes;
     }
   }
 })(this);
