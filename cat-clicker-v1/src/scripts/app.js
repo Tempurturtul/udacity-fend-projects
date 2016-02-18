@@ -1,4 +1,4 @@
-// TODO: Working on grid creation.
+// TODO Working on grid - decided to simplify...
 
 /**
  * app.js
@@ -61,8 +61,7 @@
             'image/480x318/cat-11-480x318.jpg'
           ]
         }
-      ],
-      catImagesCount = catImages[0].urls.length;
+      ];
 
   initialize();
 
@@ -105,37 +104,46 @@
   }
 
   /**
-   * Creates a <div class="grid"> element, along with child <div class="row">
-   * elements and the content elements, in the given document and returns it.
+   * Creates a <div class="grid"> element, along with child <div class="col">
+   * and <div class="cell"> elements, in the given document and returns it.
+   * Optionally populates the grid with contents.
    * @param {object} doc - The document.
-   * @param {number} rows - The number of rows in the grid.
-   * @param {object[]} contents - An array of the content elements.
+   * @param {object} data - Data describing the grid.
+   * @param {number} data.cols - Number of columns.
+   * @param {number} data.rows - Number of rows.
+   * @param {number} data.size - Cell size.
+   * @param {object[]} [contents] - An array of content elements.
    * @returns {object} - The grid element.
    */
-  function createGrid(doc, rows, contents) {
-    var grid = doc.createElement('div');
+  function createGrid(doc, data, contents) {
+    var row, col,
+        grid = doc.createElement('div');
+
     grid.classList.add('grid');
 
-    // Create the row elements.
-    for (var i = 0; i < data.rows; i++) {
-      var row = doc.createElement('div');
-      row.classList.add('row');
-      grid.appendChild(row);
-    }
+    // Create the cols.
+    for (col = 0; col < data.cols; col++) {
+      var colElem = doc.createElement('div');
+      colElem.style.display = 'inline-block';
+      colElem.classList.add('col');
+      colElem.id = getColumnId(col);
 
-    // Add the contents.
-    var containingRow,
-        containingRowIndex = -1;
-    for (var i = 0; i < contents.length; i++) {
-      // Check if containingRow needs to change.
-      var contentsPerRow = Math.ceil(contents.length / rows);
-      if (i % contentsPerRow === 0) {
-        containingRowIndex++;
-        containingRow = grid.getElementsByClassname('row')[containingRowIndex]
+      // Create the cells.
+      for (row = 0; row < data.rows; row++) {
+        var cell = doc.createElement('div');
+        cell.style.height = cell.style.width = data.size + 'px';
+        cell.classList.add('cell');
+        // Add id (A1, A2, B1, B2...).
+        cell.id = colElem.id + (row + 1);
+
+        colElem.appendChild(cell);
       }
 
-      // Append the element to the containingRow.
-      containingRow.appendChild(contents[i]);
+      grid.appendChild(colElem);
+    }
+
+    if (contents) {
+      // TODO Add contents.
     }
 
     return grid;
@@ -169,9 +177,10 @@
   /**
    * Returns an object containing data for use in an <img> element.
    * @param {number} id - The id of the image the data should represent.
+   * @param {string} [sizes='100vw'] - The <img> sizes attribute value.
    * @returns {object}
    */
-  function getCatData(id) {
+  function getCatData(id, sizes) {
     var re = new RegExp('cat-' + id);
 
     var filteredCatImages = catImages.map(function(set) {
@@ -207,55 +216,104 @@
       }
     });
 
-    data.sizes = '100vw';
+    if (sizes) {
+      data.sizes = sizes;
+    } else {
+      data.sizes = '100vw';
+    }
 
     return data;
   }
 
   /**
+   * Returns the identifier for the nth column (A...Z, AA...ZZZ).
+   * @param {number} n
+   * @returns {string}
+   */
+  function getColumnId(n) {
+    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        maxLetterPlaces = 3,
+        max = Math.pow(alphabet.length, maxLetterPlaces),
+        result;
+
+    // Early abort if n is too large.
+    if (n >= max) {
+      console.error('Column ID exceeds ' + Array(maxLetterPlaces + 1).join(alphabet.charAt(alphabet.length - 1)) + '.');
+      return;
+    }
+
+    recurse(n);
+
+    return result;
+
+    function recurse(n, acc) {
+      acc = acc || '';
+
+      // Base case.
+      if (n < alphabet.length) {
+        result = alphabet.charAt(n) + acc;
+        return;
+      }
+
+      var letter = alphabet.charAt(n % alphabet.length);
+      acc = letter + acc;
+
+      if (n / alphabet.length === 1) {
+        n = 0;
+      } else {
+        n = Math.floor(n / alphabet.length);
+      }
+
+      recurse(n, acc);
+    }
+  }
+
+  /**
    * Returns data for the next cat image (based on latest displayed image).
+   * @param {string} [sizes] - The sizes attribute value.
    * @returns {object}
    */
-  function getNextCatData() {
+  function getNextCatData(sizes) {
     var id = (count % catImages[0].urls.length) + 1;
-    return getCatData(id);
+    return getCatData(id, sizes);
   }
 
   /**
    * Returns data for a random cat image.
+   * @param {string} [sizes] - The sizes attribute value.
    * @returns {object}
    */
-  function getRandomCatData() {
+  function getRandomCatData(sizes) {
     var id = util.randomFromRange(1, catImages[0].urls.length);
-    return getCatData(id);
+    return getCatData(id, sizes);
   }
 
   /**
    * Returns data for generating a grid capable of housing n elements within the
    * specified dimensions.
-   * @param {number} n - The number of elements (square dimensions).
-   * @param {number} x - The width of the grid.
-   * @param {number} y - The height of the grid.
-   * @returns {object} - Object containing rows and size properties.
+   * @param {number} n - The number of elements.
+   * @param {number} x - The maximum width of the grid.
+   * @param {number} y - The maximum height of the grid.
+   * @returns {object} - Object containing rows, cols, and size properties.
    */
-  function gridData(n, x, y) {
-    var rows = 1,
-        size = Math.min(x, y),
-        step = 0.1;  // The percentage by which to reduce size each time it's found to be too large.
+  function getGridData(n, x, y) {
+    var cols = 1,
+        size = Math.min(x, y);  // The smallest of x and y is the greatest possible cell size.
 
-    while (x < size * Math.ceil(n / rows)) {
-      // Generate a new row if there's room.
-      if (y >= size * (rows + 1)) {
-        rows++;
+    while (y < size * Math.ceil(n / cols)) {
+      // Generate a new column if there's room.
+      if (x >= size * (cols + 1)) {
+        cols++;
       }
       // Otherwise, shrink size.
       else {
-        size -= Math.floor(size * step);
+        size--;
       }
     }
 
     return {
-      rows: rows,
+      cols: cols,
+      rows: Math.ceil(n / cols),
       size: size
     };
   }
@@ -269,21 +327,25 @@
     // Set the counter.
     counter.innerHTML = count;
 
-    // Create the grid.
-    var grid = createGrid(doc,
-                          gridData(catImagesCount, win.innerWidth, win.innerHeight));
-    doc.body.appendChild(grid);
+    // Get the data needed to create the grid.
+    var gridData = getGridData(catCount, win.innerWidth, win.innerHeight);
+    var gridContents = [];
 
     // Create the cat <img> elements.
     for (var i = 0; i < catCount; i++) {
       // Get data for the element.
-      var data = getRandomCatData();
+      var data = getRandomCatData(gridData.size + 'px');
       // Create the element.
       var elem = createImage(doc, data);
       // Add the onclick event handler to the element.
       elem.onclick = catClicked;
-      // TODO:  Add the element to the grid.
+      // Add the element to the gridContents array.
+      gridContents.push(elem);
     }
+
+    // Create the grid.
+    var grid = createGrid(doc, gridData, gridContents);
+    doc.body.appendChild(grid);
   }
 
   /**

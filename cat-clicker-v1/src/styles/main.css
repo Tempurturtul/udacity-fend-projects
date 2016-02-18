@@ -22,11 +22,13 @@ body {
 }
 
 .grid {
-
+  /*font-size: 0;*/ /* Prevent unwanted space after element. */
 }
 
-.row {
+.col {
+}
 
+.cell {
 }
 
 img {
