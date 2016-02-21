@@ -20,6 +20,7 @@ Included for comparison.
 **Revision #2**
 - Displays a list of at least 5 cats by name.
 - Displays a picture of the selected cat along with it's name in a display area.
+- Clicks tracked separately for each cat.
 
 ## Local Setup
 

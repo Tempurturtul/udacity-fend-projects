@@ -8,7 +8,7 @@
       win = global.window,
       util = global.util,
       counter = doc.getElementById('counter'),
-      count,  // Number of cat clicks.
+      counts = [],  // Number of cat clicks sorted by ID.
       cats = [
         {
           width: '1920w',
@@ -59,18 +59,18 @@
           ]
         }
       ],
-      sizes = '70vw';  // Cat <img> element sizes attribute.
+      sizes = '70vw',  // Cat <img> element sizes attribute.
+      // Closure returning the onclick function for the cat image element.
+      imgClickFunc = (function(id) {
+        return function() {
+          counts[id - 1] = counts[id - 1] + 1 || 1;
+          counter.textContent = counts[id - 1];
+
+          saveCounts(counts);
+        };
+      });
 
   initialize();
-
-  /**
-   * Increments the counter.
-   */
-  function catClicked() {
-    counter.textContent = ++count;
-
-    saveCount();
-  }
 
   /**
    * Change the cat.
@@ -84,8 +84,12 @@
    * @param {string} data.imageData.sizes
    */
   function changeCat(elem, data) {
-    changeImage(elem.getElementsByTagName('img')[0], data.imageData);
+    var img = changeImage(elem.getElementsByTagName('img')[0], data.imageData);
+    img.onclick = imgClickFunc(data.id);
+
     elem.getElementsByTagName('h2')[0].textContent = data.name;
+
+    counter.textContent = counts[data.id - 1] || 0;
   }
 
   /**
@@ -168,6 +172,7 @@
 
     var name = getCatName(id);
     var data = {
+      id: id,
       name: name,
       imageData: {}
     };
@@ -245,13 +250,13 @@
     var main = doc.getElementsByTagName('main')[0],
         list = doc.getElementsByTagName('ul')[0];
 
-    // Set the count.
-    count = retrieveCount();
-    // Set the counter.
-    counter.textContent = count;
-
     // Get data for a random cat element.
     var catData = getRandomCatData(sizes);
+
+    // Set the count.
+    counts = retrieveCounts();
+    // Set the counter.
+    counter.textContent = counts[catData.id - 1] || 0;
 
     // Create the containing div and the heading element.
     var cat = doc.createElement('div');
@@ -263,13 +268,14 @@
     // Create the image element.
     var img = createImage(doc, catData.imageData);
     // Add the onclick event handler to the cat.
-    img.onclick = catClicked;
+    img.onclick = imgClickFunc(catData.id);
     // Add the img to the containing div.
     cat.appendChild(img);
 
     // Add the cat div to the document.
     main.appendChild(cat);
 
+    // Closure returning the onclick function for the cat list elements.
     var liClickFunc = (function(id) {
       return function() {
         changeCat(cat, getCatData(id, sizes));
@@ -286,25 +292,25 @@
   }
 
   /**
-   * Returns the count stored in local storage, or zero if no count is found.
-   * @returns {number} The stored count or zero.
+   * Returns the counts stored in local storage, or an empty array if no data is found.
+   * @returns {array} The stored count or an empty array.
    */
-  function retrieveCount() {
+  function retrieveCounts() {
     if (util.storageAvailable('localStorage')) {
-      var retrievedCount = win.localStorage.getItem('count') || 0;
-      return retrievedCount;
+      var retrievedCounts = JSON.parse(win.localStorage.getItem('counts')) || [];
+      return retrievedCounts;
     } else {
       console.warn('Unable to retrieve count; local storage is unavailable.');
-      return 0;
+      return [];
     }
   }
 
   /**
-   * Attempts to save the count to local storage.
+   * Attempts to save the counts to local storage.
    */
-  function saveCount() {
+  function saveCounts(counts) {
     if (util.storageAvailable('localStorage')) {
-      win.localStorage.setItem('count', count);
+      win.localStorage.setItem('counts', JSON.stringify(counts));
     } else {
       console.warn('Count not saved; local storage is unavailable.');
     }
