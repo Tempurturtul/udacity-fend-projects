@@ -18,6 +18,7 @@ body {
   padding: 10px 10px 2px 5px;
   position: fixed;
   right: 0;
+  text-shadow: -2px 2px 2px #222;
   top: 0;
 }
 
@@ -35,13 +36,17 @@ main {
 }
 
 h2 {
+  color: white;
   font-size: 1.2em;
+  font-variant: small-caps;
   margin: 0;
   text-align: center;
+  text-shadow: -2px 2px 2px #222;
 }
 
 img {
   border-radius: 8px;
+  box-shadow: -2px 2px 2px #222;
   width: 100%;
 }
 
