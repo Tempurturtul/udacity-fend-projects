@@ -22,12 +22,39 @@ body {
   top: 0;
 }
 
+ul {
+  /*border: solid white 1px;*/
+  display: flex;
+  flex-direction: column;
+  float: left;
+  min-height: 100%;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 20%;
+}
+
+li {
+  cursor: default;
+  padding: 5px 5px 5px 5%;
+  text-shadow: -2px 2px 2px #222;
+}
+
+li:hover {
+  background: #222;
+}
+
+li:active {
+  background: #111;
+}
+
 main {
   align-items: center;
   display: flex;
   min-height: 100%;
   padding: 0 5% 0 5%;
-  width: 100%;
+  width: 80%;
 }
 
 .cat {

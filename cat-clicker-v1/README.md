@@ -9,12 +9,17 @@ Included for comparison.
 ## Project Requirements
 
 **Original**
-- Displays a picture of a cat.
+- ~~Displays a picture of a cat.~~
 - Displays a number representing clicks.
 - The number of clicks increments when the cat picture is clicked.
-**Added**
-- Displays pictures of two cats.
+
+**Revision #1**
+- ~~Displays pictures of two cats.~~
 - Displays the cat's name above the picture.
+
+**Revision #2**
+- Displays a list of at least 5 cats by name.
+- Displays a picture of the selected cat along with it's name in a display area.
 
 ## Local Setup
 

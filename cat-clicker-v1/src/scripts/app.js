@@ -9,7 +9,6 @@
       util = global.util,
       counter = doc.getElementById('counter'),
       count,  // Number of cat clicks.
-      catCount = 2,  // Number of cat <img> elements to display.
       cats = [
         {
           width: '1920w',
@@ -59,21 +58,34 @@
             'image/480x318/cat-11-480x318.jpg'
           ]
         }
-      ];
+      ],
+      sizes = '70vw';  // Cat <img> element sizes attribute.
 
   initialize();
 
   /**
-   * Increments the counter and changes the element to display the next cat.
+   * Increments the counter.
    */
   function catClicked() {
-    counter.innerHTML = ++count;
+    counter.textContent = ++count;
 
-    var data = getNextCatData('50vw');
-
-    changeImage(this, data.imageData);
-    this.previousSibling.innerHTML = data.name;
     saveCount();
+  }
+
+  /**
+   * Change the cat.
+   * @param {object} elem - The cat <div> element.
+   * @param {object} data - Data pertaining to the new cat.
+   * @param {string} data.name - The cat's name.
+   * @param {object} data.imageData - Data pertaining to the cat image.
+   * @param {string} data.imageData.src
+   * @param {string} data.imageData.alt
+   * @param {string} data.imageData.srcset
+   * @param {string} data.imageData.sizes
+   */
+  function changeCat(elem, data) {
+    changeImage(elem.getElementsByTagName('img')[0], data.imageData);
+    elem.getElementsByTagName('h2')[0].textContent = data.name;
   }
 
   /**
@@ -230,33 +242,46 @@
    * Initializes the application. Should only be called once.
    */
   function initialize() {
-    var main = doc.getElementsByTagName('main')[0];
+    var main = doc.getElementsByTagName('main')[0],
+        list = doc.getElementsByTagName('ul')[0];
+
     // Set the count.
     count = retrieveCount();
     // Set the counter.
-    counter.innerHTML = count;
+    counter.textContent = count;
 
-    // Create the cat elements.
-    for (var i = 0; i < catCount; i++) {
-      // Get data for the element.
-      var data = getRandomCatData('50vw');
+    // Get data for a random cat element.
+    var catData = getRandomCatData(sizes);
 
-      // Create the containing div and the heading element.
-      var cat = doc.createElement('div');
-      cat.classList.add('cat');
-      var heading = doc.createElement('h2');
-      heading.innerHTML = data.name;
-      cat.appendChild(heading);
+    // Create the containing div and the heading element.
+    var cat = doc.createElement('div');
+    cat.classList.add('cat');
+    var heading = doc.createElement('h2');
+    heading.textContent = catData.name;
+    cat.appendChild(heading);
 
-      // Create the image element.
-      var img = createImage(doc, data.imageData);
-      // Add the onclick event handler to the cat.
-      img.onclick = catClicked;
-      // Add the img to the containing div.
-      cat.appendChild(img);
+    // Create the image element.
+    var img = createImage(doc, catData.imageData);
+    // Add the onclick event handler to the cat.
+    img.onclick = catClicked;
+    // Add the img to the containing div.
+    cat.appendChild(img);
 
-      // Add the cat div to the document.
-      main.appendChild(cat);
+    // Add the cat div to the document.
+    main.appendChild(cat);
+
+    var liClickFunc = (function(id) {
+      return function() {
+        changeCat(cat, getCatData(id, sizes));
+      };
+    });
+
+    // Populate the cat list.
+    for (var i = 1, len = cats[0].urls.length; i <= len; i++) {
+      var li = doc.createElement('li');
+      li.textContent = getCatName(i);
+      li.onclick = liClickFunc(i);
+      list.appendChild(li);
     }
   }
 
