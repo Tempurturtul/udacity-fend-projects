@@ -1,5 +1,3 @@
-// TODO Working on grid - decided to simplify...
-
 /**
  * app.js
  * Core functionality for the Cat Clicker application.
@@ -11,8 +9,8 @@
       util = global.util,
       counter = doc.getElementById('counter'),
       count,  // Number of cat clicks.
-      catCount = 12,  // Number of cat <img> elements.
-      catImages = [
+      catCount = 2,  // Number of cat <img> elements to display.
+      cats = [
         {
           width: '1920w',
           urls: [
@@ -66,14 +64,15 @@
   initialize();
 
   /**
-   * Increments the counter and changes the image to the next cat.
+   * Increments the counter and changes the element to display the next cat.
    */
   function catClicked() {
     counter.innerHTML = ++count;
 
-    var data = getNextCatData();
+    var data = getNextCatData('50vw');
 
-    changeImage(this, data);
+    changeImage(this, data.imageData);
+    this.previousSibling.innerHTML = data.name;
     saveCount();
   }
 
@@ -104,52 +103,6 @@
   }
 
   /**
-   * Creates a <div class="grid"> element, along with child <div class="col">
-   * and <div class="cell"> elements, in the given document and returns it.
-   * Optionally populates the grid with contents.
-   * @param {object} doc - The document.
-   * @param {object} data - Data describing the grid.
-   * @param {number} data.cols - Number of columns.
-   * @param {number} data.rows - Number of rows.
-   * @param {number} data.size - Cell size.
-   * @param {object[]} [contents] - An array of content elements.
-   * @returns {object} - The grid element.
-   */
-  function createGrid(doc, data, contents) {
-    var row, col,
-        grid = doc.createElement('div');
-
-    grid.classList.add('grid');
-
-    // Create the cols.
-    for (col = 0; col < data.cols; col++) {
-      var colElem = doc.createElement('div');
-      colElem.style.display = 'inline-block';
-      colElem.classList.add('col');
-      colElem.id = getColumnId(col);
-
-      // Create the cells.
-      for (row = 0; row < data.rows; row++) {
-        var cell = doc.createElement('div');
-        cell.style.height = cell.style.width = data.size + 'px';
-        cell.classList.add('cell');
-        // Add id (A1, A2, B1, B2...).
-        cell.id = colElem.id + (row + 1);
-
-        colElem.appendChild(cell);
-      }
-
-      grid.appendChild(colElem);
-    }
-
-    if (contents) {
-      // TODO Add contents.
-    }
-
-    return grid;
-  }
-
-  /**
    * Creates an <img> element in the given document and returns it.
    * @param {object} doc - The document.
    * @param {string|object} data - Path to image, or object containing image data.
@@ -175,7 +128,7 @@
   }
 
   /**
-   * Returns an object containing data for use in an <img> element.
+   * Returns an object containing data relating to a cat image.
    * @param {number} id - The id of the image the data should represent.
    * @param {string} [sizes='100vw'] - The <img> sizes attribute value.
    * @returns {object}
@@ -183,7 +136,7 @@
   function getCatData(id, sizes) {
     var re = new RegExp('cat-' + id);
 
-    var filteredCatImages = catImages.map(function(set) {
+    var filteredcats = cats.map(function(set) {
       var url;
 
       // For each url...
@@ -201,71 +154,56 @@
       };
     });
 
-    var data = {};
-    data.src = filteredCatImages[0].url;
-    data.alt = 'A cat.';
+    var name = getCatName(id);
+    var data = {
+      name: name,
+      imageData: {}
+    };
 
-    // Set data.srcset.
-    filteredCatImages.forEach(function(set) {
+    data.imageData.src = filteredcats[0].url;
+    data.imageData.alt = 'A cat.';
+
+    // Set data.imageData.srcset.
+    filteredcats.forEach(function(set) {
       var srcset = set.url + ' ' + set.width;
 
-      if (data.srcset) {
-        data.srcset += ', ' + srcset;
+      if (data.imageData.srcset) {
+        data.imageData.srcset += ', ' + srcset;
       } else {
-        data.srcset = srcset;
+        data.imageData.srcset = srcset;
       }
     });
 
     if (sizes) {
-      data.sizes = sizes;
+      data.imageData.sizes = sizes;
     } else {
-      data.sizes = '100vw';
+      data.imageData.sizes = '100vw';
     }
 
     return data;
   }
 
   /**
-   * Returns the identifier for the nth column (A...Z, AA...ZZZ).
-   * @param {number} n
-   * @returns {string}
+   * Returns the name of the cat with the given ID.
+   * @param {number|string} id - The cat's ID.
+   * @returns {string} - The cat's name.
    */
-  function getColumnId(n) {
-    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-        maxLetterPlaces = 3,
-        max = Math.pow(alphabet.length, maxLetterPlaces),
-        result;
+  function getCatName(id) {
+    var names = [
+      'Killit',
+      'Scratchit',
+      'Watchit',
+      'Pounceonit',
+      'Warmm',
+      'Curious',
+      'Guru',
+      'Myspot',
+      'Lazy',
+      'Feedme',
+      'Petme'
+    ];
 
-    // Early abort if n is too large.
-    if (n >= max) {
-      console.error('Column ID exceeds ' + Array(maxLetterPlaces + 1).join(alphabet.charAt(alphabet.length - 1)) + '.');
-      return;
-    }
-
-    recurse(n);
-
-    return result;
-
-    function recurse(n, acc) {
-      acc = acc || '';
-
-      // Base case.
-      if (n < alphabet.length) {
-        result = alphabet.charAt(n) + acc;
-        return;
-      }
-
-      var letter = alphabet.charAt(n % alphabet.length);
-      acc = letter + acc;
-
-      if (n / alphabet.length === 1) {
-        n = 0;
-      } else {
-        n = Math.floor(n / alphabet.length);
-      }
-
-      recurse(n, acc);
-    }
+    return names[id - 1];
   }
 
   /**
@@ -274,7 +212,7 @@
    * @returns {object}
    */
   function getNextCatData(sizes) {
-    var id = (count % catImages[0].urls.length) + 1;
+    var id = (count % cats[0].urls.length) + 1;
     return getCatData(id, sizes);
   }
 
@@ -284,68 +222,42 @@
    * @returns {object}
    */
   function getRandomCatData(sizes) {
-    var id = util.randomFromRange(1, catImages[0].urls.length);
+    var id = util.randomFromRange(1, cats[0].urls.length);
     return getCatData(id, sizes);
-  }
-
-  /**
-   * Returns data for generating a grid capable of housing n elements within the
-   * specified dimensions.
-   * @param {number} n - The number of elements.
-   * @param {number} x - The maximum width of the grid.
-   * @param {number} y - The maximum height of the grid.
-   * @returns {object} - Object containing rows, cols, and size properties.
-   */
-  function getGridData(n, x, y) {
-    var cols = 1,
-        size = Math.min(x, y);  // The smallest of x and y is the greatest possible cell size.
-
-    while (y < size * Math.ceil(n / cols)) {
-      // Generate a new column if there's room.
-      if (x >= size * (cols + 1)) {
-        cols++;
-      }
-      // Otherwise, shrink size.
-      else {
-        size--;
-      }
-    }
-
-    return {
-      cols: cols,
-      rows: Math.ceil(n / cols),
-      size: size
-    };
   }
 
   /**
    * Initializes the application. Should only be called once.
    */
   function initialize() {
+    var main = doc.getElementsByTagName('main')[0];
     // Set the count.
     count = retrieveCount();
     // Set the counter.
     counter.innerHTML = count;
 
-    // Get the data needed to create the grid.
-    var gridData = getGridData(catCount, win.innerWidth, win.innerHeight);
-    var gridContents = [];
-
-    // Create the cat <img> elements.
+    // Create the cat elements.
     for (var i = 0; i < catCount; i++) {
       // Get data for the element.
-      var data = getRandomCatData(gridData.size + 'px');
-      // Create the element.
-      var elem = createImage(doc, data);
-      // Add the onclick event handler to the element.
-      elem.onclick = catClicked;
-      // Add the element to the gridContents array.
-      gridContents.push(elem);
-    }
+      var data = getRandomCatData('50vw');
 
-    // Create the grid.
-    var grid = createGrid(doc, gridData, gridContents);
-    doc.body.appendChild(grid);
+      // Create the containing div and the heading element.
+      var cat = doc.createElement('div');
+      cat.classList.add('cat');
+      var heading = doc.createElement('h2');
+      heading.innerHTML = data.name;
+      cat.appendChild(heading);
+
+      // Create the image element.
+      var img = createImage(doc, data.imageData);
+      // Add the onclick event handler to the cat.
+      img.onclick = catClicked;
+      // Add the img to the containing div.
+      cat.appendChild(img);
+
+      // Add the cat div to the document.
+      main.appendChild(cat);
+    }
   }
 
   /**

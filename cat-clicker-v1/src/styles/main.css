@@ -21,18 +21,28 @@ body {
   top: 0;
 }
 
-.grid {
-  /*font-size: 0;*/ /* Prevent unwanted space after element. */
+main {
+  align-items: center;
+  display: flex;
+  min-height: 100%;
+  padding: 0 5% 0 5%;
+  width: 100%;
 }
 
-.col {
+.cat {
+  padding: 10px;
+  overflow: hidden;
 }
 
-.cell {
+h2 {
+  font-size: 1.2em;
+  margin: 0;
+  text-align: center;
 }
 
 img {
   border-radius: 8px;
+  width: 100%;
 }
 
 img:hover {
