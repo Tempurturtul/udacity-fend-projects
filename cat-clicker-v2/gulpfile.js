@@ -91,7 +91,16 @@ var browsers = ['google-chrome', 'firefox'];
 // Path to root url for gh-pages (/project-name).
 var ghRoot = '';
 // CSS selectors ignored by uncss.
-var uncssIgnoredSelectors = ['img'];
+var uncssIgnoredSelectors = [
+  'li',
+  'button',
+  'h2',
+  'img',
+  'span',
+  '.cat-list',
+  '.cat-list-entry',
+  '.selected'
+];
 // Path to page tested by psi.
 var psiPath = '/';
 // Cache-control values for local server.
