@@ -364,7 +364,7 @@
 
         pictureElem.id = 'cat-picture';
         pictureElem.alt = 'A picture of a cat.';
-        pictureElem.sizes = '80vw';
+        pictureElem.sizes = '70vw';
 
         pictureElem.addEventListener('click', clickFn, false);
 
