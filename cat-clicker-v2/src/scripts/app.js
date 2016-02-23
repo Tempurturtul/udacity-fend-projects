@@ -420,11 +420,100 @@
 
     adminView: {
       init: function() {
+        this.adminElem = global.document.getElementById('admin');
 
+        this.render();
       },
 
       render: function() {
+        // TODO Fix element creation.
+        var doc = global.document,
+            btnElem,
+            formElem,
+            rowElem,
+            labelElem,
+            inputElem,
+            cat = octopus.getSelectedCat();
 
+        // Create the admin toggle button.
+        btnElem = doc.createElement('button');
+        btnElem.id = 'admin-button';
+        btnElem.textContent = 'Admin';
+        btnElem.addEventListener('click', function() {
+          console.log(doc);
+          doc.getElementById('admin-panel').classList.toggle('hidden');
+        }, false);
+
+        // Create the form.
+        formElem = doc.createElement('form');
+        formElem.id = 'admin-panel';
+        formElem.classList.add('hidden');
+
+        // Create the form contents.
+        // Row #1: Name.
+        rowElem = doc.createElement('div');
+        rowElem.classList.add('row');
+        labelElem = doc.createElement('label');
+        labelElem.for = 'cat-name-input';
+        labelElem.textContent = 'Name:';
+        inputElem = doc.createElement('input');
+        inputElem.id = 'cat-name-input';
+        inputElem.type = 'text';
+        rowElem.appendChild(labelElem);
+        rowElem.appendChild(inputElem);
+        formElem.appendChild(rowElem);
+        // Row #2: Picture.
+        rowElem = doc.createElement('div');
+        rowElem.classList.add('row');
+        labelElem = doc.createElement('label');
+        labelElem.for = 'cat-picture-input';
+        labelElem.textContent = 'Picture:';
+        inputElem = doc.createElement('input');
+        inputElem.id = 'cat-picture-input';
+        inputElem.type = 'url';
+        rowElem.appendChild(labelElem);
+        rowElem.appendChild(inputElem);
+        formElem.appendChild(rowElem);
+        // Row #3: Clicks.
+        rowElem = doc.createElement('div');
+        rowElem.classList.add('row');
+        labelElem = doc.createElement('label');
+        labelElem.for = 'cat-clicks-input';
+        labelElem.textContent = 'Clicks:';
+        inputElem = doc.createElement('input');
+        inputElem.id = 'cat-clicks-input';
+        inputElem.type = 'number';
+        rowElem.appendChild(labelElem);
+        rowElem.appendChild(inputElem);
+        formElem.appendChild(rowElem);
+        // Row #4: Buttons.
+        rowElem = doc.createElement('div');
+        rowElem.classList.add('row');
+        formElem.appendChild(rowElem);
+        btnElem = doc.createElement('button');
+        btnElem.id = 'cancel';
+        btnElem.type = 'button';
+        btnElem.textContent = 'Cancel';
+        // TODO Add event handler.
+        rowElem.appendChild(btnElem);
+        btnElem = doc.createElement('button');
+        btnElem.id = 'save';
+        btnElem.type = 'button';
+        btnElem.textContent = 'Save';
+        // TODO Add event handler.
+        rowElem.appendChild(btnElem);
+        formElem.appendChild(rowElem);
+
+        this.adminElem.appendChild(btnElem);
+        this.adminElem.appendChild(formElem);
+
+        /*
+          <div class="row">
+            <button id="cancel" type="button">Cancel</button>
+            <button id="save" type="button">Save</button>
+          </div>
+        </form>
+        */
       },
 
       update: function() {
