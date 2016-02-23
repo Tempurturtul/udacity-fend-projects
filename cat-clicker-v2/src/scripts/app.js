@@ -6,9 +6,15 @@
 (function(global) {
   var model = {
     init: function() {
+      // Set selected cat to a random cat.
+      var cats = this.getAllCats(),
+          keys = Object.keys(cats);
+
+      this.selectedCat = cats[keys[Math.floor(Math.random() * keys.length)]];
+
+      // Make sure clicks exist in local storage.
       if (!global.window.localStorage.getItem('clicks')) {
         var clicks = {};
-        var cats = this.getAllCats();
 
         for (var catID in cats) {
           clicks[catID] = 0;
@@ -225,6 +231,14 @@
       return this.getAllCats()[id];
     },
 
+    getSelectedCat: function() {
+      return this.selectedCat;
+    },
+
+    setSelectedCat: function(id) {
+      this.selectedCat = this.getCat(id);
+    },
+
     getAllClicks: function() {
       return JSON.parse(global.window.localStorage.getItem('clicks'));
     },
@@ -233,10 +247,10 @@
       return this.getAllClicks()[id];
     },
 
-    addClick: function(id) {
+    addClick: function() {
       var clicks = this.getAllClicks();
 
-      clicks[id]++;
+      clicks[this.selectedCat.id]++;
 
       global.window.localStorage.setItem('clicks', JSON.stringify(clicks));
     }
@@ -257,20 +271,11 @@
     },
 
     getSelectedCat: function() {
-      if (this.selectedCatID) {
-        return model.getCat(this.selectedCatID);
-      } else {
-        var cats = model.getAllCats(),
-            keys = Object.keys(cats);
-
-        // Randomly select an ID.
-        this.selectedCatID = keys[Math.floor(Math.random() * keys.length)];
-        return cats[this.selectedCatID];
-      }
+      return model.getSelectedCat();
     },
 
     setSelectedCat: function(id) {
-      this.selectedCatID = id;
+      model.setSelectedCat(id);
       view.listView.updateSelected();
       view.detailsView.updateSelected();
     },
@@ -280,8 +285,7 @@
     },
 
     addClick: function() {
-      var id = this.getSelectedCat().id;
-      model.addClick(id);
+      model.addClick();
     }
   };
 

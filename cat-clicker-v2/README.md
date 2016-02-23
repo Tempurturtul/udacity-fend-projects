@@ -2,7 +2,7 @@
 
 This is the second version of the "Cat Clicker" application, created after working through the Design Patterns course.
 
-**TODO:** Add preview image.
+![Preview](docs/preview.png "A preview screenshot.")
 
 ## Local Setup
 
