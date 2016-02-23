@@ -293,6 +293,7 @@
     init: function() {
       this.listView.init();
       this.detailsView.init();
+      this.adminView.init();
     },
 
     listView: {
@@ -414,6 +415,20 @@
           }, '');
 
         this.updateClicks();
+      }
+    },
+
+    adminView: {
+      init: function() {
+
+      },
+
+      render: function() {
+
+      },
+
+      update: function() {
+
       }
     }
   };

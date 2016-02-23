@@ -27,10 +27,7 @@ ul {
   padding: 0 10px 0 0;
 }
 
-li {
-}
-
-button {
+.cat-list-entry button {
   background: none;
   border: none;
   height: 100%;
@@ -41,11 +38,11 @@ button {
   width: 100%;
 }
 
-button:hover {
+.cat-list-entry button:hover {
   background: #222;
 }
 
-button:active {
+.cat-list-entry button:active {
   background: #111;
 }
 
@@ -78,13 +75,17 @@ img:active {
   box-shadow: 0 0 2px 1px rgba(255,255,255,1);
 }
 
-span {
+#cat-clicks {
   background: #333;
   font-size: 1.5em;
   position: fixed;
   right: 10px;
   text-shadow: -2px 2px 2px #222;
   top: 10px;
+}
+
+.hidden {
+  display: none;
 }
 
 @media (max-width: 500px) {

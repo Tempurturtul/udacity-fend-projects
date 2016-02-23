@@ -14,7 +14,9 @@
     <div class="container">
       <ul id="cat-list">
         <!--
-          <li class="cat-list-entry"><button id="[Cat ID]">[Cat Name]</button></li>
+          <li class="cat-list-entry [selected]">
+            <button id="{{Cat ID}}">{{Cat Name}}</button>
+          </li>
         -->
       </ul>
       <main id="cat-details">
@@ -24,6 +26,29 @@
           <span id="cat-clicks"></span>
         -->
       </main>
+      <div id="admin">
+        <!--
+          <button id="admin-button">Admin</button>
+          <form id="admin-panel" class="hidden">
+            <div class="row">
+              <label for="cat-name-input">Name:</label>
+              <input id="cat-name-input" type="text">
+            </div>
+            <div class="row">
+              <label for="cat-picture-input">Picture:</label>
+              <input id="cat-picture-input" type="url">
+            </div>
+            <div class="row">
+              <label for="cat-clicks-input">Clicks:</label>
+              <input id="cat-clicks-input" type="number">
+            </div>
+            <div class="row">
+              <button id="cancel" type="button">Cancel</button>
+              <button id="save" type="button">Save</button>
+            </div>
+          </form>
+        -->
+      </div>
     </div>
     <!-- build:js scripts.js -->
     <script src="scripts/app.js"></script>
