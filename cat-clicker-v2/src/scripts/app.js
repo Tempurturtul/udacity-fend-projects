@@ -322,15 +322,17 @@
           btn.textContent = cats[cat].name;
           btn.id = cats[cat].id;
 
-          btn.addEventListener('click', clickFn, false);
+          btn.addEventListener('click', clickFn(cats[cat]), false);
 
           li.appendChild(btn);
 
           this.listElem.appendChild(li);
         }
 
-        function clickFn() {
-          octopus.setSelectedCat(this.id);
+        function clickFn(cat) {
+          return function () {
+            octopus.setSelectedCat(cat.id);
+          };
         }
       },
 
