@@ -88,6 +88,11 @@ img:active {
   display: none;
 }
 
+#admin {
+  background: white;
+  color: black;
+}
+
 @media (max-width: 500px) {
   .container {
     flex-direction: column;

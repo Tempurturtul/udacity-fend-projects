@@ -6,225 +6,270 @@
 (function(global) {
   var model = {
     init: function() {
-      // Set selected cat to a random cat.
-      var cats = this.getAllCats(),
-          keys = Object.keys(cats);
+      var cats,
+          ids;
 
-      this.selectedCat = cats[keys[Math.floor(Math.random() * keys.length)]];
+      // Initialize cats if not in local storage.
+      if (!global.window.localStorage.getItem('cats')) {
+        cats = {
+          1: {
+            id: 1,
+            name: 'Killit',
+            clicks: 0,
+            images: {
+              src: 'image/cat-1.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-1.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-1-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-1-480x318.jpg'
+                }
+              ]
+            }
+          },
+          2: {
+            id: 2,
+            name: 'Scratchit',
+            clicks: 0,
+            images: {
+              src: 'image/cat-2.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-2.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-2-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-2-480x318.jpg'
+                }
+              ]
+            }
+          },
+          3: {
+            id: 3,
+            name: 'Watchit',
+            clicks: 0,
+            images: {
+              src: 'image/cat-3.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-3.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-3-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-3-480x318.jpg'
+                }
+              ]
+            }
+          },
+          4: {
+            id: 4,
+            name: 'Pounceonit',
+  	        clicks: 0,
+            images: {
+              src: 'image/cat-4.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-4.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-4-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-4-480x318.jpg'
+                }
+              ]
+            }
+          },
+          5: {
+            id: 5,
+            name: 'Warmm',
+            clicks: 0,
+            images: {
+              src: 'image/cat-5.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-5.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-5-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-5-480x318.jpg'
+                }
+              ]
+            }
+          },
+          6: {
+            id: 6,
+            name: 'Curious',
+            clicks: 0,
+            images: {
+              src: 'image/cat-6.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-6.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-6-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-6-480x318.jpg'
+                }
+              ]
+            }
+          },
+          7: {
+            id: 7,
+            name: 'Guru',
+            clicks: 0,
+            images: {
+              src: 'image/cat-7.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-7.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-7-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-7-480x318.jpg'
+                }
+              ]
+            }
+          },
+          8: {
+            id: 8,
+            name: 'Myspot',
+            clicks: 0,
+            images: {
+              src: 'image/cat-8.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-8.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-8-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-8-480x318.jpg'
+                }
+              ]
+            }
+          },
+          9: {
+            id: 9,
+            name: 'Lazy',
+            clicks: 0,
+            images: {
+              src: 'image/cat-9.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-9.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-9-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-9-480x318.jpg'
+                }
+              ]
+            }
+          },
+          10: {
+            id: 10,
+            name: 'Feedme',
+            clicks: 0,
+            images: {
+              src: 'image/cat-10.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-10.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-10-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-10-480x318.jpg'
+                }
+              ]
+            }
+          },
+          11: {
+            id: 11,
+            name: 'Petme',
+            clicks: 0,
+            images: {
+              src: 'image/cat-11.jpg',
+              srcset: [
+                {
+                  width: '1920w',
+                  url: 'image/cat-11.jpg'
+                },
+                {
+                  width: '960w',
+                  url: 'image/960x635/cat-11-960x635.jpg'
+                },
+                {
+                  width: '480w',
+                  url: 'image/480x318/cat-11-480x318.jpg'
+                }
+              ]
+            }
+          }
+        };
 
-      // Make sure clicks exist in local storage.
-      if (!global.window.localStorage.getItem('clicks')) {
-        var clicks = {};
-
-        for (var catID in cats) {
-          clicks[catID] = 0;
-        }
-
-        global.window.localStorage.setItem('clicks', JSON.stringify(clicks));
+        global.window.localStorage.setItem('cats', JSON.stringify(cats));
       }
+
+      // Initialize selected cat and admin mode.
+      cats = this.getAllCats();
+      ids = Object.keys(cats);
+
+      // Use a random cat ID for the selected cat.
+      this.selectedCat = ids[Math.floor(Math.random() * ids.length)];
+      this.adminMode = false;
     },
 
     getAllCats: function() {
-      return {
-        1: {
-          id: 1,
-          name: 'Killit',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-1.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-1-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-1-480x318.jpg'
-            }
-          ]
-        },
-        2: {
-          id: 2,
-          name: 'Scratchit',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-2.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-2-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-2-480x318.jpg'
-            }
-          ]
-        },
-        3: {
-          id: 3,
-          name: 'Watchit',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-3.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-3-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-3-480x318.jpg'
-            }
-          ]
-        },
-        4: {
-          id: 4,
-          name: 'Pounceonit',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-4.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-4-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-4-480x318.jpg'
-            }
-          ]
-        },
-        5: {
-          id: 5,
-          name: 'Warmm',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-5.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-5-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-5-480x318.jpg'
-            }
-          ]
-        },
-        6: {
-          id: 6,
-          name: 'Curious',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-6.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-6-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-6-480x318.jpg'
-            }
-          ]
-        },
-        7: {
-          id: 7,
-          name: 'Guru',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-7.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-7-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-7-480x318.jpg'
-            }
-          ]
-        },
-        8: {
-          id: 8,
-          name: 'Myspot',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-8.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-8-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-8-480x318.jpg'
-            }
-          ]
-        },
-        9: {
-          id: 9,
-          name: 'Lazy',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-9.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-9-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-9-480x318.jpg'
-            }
-          ]
-        },
-        10: {
-          id: 10,
-          name: 'Feedme',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-10.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-10-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-10-480x318.jpg'
-            }
-          ]
-        },
-        11: {
-          id: 11,
-          name: 'Petme',
-          images: [
-            {
-              width: '1920w',
-              url: 'image/cat-11.jpg'
-            },
-            {
-              width: '960w',
-              url: 'image/960x635/cat-11-960x635.jpg'
-            },
-            {
-              width: '480w',
-              url: 'image/480x318/cat-11-480x318.jpg'
-            }
-          ]
-        }
-      };
+      return JSON.parse(global.window.localStorage.getItem('cats'));
     },
 
     getCat: function(id) {
@@ -232,27 +277,36 @@
     },
 
     getSelectedCat: function() {
-      return this.selectedCat;
+      return this.getCat(this.selectedCat);
     },
 
     setSelectedCat: function(id) {
-      this.selectedCat = this.getCat(id);
+      this.selectedCat = id;
     },
 
-    getAllClicks: function() {
-      return JSON.parse(global.window.localStorage.getItem('clicks'));
+    editCat: function(id, data) {
+      var cats = this.getAllCats(),
+          cat = cats[id];
+
+      if (data.name) {
+        cat.name = data.name;
+      }
+
+      if (data.clicks) {
+        cat.clicks = data.clicks;
+      }
+
+      if (data.images) {
+        cat.images = data.images;
+      }
+
+      global.window.localStorage.setItem('cats', JSON.stringify(cats));
     },
 
-    getClicks: function(id) {
-      return this.getAllClicks()[id];
-    },
+    incrementClicks: function(id) {
+      var clicks = this.getCat(id).clicks;
 
-    addClick: function() {
-      var clicks = this.getAllClicks();
-
-      clicks[this.selectedCat.id]++;
-
-      global.window.localStorage.setItem('clicks', JSON.stringify(clicks));
+      this.editCat(id, {clicks: clicks + 1});
     }
   };
 
@@ -281,12 +335,10 @@
       view.adminView.update();
     },
 
-    getClicks: function(id) {
-      return model.getClicks(id);
-    },
+    incrementClicks: function() {
+      var id = this.getSelectedCat().id;
 
-    addClick: function() {
-      model.addClick();
+      model.incrementClicks(id);
       view.detailsView.updateClicks();
       view.adminView.update();
     }
@@ -387,7 +439,7 @@
         this.updateSelected();
 
         function clickFn() {
-          octopus.addClick();
+          octopus.incrementClicks();
         }
       },
 
@@ -395,7 +447,7 @@
         var clicksElem = global.document.getElementById('cat-clicks'),
             cat = octopus.getSelectedCat();
 
-        clicksElem.textContent = octopus.getClicks(cat.id);
+        clicksElem.textContent = cat.clicks;
       },
 
       updateSelected: function() {
@@ -404,8 +456,8 @@
             pictureElem = global.document.getElementById('cat-picture');
 
         nameElem.textContent = cat.name;
-        pictureElem.src = cat.images[0].url;
-        pictureElem.srcset = cat.images
+        pictureElem.src = cat.images.src;
+        pictureElem.srcset = cat.images.srcset
           .reduce(function(acc, curr) {
             var set = curr.url + ' ' + curr.width;
 
@@ -473,7 +525,7 @@
         inputElem = doc.createElement('input');
         inputElem.id = 'cat-picture-input';
         inputElem.type = 'url';
-        inputElem.value = cat.images[0].url;
+        inputElem.value = cat.images.src;
         rowElem.appendChild(labelElem);
         rowElem.appendChild(inputElem);
         formElem.appendChild(rowElem);
@@ -486,7 +538,7 @@
         inputElem = doc.createElement('input');
         inputElem.id = 'cat-clicks-input';
         inputElem.type = 'number';
-        inputElem.value = octopus.getClicks(cat.id);
+        inputElem.value = cat.clicks;
         rowElem.appendChild(labelElem);
         rowElem.appendChild(inputElem);
         formElem.appendChild(rowElem);
@@ -526,8 +578,8 @@
             clicksInputElem = doc.getElementById('cat-clicks-input');
 
         nameInputElem.value = cat.name;
-        pictureInputElem.value = cat.images[0].url;
-        clicksInputElem.value = octopus.getClicks(cat.id);
+        pictureInputElem.value = cat.images.src;
+        clicksInputElem.value = cat.clicks;
       }
     }
   };
