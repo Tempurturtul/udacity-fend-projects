@@ -265,7 +265,7 @@
 
       // Use a random cat ID for the selected cat.
       this.selectedCat = ids[Math.floor(Math.random() * ids.length)];
-      this.adminMode = false;
+      this.adminMode = true;  // False to completely disable the admin view.
     },
 
     getAllCats: function() {
@@ -293,7 +293,7 @@
       }
 
       if (data.clicks) {
-        cat.clicks = data.clicks;
+        cat.clicks = parseInt(data.clicks);
       }
 
       if (data.images) {
@@ -307,6 +307,10 @@
       var clicks = this.getCat(id).clicks;
 
       this.editCat(id, {clicks: clicks + 1});
+    },
+
+    getAdminMode: function() {
+      return this.adminMode;
     }
   };
 
@@ -332,7 +336,23 @@
       model.setSelectedCat(id);
       view.listView.updateSelected();
       view.detailsView.updateSelected();
-      view.adminView.update();
+
+      if (this.getAdminMode()) {
+        view.adminView.update();
+      }
+    },
+
+    editSelectedCat: function(data) {
+      var cat = this.getSelectedCat();
+
+      // Edit data to avoid unnecessarily overwriting srcset data if the src didn't change.
+      if (data.images.src === cat.images.src){
+        data.images = cat.images;
+      }
+
+      model.editCat(cat.id, data);
+      view.listView.render();
+      view.detailsView.updateSelected();
     },
 
     incrementClicks: function() {
@@ -340,7 +360,14 @@
 
       model.incrementClicks(id);
       view.detailsView.updateClicks();
-      view.adminView.update();
+
+      if (this.getAdminMode()) {
+        view.adminView.update();
+      }
+    },
+
+    getAdminMode: function() {
+      return model.getAdminMode();
     }
   };
 
@@ -348,7 +375,10 @@
     init: function() {
       this.listView.init();
       this.detailsView.init();
-      this.adminView.init();
+
+      if (octopus.getAdminMode()) {
+        this.adminView.init();
+      }
     },
 
     listView: {
@@ -359,6 +389,9 @@
       },
 
       render: function() {
+        // Clear list view.
+        this.listElem.innerHTML = '';
+
         var doc = global.document,
             cats = octopus.getAllCats(),
             selectedCat = octopus.getSelectedCat(),
@@ -457,16 +490,21 @@
 
         nameElem.textContent = cat.name;
         pictureElem.src = cat.images.src;
-        pictureElem.srcset = cat.images.srcset
-          .reduce(function(acc, curr) {
-            var set = curr.url + ' ' + curr.width;
 
-            if (acc === '') {
-              return set;
-            }
+        if (cat.images.srcset) {
+          pictureElem.srcset = cat.images.srcset
+            .reduce(function(acc, curr) {
+              var set = curr.url + ' ' + curr.width;
 
-            return acc += ', ' + set;
-          }, '');
+              if (acc === '') {
+                return set;
+              }
+
+              return acc += ', ' + set;
+            }, '');
+        } else {
+          pictureElem.srcset = '';
+        }
 
         this.updateClicks();
       }
@@ -492,9 +530,7 @@
         btnElem = doc.createElement('button');
         btnElem.id = 'admin-button';
         btnElem.textContent = 'Admin';
-        btnElem.addEventListener('click', function() {
-          doc.getElementById('admin-panel').classList.toggle('hidden');
-        }, false);
+        btnElem.addEventListener('click', toggleFn, false);
         this.adminElem.appendChild(btnElem);
 
         // Create the form.
@@ -550,24 +586,49 @@
         btnElem.id = 'cancel';
         btnElem.type = 'button';
         btnElem.textContent = 'Cancel';
-        // TODO Add event handler.
+        btnElem.addEventListener('click', cancelFn, false);
         rowElem.appendChild(btnElem);
         btnElem = doc.createElement('button');
         btnElem.id = 'save';
         btnElem.type = 'button';
         btnElem.textContent = 'Save';
-        // TODO Add event handler.
+        btnElem.addEventListener('click', saveFn, false);
         rowElem.appendChild(btnElem);
         formElem.appendChild(rowElem);
         this.adminElem.appendChild(formElem);
 
-        /*
-          <div class="row">
-            <button id="cancel" type="button">Cancel</button>
-            <button id="save" type="button">Save</button>
-          </div>
-        </form>
-        */
+        function toggleFn() {
+          doc.getElementById('admin-panel').classList.toggle('hidden');
+        }
+
+        function cancelFn() {
+          // Toggle the form and reset the form inputs.
+          var cat = octopus.getSelectedCat(),
+              nameInputElem = doc.getElementById('cat-name-input'),
+              pictureInputElem = doc.getElementById('cat-picture-input'),
+              clicksInputElem = doc.getElementById('cat-clicks-input');
+
+          toggleFn();
+
+          nameInputElem.value = cat.name;
+          pictureInputElem.value = cat.images.src;
+          clicksInputElem.value = cat.clicks;
+        }
+
+        function saveFn() {
+          // Toggle the form and save the form inputs, then update the view.
+          var data = {
+            name: doc.getElementById('cat-name-input').value,
+            images: {
+              src: doc.getElementById('cat-picture-input').value
+            },
+            clicks: doc.getElementById('cat-clicks-input').value
+          };
+
+          toggleFn();
+
+          octopus.editSelectedCat(data);
+        }
       },
 
       update: function() {
