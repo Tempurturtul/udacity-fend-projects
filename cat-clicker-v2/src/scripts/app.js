@@ -278,6 +278,7 @@
       model.setSelectedCat(id);
       view.listView.updateSelected();
       view.detailsView.updateSelected();
+      view.adminView.update();
     },
 
     getClicks: function(id) {
@@ -286,6 +287,8 @@
 
     addClick: function() {
       model.addClick();
+      view.detailsView.updateClicks();
+      view.adminView.update();
     }
   };
 
@@ -385,7 +388,6 @@
 
         function clickFn() {
           octopus.addClick();
-          view.detailsView.updateClicks();
         }
       },
 
@@ -426,7 +428,6 @@
       },
 
       render: function() {
-        // TODO Fix element creation.
         var doc = global.document,
             btnElem,
             formElem,
@@ -440,9 +441,9 @@
         btnElem.id = 'admin-button';
         btnElem.textContent = 'Admin';
         btnElem.addEventListener('click', function() {
-          console.log(doc);
           doc.getElementById('admin-panel').classList.toggle('hidden');
         }, false);
+        this.adminElem.appendChild(btnElem);
 
         // Create the form.
         formElem = doc.createElement('form');
@@ -459,6 +460,7 @@
         inputElem = doc.createElement('input');
         inputElem.id = 'cat-name-input';
         inputElem.type = 'text';
+        inputElem.value = cat.name;
         rowElem.appendChild(labelElem);
         rowElem.appendChild(inputElem);
         formElem.appendChild(rowElem);
@@ -471,6 +473,7 @@
         inputElem = doc.createElement('input');
         inputElem.id = 'cat-picture-input';
         inputElem.type = 'url';
+        inputElem.value = cat.images[0].url;
         rowElem.appendChild(labelElem);
         rowElem.appendChild(inputElem);
         formElem.appendChild(rowElem);
@@ -483,6 +486,7 @@
         inputElem = doc.createElement('input');
         inputElem.id = 'cat-clicks-input';
         inputElem.type = 'number';
+        inputElem.value = octopus.getClicks(cat.id);
         rowElem.appendChild(labelElem);
         rowElem.appendChild(inputElem);
         formElem.appendChild(rowElem);
@@ -503,8 +507,6 @@
         // TODO Add event handler.
         rowElem.appendChild(btnElem);
         formElem.appendChild(rowElem);
-
-        this.adminElem.appendChild(btnElem);
         this.adminElem.appendChild(formElem);
 
         /*
@@ -517,7 +519,15 @@
       },
 
       update: function() {
+        var doc = global.document,
+            cat = octopus.getSelectedCat(),
+            nameInputElem = doc.getElementById('cat-name-input'),
+            pictureInputElem = doc.getElementById('cat-picture-input'),
+            clicksInputElem = doc.getElementById('cat-clicks-input');
 
+        nameInputElem.value = cat.name;
+        pictureInputElem.value = cat.images[0].url;
+        clicksInputElem.value = octopus.getClicks(cat.id);
       }
     }
   };
