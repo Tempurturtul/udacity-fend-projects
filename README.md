@@ -9,7 +9,7 @@ I used the Polymer iron-collapse component in order to achieve the "Exceeds Spec
 
 The live site may be viewed at [tempurturtul.github.io/fend-resume](http://tempurturtul.github.io/fend-resume).
 
-The client-side source files are located in `src/client`.
+The client-side source files are located in the `src` folder.
 
 ## Setup
 
