@@ -1,0 +1,7 @@
+{
+  "name": "fend-neighborhood-map",
+  "private": true,
+  "dependencies": {
+    "knockout": "^3.4.0"
+  }
+}
