@@ -18,10 +18,8 @@
         <input id="name-filter" type="text" placeholder="Name">
         <label><input id="visible-filter" type="checkbox">Visible Only</label>
       </fieldset>
-      <ul class="marker-list">
-        <li>(Map Marker Title)</li>
-        <li>(Map Marker Title)</li>
-        <li>(Map Marker Title)</li>
+      <ul class="marker-list" data-bind="foreach: markerList">
+        <li data-bind="text: title"></li>
       </ul>
     </header>
 
