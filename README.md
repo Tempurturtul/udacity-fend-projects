@@ -64,7 +64,8 @@ webpage. Read this blogpost to learn more .Some JavaScript libraries
 provide special methods to handle errors. For example: refer to .fail()
 method discussed here if you use jQuery's ajax() method. We strongly
 encourage you to explore ways to handle errors in the library you are
-using to make API calls.```
+using to make API calls.
+```
 
 ## User Stories
 
