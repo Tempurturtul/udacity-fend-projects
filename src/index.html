@@ -12,7 +12,23 @@
     <!-- endbuild -->
   </head>
   <body>
-    <div id="map"></div>
+    <header>
+      <fieldset>
+        <legend>Marker Filters</legend>
+        <input id="name-filter" type="text" placeholder="Name">
+        <label><input id="visible-filter" type="checkbox">Visible Only</label>
+      </fieldset>
+      <ul class="marker-list">
+        <li>(Map Marker Title)</li>
+        <li>(Map Marker Title)</li>
+        <li>(Map Marker Title)</li>
+      </ul>
+    </header>
+
+    <main>
+      <input id="places-search" type="text" placeholder="Search">
+      <div id="map"></div>
+    </main>
 
     <!-- Google Maps API. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFjYsMLSna2dvG5DIL-zXcXRQs5-UY-Zs"></script>
@@ -21,6 +37,7 @@
 
     <!-- App-specific scripts. -->
     <!-- build:js scripts.js -->
+    <script src="js/map.js"></script>
     <script src="js/app.js"></script>
     <!-- endbuild -->
   </body>
