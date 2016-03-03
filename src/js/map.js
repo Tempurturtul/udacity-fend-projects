@@ -12,7 +12,8 @@
       defaults = {
         mapOptions: {
           // TODO Additional properties to consider:
-          //  mapTypeId - The map type.
+          //  backgroundColor - The background color visible when panning.
+          //  mapTypeId - The map type. (HYBRID, ROADMAP, SATELLITE, TERRAIN)
           center: {lat: 35.689, lng: 139.692},  // Tokyo, Japan.
           zoom: 10
         }
