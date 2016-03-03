@@ -12,14 +12,14 @@
     <!-- endbuild -->
   </head>
   <body>
-    <header>
+    <header id="sidebar">
+      <button id="sidebar-toggle"></button>
       <fieldset>
-        <legend>Marker Filters</legend>
+        <legend>Map Marker Filters</legend>
         <input id="name-filter" type="text" placeholder="Name">
         <label><input id="visible-filter" type="checkbox">Visible Only</label>
       </fieldset>
-      <ul class="marker-list" data-bind="foreach: markerList">
-        <li data-bind="text: title"></li>
+      <ul class="marker-list" data-bind="template: { name: 'listTemplate', foreach: markers }">
       </ul>
     </header>
 
@@ -27,6 +27,20 @@
       <input id="places-search" type="text" placeholder="Search">
       <div id="map"></div>
     </main>
+
+    <!-- Templates. -->
+    <script type="text/html" id="listTemplate">
+      <!-- ko if: $data.contents -->
+      <li>
+        <span data-bind="text: name"></span>
+        <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
+        </ul>
+      </li>
+      <!-- /ko -->
+      <!-- ko ifnot: $data.contents -->
+      <li data-bind="text: title"></li>
+      <!-- /ko -->
+    </script>
 
     <!-- Google Maps API. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFjYsMLSna2dvG5DIL-zXcXRQs5-UY-Zs"></script>
