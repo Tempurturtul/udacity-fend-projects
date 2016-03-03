@@ -21,14 +21,14 @@
             contents: [
               {
                 position: {lat: 35.66, lng: 139.7},
-                title: 'Default Sub Marker 1'
+                title: 'Default Marker 1.1'
               },
               {
-                name: 'Default Subfolder 1',
+                name: 'Default Folder 1.1',
                 contents: [
                   {
                     position: {lat: 35.65, lng: 139.7},
-                    title: 'Default Sub-Sub Marker 1'
+                    title: 'Default Marker 1.1.1'
                   }
                 ]
               }

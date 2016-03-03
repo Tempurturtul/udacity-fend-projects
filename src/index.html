@@ -16,7 +16,7 @@
       <button id="sidebar-toggle"></button>
       <fieldset>
         <legend>Map Marker Filters</legend>
-        <input id="name-filter" type="text" placeholder="Name">
+        <input id="name-filter" type="text" placeholder="Search Markers">
         <label><input id="visible-filter" type="checkbox">Visible Only</label>
       </fieldset>
       <ul class="marker-list" data-bind="template: { name: 'listTemplate', foreach: markers }">
@@ -42,8 +42,8 @@
       <!-- /ko -->
     </script>
 
-    <!-- Google Maps API. -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFjYsMLSna2dvG5DIL-zXcXRQs5-UY-Zs"></script>
+    <!-- Google Maps API and Places library. -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFjYsMLSna2dvG5DIL-zXcXRQs5-UY-Zs&libraries=places"></script>
     <!-- Knockout (via Bower). -->
     <script src="bower_components/knockout/dist/knockout.js"></script>
 
