@@ -30,7 +30,8 @@
    * Initializes the map, places service, and places search box.
    */
   function init() {
-    var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)) || defaults.mapOptions;
+    var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)) || defaults.mapOptions,
+        inputElem = document.getElementById(searchBoxID);
 
     // Initialize the map.
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
@@ -39,11 +40,20 @@
     places = new google.maps.places.PlacesService(map);
 
     // Initialize the places search box.
-    searchBox = new google.maps.places.SearchBox(document.getElementById(searchBoxID));
+    searchBox = new google.maps.places.SearchBox(inputElem);
+
+    // Add the search box to the map controls.
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(inputElem);
 
     // Bias the search box results towards the map's viewport.
     map.addListener('bounds_changed', function() {
       searchBox.setBounds(map.getBounds());
+    });
+
+    // Listen for the event fired when the user selects a search result.
+    searchBox.addListener('places_changed', function() {
+      // TODO Send getPlaces() data to app.js?
+      console.log(searchBox.getPlaces());
     });
   }
 
