@@ -52,8 +52,9 @@
 
     // Listen for the event fired when the user selects a search result.
     searchBox.addListener('places_changed', function() {
-      // TODO Send getPlaces() data to app.js?
-      console.log(searchBox.getPlaces());
+      // TODO Send getPlaces() data to app.js? Expose a callback? Initialize
+      // this listener in app.js? <--- I think this one.
+      console.log(this.getPlaces());
     });
   }
 
