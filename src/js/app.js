@@ -84,22 +84,40 @@
     // Create a collection of map markers and folders.
     self.markers = ko.observableArray([]);
 
-    // Initialize the App View Model.
-    init();
-
     // Provide methods for adding, modifying, and removing map markers.
-    self.addMarker = function() {};
+    self.addMarker = function(marker) {
+      // Add a marker.
 
-    self.modifyMarker = function() {};
+      map.addMarker(ko.toJS(marker));
+      self.markers.push(marker);
+    };
 
-    self.removeMarker = function() {};
+    self.modifyMarker = function(marker) {
+      // Modify a marker.
+
+    };
+
+    self.removeMarker = function(marker) {
+      // Remove a marker.
+
+    };
 
     // Provide methods for adding, modifying, and removing map marker folders.
-    self.addFolder = function() {};
+    self.addFolder = function(folder) {
+      // Add a folder.
 
-    self.modifyFolder = function() {};
+      self.markers.push(folder);
+    };
 
-    self.removeFolder = function() {};
+    self.modifyFolder = function(folder) {
+      // Modify a folder.
+
+    };
+
+    self.removeFolder = function(folder) {
+      // Remove a folder.
+
+    };
 
     // Provide a method for toggling the sidebar between collapsed and expanded.
 
@@ -109,6 +127,8 @@
 
     // Provide methods for filtering markers by title and visibility.
 
+    // Initialize the App View Model.
+    init();
 
     // Private methods.
 
@@ -123,38 +143,15 @@
       arr.forEach(function(data) {
         if (data.contents) {
           // Folder.
-          self.markers.push(new MarkerFolder(data));
+          self.addFolder(new MarkerFolder(data));
         } else {
           // Marker.
-          map.addMarker(data);
-          self.markers.push(new Marker(data));
+          self.addMarker(new Marker(data));
         }
       });
 
       // Listen for the event fired when the user selects a search result.
-      map.searchBox.addListener('places_changed', function() {
-        var places = this.getPlaces(),
-            data;
-
-        places.forEach(function(place) {
-          // var icon = {
-          //   url: place.icon,
-          //   size: new google.maps.Size(71, 71),
-          //   origin: new google.maps.Point(0, 0),
-          //   anchor: new google.maps.Point(17, 34),
-          //   scaledSize: new google.maps.Size(25, 25)
-          // };
-
-          // Create marker data for each place.
-          data = {
-            title: place.name,
-            position: place.geometry.location
-          };
-
-          map.addMarker(data);
-          self.markers.push(new Marker(data));
-        });
-      });
+      map.searchBox.addListener('places_changed', selectPlaces);
     }
 
     /**
@@ -162,6 +159,32 @@
      */
     function storeMarkers() {
       localStorage.setItem(storageKeys.MARKERS, ko.toJSON(self.markers));
+    }
+
+    /**
+     * Called when the user selects a place or set of places in the map search box.
+     * Opens a dialogue box that the user can use to modify and confirm or cancel
+     * map marker creation.
+     */
+    function selectPlaces() {
+      var places = this.getPlaces(),
+          tempMarkers = [];
+
+      // Create a marker for each place and push it to the tempMarkers array.
+      places.forEach(function(place) {
+        // TODO Icon.
+
+        tempMarkers.push(new Marker({
+          title: place.name,
+          position: place.geometry.location
+        }));
+      });
+
+      // Open a dialogue box for the user to modify and confirm or cancel the
+      // creation of map markers.
+
+      // TODO
+
     }
 
   }
