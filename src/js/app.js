@@ -84,9 +84,8 @@
     // Create a collection of map markers and folders.
     self.markers = ko.observableArray([]);
 
-    // Initialize the collection of map markers and folders, and adds all
-    // markers to the map.
-    initMarkers();
+    // Initialize the App View Model.
+    init();
 
     // Provide methods for adding, modifying, and removing map markers.
     self.addMarker = function() {};
@@ -115,11 +114,11 @@
 
     /**
      * Initializes self.markers with markers and marker folders from local storage,
-     * or from defaults if local storage is empty. Also adds initial markers to
-     * the map.
+     * or from defaults if local storage is empty; adds initial markers to the map;
+     * Adds an event listener to the map search box.
      */
-    function initMarkers() {
-      var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERLIST)) || defaults.markers;
+    function init() {
+      var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
 
       arr.forEach(function(data) {
         if (data.contents) {
@@ -130,6 +129,31 @@
           map.addMarker(data);
           self.markers.push(new Marker(data));
         }
+      });
+
+      // Listen for the event fired when the user selects a search result.
+      map.searchBox.addListener('places_changed', function() {
+        var places = this.getPlaces(),
+            data;
+
+        places.forEach(function(place) {
+          // var icon = {
+          //   url: place.icon,
+          //   size: new google.maps.Size(71, 71),
+          //   origin: new google.maps.Point(0, 0),
+          //   anchor: new google.maps.Point(17, 34),
+          //   scaledSize: new google.maps.Size(25, 25)
+          // };
+
+          // Create marker data for each place.
+          data = {
+            title: place.name,
+            position: place.geometry.location
+          };
+
+          map.addMarker(data);
+          self.markers.push(new Marker(data));
+        });
       });
     }
 

@@ -49,13 +49,6 @@
     map.addListener('bounds_changed', function() {
       searchBox.setBounds(map.getBounds());
     });
-
-    // Listen for the event fired when the user selects a search result.
-    searchBox.addListener('places_changed', function() {
-      // TODO Send getPlaces() data to app.js? Expose a callback? Initialize
-      // this listener in app.js? <--- I think this one.
-      console.log(this.getPlaces());
-    });
   }
 
   /**
@@ -66,7 +59,6 @@
     //  data.draggable - Makes the marker draggable.
     //  data.icon - Icon for the marker.
     //  data.label - First letter of this string is displayed on marker.
-    //  data.place - Use instead of position (more detailed).
     //  data.visible - Useful for hiding markers.
     //  data.zIndex - Useful for sorting markers by folder depth.
 
@@ -88,6 +80,7 @@
   global.map = {
     addMarker: addMarker,
     modifyMarker: modifyMarker,
-    removeMarker: removeMarker
+    removeMarker: removeMarker,
+    searchBox: searchBox
   };
 })(this);
