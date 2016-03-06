@@ -12,8 +12,8 @@
     <!-- endbuild -->
   </head>
   <body>
-    <header id="sidebar">
-      <button class="sidebar-toggle"></button>
+    <header id="sidebar" data-bind="css: {expanded: sidebar.expanded}">
+      <button class="sidebar-toggle" data-bind="click: sidebar.toggle">Toggle Sidebar</button>
       <fieldset>
         <legend>Map Marker Filters</legend>
         <input type="text" placeholder="Search Markers">
@@ -26,18 +26,18 @@
     <main>
       <input id="places-search" type="text" placeholder="Search">
       <div id="map"></div>
-      <form data-bind="visible: markersForm">
+      <form data-bind="visible: markersForm.visible">
         <fieldset>
           <legend>Pending Map Markers</legend>
-          <!-- ko foreach: pendingMarkers -->
+          <!-- ko foreach: markersForm.pendingMarkers -->
           <div class="pending-marker">
             <input class="add-marker" type="checkbox" data-bind="checked: confirmed">
             <span data-bind="text: marker.title"></span>
           </div>
           <!-- /ko -->
         </fieldset>
-        <button type="button" data-bind="click: cancelMarkersForm">Cancel</button>
-        <button type="button" data-bind="click: submitMarkersForm">Confirm</button>
+        <button type="button" data-bind="click: markersForm.cancel">Cancel</button>
+        <button type="button" data-bind="click: markersForm.submit">Confirm</button>
       </form>
     </main>
 

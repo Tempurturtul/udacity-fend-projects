@@ -84,86 +84,87 @@
     // A collection of map markers and folders.
     self.markers = ko.observableArray([]);
 
-    // A collection of pending map markers.
-    self.pendingMarkers = ko.observableArray([]);
+    // Sidebar functionality.
+    // TODO:
+    //  - Provide a method for toggling a marker folder between collapsed and expanded.
+    //  - Provide a method for centering on a marker or set of markers.
+    //  - Provide methods for filtering markers by title and visibility.
+    self.sidebar = {
+      expanded: ko.observable(false),
 
-    // Is the confirm markers form visible?
-    self.markersForm = ko.observable(false);
+      toggle: function() {
+        self.sidebar.expanded(!self.sidebar.expanded());
+      },
 
-    // Provide methods for adding, modifying, and removing map markers.
-    self.addMarker = function(marker) {
-      // Add a marker.
+      addFolder: function(folder) {
+        // Add a folder.
 
-      map.addMarker(ko.toJS(marker));
-      self.markers.push(marker);
-      storeMarkers();
+        self.markers.push(folder);
+        storeMarkers();
+      },
+
+      modifyFolder: function(folder) {
+        // Modify a folder.
+
+      },
+
+      removeFolder: function(folder) {
+        // Remove a folder.
+
+      }
     };
 
-    self.modifyMarker = function(marker) {
-      // Modify a marker.
+    // Markers form functionality.
+    self.markersForm = {
+      pendingMarkers: ko.observableArray([]),
 
+      visible: ko.observable(false),
+
+      toggle: function() {
+        self.markersForm.visible(!self.markersForm.visible());
+      },
+
+      submit: function() {
+        // Add the confirmed markers.
+        self.markersForm.pendingMarkers().forEach(function(pending) {
+          if (pending.confirmed()) {
+            self.markersForm.addMarker(pending.marker);
+          }
+        });
+
+        // Toggle the markers form.
+        self.markersForm.toggle();
+
+        // Clear the pending markers array.
+        self.markersForm.pendingMarkers([]);
+      },
+
+      cancel: function() {
+        // Toggle the markers form.
+        self.markersForm.toggle();
+
+        // Clear the pending markers array.
+        self.markersForm.pendingMarkers([]);
+      },
+
+      addMarker: function(marker) {
+        // Add a marker.
+
+        map.addMarker(ko.toJS(marker));
+        self.markers.push(marker);
+        storeMarkers();
+      },
+
+      modifyMarker: function(marker) {
+        // Modify a marker.
+
+      },
+
+      removeMarker: function(marker) {
+        // Remove a marker.
+
+      }
     };
-
-    self.removeMarker = function(marker) {
-      // Remove a marker.
-
-    };
-
-    // Provide methods for adding, modifying, and removing map marker folders.
-    self.addFolder = function(folder) {
-      // Add a folder.
-
-      self.markers.push(folder);
-      storeMarkers();
-    };
-
-    self.modifyFolder = function(folder) {
-      // Modify a folder.
-
-    };
-
-    self.removeFolder = function(folder) {
-      // Remove a folder.
-
-    };
-
-    // Provide a method for toggling the sidebar between collapsed and expanded.
-
-    // Provide a method for toggling the confirm markers form between visible and hidden.
-    self.toggleMarkersForm = function() {
-      self.markersForm(!self.markersForm());
-    };
-
-    // Provide a method for submitting the markers form.
-    self.submitMarkersForm = function() {
-      // Add the confirmed markers.
-      self.pendingMarkers().forEach(function(pending) {
-        if (pending.confirmed()) {
-          self.addMarker(pending.marker);
-        }
-      });
-
-      // Toggle the markers form.
-      self.toggleMarkersForm();
-
-      // Clear the pending markers array.
-      self.pendingMarkers([]);
-    };
-
-    // Provide a method for cancelling the markers form.
-    self.cancelMarkersForm = function() {
-      // Toggle the markers form.
-      self.toggleMarkersForm();
-
-      // Clear the pending markers array.
-      self.pendingMarkers([]);
-    };
-
-    // Provide a method for toggling a marker folder between collapsed and expanded.
-
-    // Provide a method for centering on a marker or set of markers.
-
-    // Provide methods for filtering markers by title and visibility.
 
     // Initialize the App View Model.
     init();
@@ -209,7 +210,7 @@
       var places = this.getPlaces();
 
       // Clear the pending markers array.
-      self.pendingMarkers([]);
+      self.markersForm.pendingMarkers([]);
 
       // Create a marker for each place and push it to the pending markers array
       // along with the default confirmed value.
@@ -223,14 +224,14 @@
           }
         });
 
-        self.pendingMarkers.push({
+        self.markersForm.pendingMarkers.push({
           marker: marker,
           confirmed: ko.observable(true)
         });
       });
 
       // Open the confirm markers form.
-      self.toggleMarkersForm();
+      self.markersForm.toggle();
     }
 
   }
