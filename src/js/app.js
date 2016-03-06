@@ -134,6 +134,31 @@
       self.markersForm(!self.markersForm());
     };
 
+    // Provide a method for submitting the markers form.
+    self.submitMarkersForm = function() {
+      // Add the confirmed markers.
+      self.pendingMarkers().forEach(function(pending) {
+        if (pending.confirmed()) {
+          self.addMarker(pending.marker);
+        }
+      });
+
+      // Toggle the markers form.
+      self.toggleMarkersForm();
+
+      // Clear the pending markers array.
+      self.pendingMarkers([]);
+    };
+
+    // Provide a method for cancelling the markers form.
+    self.cancelMarkersForm = function() {
+      // Toggle the markers form.
+      self.toggleMarkersForm();
+
+      // Clear the pending markers array.
+      self.pendingMarkers([]);
+    };
+
     // Provide a method for toggling a marker folder between collapsed and expanded.
 
     // Provide a method for centering on a marker or set of markers.
@@ -189,10 +214,13 @@
       // Create a marker for each place and push it to the pending markers array
       // along with the default confirmed value.
       places.forEach(function(place) {
-        // TODO Icon.
+        // TODO Icon, etc.
         var marker = new Marker({
           title: place.name,
-          position: place.geometry.location
+          position: {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          }
         });
 
         self.pendingMarkers.push({
