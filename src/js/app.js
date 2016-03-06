@@ -81,8 +81,14 @@
   function AppViewModel() {
     var self = this;
 
-    // Create a collection of map markers and folders.
+    // A collection of map markers and folders.
     self.markers = ko.observableArray([]);
+
+    // A collection of pending map markers.
+    self.pendingMarkers = ko.observableArray([]);
+
+    // Is the confirm markers form visible?
+    self.markersForm = ko.observable(false);
 
     // Provide methods for adding, modifying, and removing map markers.
     self.addMarker = function(marker) {
@@ -90,6 +96,7 @@
 
       map.addMarker(ko.toJS(marker));
       self.markers.push(marker);
+      storeMarkers();
     };
 
     self.modifyMarker = function(marker) {
@@ -107,6 +114,7 @@
       // Add a folder.
 
       self.markers.push(folder);
+      storeMarkers();
     };
 
     self.modifyFolder = function(folder) {
@@ -120,6 +128,11 @@
     };
 
     // Provide a method for toggling the sidebar between collapsed and expanded.
+
+    // Provide a method for toggling the confirm markers form between visible and hidden.
+    self.toggleMarkersForm = function() {
+      self.markersForm(!self.markersForm());
+    };
 
     // Provide a method for toggling a marker folder between collapsed and expanded.
 
@@ -143,10 +156,11 @@
       arr.forEach(function(data) {
         if (data.contents) {
           // Folder.
-          self.addFolder(new MarkerFolder(data));
+          self.markers.push(new MarkerFolder(data));
         } else {
           // Marker.
-          self.addMarker(new Marker(data));
+          map.addMarker(data);
+          self.markers.push(new Marker(data));
         }
       });
 
@@ -163,28 +177,32 @@
 
     /**
      * Called when the user selects a place or set of places in the map search box.
-     * Opens a dialogue box that the user can use to modify and confirm or cancel
-     * map marker creation.
+     * Opens a form that the user can use to modify and confirm or cancel map marker
+     * creation.
      */
     function selectPlaces() {
-      var places = this.getPlaces(),
-          tempMarkers = [];
+      var places = this.getPlaces();
 
-      // Create a marker for each place and push it to the tempMarkers array.
+      // Clear the pending markers array.
+      self.pendingMarkers([]);
+
+      // Create a marker for each place and push it to the pending markers array
+      // along with the default confirmed value.
       places.forEach(function(place) {
         // TODO Icon.
-
-        tempMarkers.push(new Marker({
+        var marker = new Marker({
           title: place.name,
           position: place.geometry.location
-        }));
+        });
+
+        self.pendingMarkers.push({
+          marker: marker,
+          confirmed: ko.observable(true)
+        });
       });
 
-      // Open a dialogue box for the user to modify and confirm or cancel the
-      // creation of map markers.
-
-      // TODO
-
+      // Open the confirm markers form.
+      self.toggleMarkersForm();
     }
 
   }

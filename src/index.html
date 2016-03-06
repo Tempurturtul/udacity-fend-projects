@@ -26,6 +26,19 @@
     <main>
       <input id="places-search" type="text" placeholder="Search">
       <div id="map"></div>
+      <form id="confirm-markers" data-bind="visible: markersForm">
+        <fieldset>
+          <legend>Pending Map Markers</legend>
+          <!-- ko foreach: pendingMarkers -->
+          <div class="pending-marker">
+            <input class="add-marker" type="checkbox" data-bind="checked: confirmed">
+            <span data-bind="text: marker.title"></span>
+          </div>
+          <!-- /ko -->
+        </fieldset>
+        <button id="cancel-markers" type="button">Cancel</button>
+        <button id="confirm-markers" type="button">Confirm</button>
+      </form>
     </main>
 
     <!-- Templates. -->
