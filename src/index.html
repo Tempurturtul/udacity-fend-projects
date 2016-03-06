@@ -13,11 +13,11 @@
   </head>
   <body>
     <header id="sidebar">
-      <button id="sidebar-toggle"></button>
+      <button class="sidebar-toggle"></button>
       <fieldset>
         <legend>Map Marker Filters</legend>
-        <input id="name-filter" type="text" placeholder="Search Markers">
-        <label><input id="visible-filter" type="checkbox">Visible Only</label>
+        <input type="text" placeholder="Search Markers">
+        <label><input type="checkbox">Visible Only</label>
       </fieldset>
       <ul class="marker-list" data-bind="template: { name: 'listTemplate', foreach: markers }">
       </ul>
@@ -26,7 +26,7 @@
     <main>
       <input id="places-search" type="text" placeholder="Search">
       <div id="map"></div>
-      <form id="confirm-markers" data-bind="visible: markersForm">
+      <form data-bind="visible: markersForm">
         <fieldset>
           <legend>Pending Map Markers</legend>
           <!-- ko foreach: pendingMarkers -->
@@ -36,8 +36,8 @@
           </div>
           <!-- /ko -->
         </fieldset>
-        <button id="cancel-markers-btn" type="button" data-bind="click: cancelMarkersForm">Cancel</button>
-        <button id="confirm-markers-btn" type="button" data-bind="click: submitMarkersForm">Confirm</button>
+        <button type="button" data-bind="click: cancelMarkersForm">Cancel</button>
+        <button type="button" data-bind="click: submitMarkersForm">Confirm</button>
       </form>
     </main>
 
