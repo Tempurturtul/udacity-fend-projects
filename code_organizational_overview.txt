@@ -1,0 +1,43 @@
+app.js
+-------------------------------------------------------------------------------
+Scope:
+	Handle core knockout-controlled functionality.
+Variables:
+	ko,
+	localStorage,
+	storageKeys.MARKERS,
+	defaults.markers,
+	map (exposed map.js values)
+Functions:
+	
+Exposed:
+	N/A
+
+===============================================================================
+
+map.js
+-------------------------------------------------------------------------------
+Scope:
+	Handle google.maps functionality.
+Variables:
+	document,
+	localStorage,
+	google,
+	storageKeys.MAPOPTIONS,
+	defaults.mapOptions,
+	map, (google.maps object)
+	markers, (array of google.maps objects)
+	places, (google.maps service)
+	searchBox, (google.maps object)
+	searchBoxID
+Functions:
+	
+Exposed:
+	map.addMarker
+		Function for adding a google.maps Marker to the Map.
+	map.modifyMarker
+		Function for modifying a google.maps Marker.
+	map.removeMarker
+		Function for removing a google.maps Marker.
+	map.onPlacesChanged
+		Function for adding a listener to the google.maps SearchBox's `places_changed` event.
