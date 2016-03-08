@@ -8,8 +8,6 @@ Variables:
 	storageKeys.MARKERS,
 	defaults.markers,
 	map (exposed map.js values)
-Functions:
-	
 Exposed:
 	N/A
 
@@ -30,8 +28,6 @@ Variables:
 	places, (google.maps service)
 	searchBox, (google.maps object)
 	searchBoxID
-Functions:
-	
 Exposed:
 	map.addMarker
 		Function for adding a google.maps Marker to the Map.

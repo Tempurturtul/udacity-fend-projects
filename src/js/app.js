@@ -1,4 +1,4 @@
-// Knockout-controlled functionality.
+// Core knockout-controlled functionality.
 
 (function(global) {
   var ko = global.ko,

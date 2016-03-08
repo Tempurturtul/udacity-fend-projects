@@ -1,7 +1,5 @@
 // Google Maps functionality.
 
-// NOTE Search box example: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
-
 (function(global) {
   var document = global.document,
       localStorage = global.localStorage,
