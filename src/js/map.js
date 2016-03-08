@@ -77,10 +77,18 @@
    */
   function removeMarker(data) {}
 
+  /**
+   * Adds a places_changed event listener to the search box and calls the given
+   * function `fn` when the event fires.
+   */
+  function onPlacesChanged(fn) {
+    searchBox.addListener('places_changed', fn);
+  }
+
   global.map = {
     addMarker: addMarker,
     modifyMarker: modifyMarker,
     removeMarker: removeMarker,
-    searchBox: searchBox
+    onPlacesChanged: onPlacesChanged
   };
 })(this);

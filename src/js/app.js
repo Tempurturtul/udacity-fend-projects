@@ -190,8 +190,8 @@
         }
       });
 
-      // Listen for the event fired when the user selects a search result.
-      map.searchBox.addListener('places_changed', selectPlaces);
+      // Call selectPlaces when the user selects a search result.
+      map.onPlacesChanged(selectPlaces);
     }
 
     /**
