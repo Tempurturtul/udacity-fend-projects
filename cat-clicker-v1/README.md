@@ -1,8 +1,8 @@
 # Cat Clicker, v1
 
-This is the first version of the "Cat Clicker" application, created before working through the Design Patterns course.
+This is the first version of the "Cat Clicker" application, created before working through the [Design Patterns course](https://www.udacity.com/course/ud989-nd).
 
-Included for comparison.
+It is included for comparison with the version created after working through the course.
 
 ![Preview](docs/preview.png "A preview screenshot.")
 
