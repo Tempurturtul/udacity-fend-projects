@@ -2,7 +2,22 @@
 
 This is the **5th** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program.
 
-## Project Requirements
+## Quickstart
+
+- Install [Node](https://nodejs.org/en/), [Gulp](http://gulpjs.com/), and [Bower](http://bower.io/).
+- Clone this repository and install dependencies.
+```
+  git clone https://github.com/Tempurturtul/fend-neighborhood-map.git
+  cd fend-neighborhood-map/
+  npm install
+  bower install
+```
+- Run the default gulp task to serve source files. *(See `gulpfile.js` for additional gulp tasks.)*
+```
+  gulp
+```
+
+## Udacity's Project Instructions
 
 ```
 1. Review our course JavaScript Design Patterns.
@@ -69,31 +84,14 @@ using to make API calls.
 
 ## User Stories
 
-- ***(WiP)*** User can view a map that initializes either with the options from the user's most recent visit or with pre-defined defaults.
+- User can view a map that initializes either with the options from the user's most recent visit or with pre-defined defaults.
 - ***(WiP)*** User can add, remove, and edit persistent map markers that will be displayed on the map.
-- ***(WiP)*** On the user's first visit, five default map markers will exist.
-- ***(WiP)*** User can use a search bar to find locations from which to create new map markers.
-- ***(WiP)*** User can view a list of map markers.
+- On the user's first visit, five default map markers will exist.
+- User can use a search bar to find locations from which to create new map markers.
+- User can view a list of map markers.
 - ***(WiP)*** User can sort and categorize map markers in the list.
 - ***(WiP)*** User can filter map markers in the list and the map will update its displayed markers accordingly.
 - ***(WiP)*** User can click on a map marker on the map or the list to view (within a Google Maps infoWindow) information on the location from various (not all Google API-related) sources.
 - ***(WiP)*** User can view an animation effect on a map marker whenever that map marker is selected on the map or in the list.
 - ***(WiP)*** User can click on an icon next to a map marker category in the list to center and zoom the map in such a way that all the markers contained in that category are visible on the map.
 - ***(WiP)*** User can experience errors (for example, resulting from unexpected third-party API results) in a gracefully handled manner. (Either with a helpful error message, or with no negative repercussions to the UI.)
-
-## Local Setup
-
-**Prerequisites**
-- [Node](https://nodejs.org/en/)
-- [Gulp](http://gulpjs.com/)
-- [Bower](http://bower.io/)
-
-**Install dependencies.**
-- In project directory: `npm install`.
-- In project directory: `bower install`.
-
-**Run desired Gulp task(s).**
-- `gulp`
-  - Lints and serves source files.
-- `gulp build; gulp serve:dest`
-  - Creates then serves distribution files.
