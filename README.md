@@ -1,4 +1,4 @@
-# fend-optimization
+# Optimization
 
 This is the **4th** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program. It provides a portfolio website that must be optimized to achieve a high [PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/) score and steady FPS.
 
@@ -13,7 +13,7 @@ This is the **4th** project in Udacity's [Front-End Web Developer Nanodegree](ht
 1. Replaced pizzeria thumbnail with a resized image.
 1. Replaced remotely hosted thumbnails with locally hosted versions (allowing image optimization and manipulation of `cache-control` headers).
 1. Set `cache-control` `max-age` to 1 year for appropriate resources.
-1. Applied finger-prints to appropriate resources.
+1. Applied finger-prints to appropriate resources for cache-busting purposes.
 1. Inlined critical and other appropriate `.css`.
 1. Removed use of google fonts.
 
