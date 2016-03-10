@@ -45,13 +45,14 @@ $(document).ready(function() {
         },
         'welcomeMessage' : 'I\'m currently seeking employment as a front-end web ' +
         'developer and am happy to relocate as necessary within the United States. ' +
-        'This resume was last updated in February of 2016. Please don\'t hesitate to ' +
-        'contact me!',
+        'Please don\'t hesitate to contact me! This resume was last updated in ' +
+        'March of 2016.',
         'skills' : [
           'HTML',
           'CSS',
           'JavaScript',
           'jQuery',
+          'Knockout',
           'AngularJS',
           'Node.js',
           'Gulp'
@@ -83,6 +84,23 @@ $(document).ready(function() {
     getProjects: function() {
       return {
         'projects': [
+          {
+            'title': 'Optimization',
+            'dates': 'February 2016',
+            'description': 'Given a poorly optimized website, I was tasked with ' +
+            'optimizing the site to achieve a high PageSpeed Insights score and ' +
+            'consistently high FPS. Optimization techniques used include concatenating ' +
+            'and minifying files, inlining critical css, modifying cache-control ' +
+            'headers, and refactoring JavaScript. The full optimization process ' +
+            'is detailed in the GitHub repository for this project.',
+            'images': [
+              'img/fend-optimization-home.png',
+              'img/fend-optimization-game.png',
+              'img/fend-optimization-pizzeria.png'
+            ],
+            'github': 'https://github.com/Tempurturtul/fend-optimization',
+            'url': 'http://tempurturtul.github.io/fend-optimization/'
+          },
           {
             'title': 'Frogger Clone',
             'dates': 'January 2016',
