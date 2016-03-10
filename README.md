@@ -15,11 +15,11 @@ The final project for the course is located in [Tempurturtul/fend-neighborhood-m
 [**ud989-cat-clicker-ko-starter/**](ud989-cat-clicker-ko-starter)
 - An introduction to the Knockout framework.
 
-[**ud989-retain-master**](ud989-retain-master)
+[**ud989-retain-master/**](ud989-retain-master)
 - An initial introduction to the Model-View-"Octopus" design pattern later used to build cat-clicker-v2.
 
-[**ud989-school-attendance-master**](ud989-school-attendance-master)
+[**ud989-school-attendance-master/**](ud989-school-attendance-master)
 - Practice refactoring unorganized code.
 
-[**ud989-todo-app**](ud989-todo-app)
+[**ud989-todo-app/**](ud989-todo-app)
 - Practice working with an unknown codebase.
