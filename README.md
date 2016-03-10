@@ -1,4 +1,4 @@
-# fend-neighborhood-map
+# Neighborhood Map
 
 This is the **5th** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program.
 
