@@ -24,7 +24,7 @@ helper.HTMLworkDescription = '<p class="description">%data%</p>';
 
 helper.HTMLprojectStart = '<article class="project-entry"></article>';
 helper.HTMLprojectTitle = '<h3>%data%</h3>';
-helper.HTMLprojectTitleWithUrl = '<h3><a href="%url-data%" target="_blank">%data%</a></h3>';
+helper.HTMLprojectTitleWithUrl = '<h3><a href="%url-data%" target="_blank">%data% <i class="fa fa-external-link"></i></a></h3>';
 helper.HTMLprojectDates = '<div class="row"><p class="time-period">%data%</p></div>';
 helper.HTMLprojectGithub = '<a class="github-link" href="%data%" target="_blank"><i class="fa fa-github"></i></a>';
 helper.HTMLprojectDescription = '<p class="description">%data%</p>';
@@ -33,7 +33,7 @@ helper.HTMLprojectImage = '<img src="%data%">';
 
 helper.HTMLschoolStart = '<article class="education-entry"></article>';
 helper.HTMLschoolName = '<h3><a href="%url-data%" target="_blank">%data%';
-helper.HTMLschoolDegree = ' -- %data%</a></h3>';
+helper.HTMLschoolDegree = ' -- %data% <i class="fa fa-external-link"></i></a></h3>';
 helper.HTMLschoolDates = '<div class="row"><p class="time-period">%data%</p></div>';
 helper.HTMLschoolLocation = '<p class="location">%data%</p>';
 helper.HTMLschoolMajor = '<p>Major: %data%</p>';
@@ -41,7 +41,7 @@ helper.HTMLschoolDescription = '<p class="description">%data%</p>';
 
 helper.HTMLonlineClasses = '<h3 id="classes-heading">Online Classes</h3>';
 helper.HTMLonlineTitle = '<h4><a href="%url-data%" target="_blank">%data%';
-helper.HTMLonlineSchool = ' - %data%</a></h4>';
+helper.HTMLonlineSchool = ' - %data% <i class="fa fa-external-link"></i></a></h4>';
 helper.HTMLonlineDate = '<p class="time-period">%data%</p>';
 helper.HTMLonlineDescription = '<p class="description">%data%</p>';
 

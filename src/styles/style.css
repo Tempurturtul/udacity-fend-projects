@@ -123,7 +123,7 @@ ul {
 }
 
 .github-link {
-  color: #999;
+  color: #666;
   font-size: 1.2rem;
   line-height: 1rem;
   position: relative;
@@ -331,7 +331,6 @@ header .row {
   margin-left: 0.5em;
 }
 
-/* Work entry titles. */
 .work-entry > h3 {
   display: inline-block;  /* Require the user to mouse over the title text. */
 }
@@ -339,6 +338,13 @@ header .row {
 .work-entry > h3:hover {
   color: #5f7d8e;  /* Same as a elements. */
   cursor: pointer;  /* Same as a elements. */
+}
+
+/* Icon in project, education, and online course titles. */
+h3 .fa-external-link,
+h4 .fa-external-link {
+  font-size: 0.6em;
+  vertical-align: super;
 }
 
 .project-images img {
