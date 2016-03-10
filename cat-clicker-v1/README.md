@@ -2,7 +2,7 @@
 
 This is the first version of the "Cat Clicker" application, created before working through the [Design Patterns course](https://www.udacity.com/course/ud989-nd).
 
-It is included for comparison with the version created after working through the course.
+It is included for comparison with [version 2](https://github.com/Tempurturtul/fend-design-patterns/tree/master/cat-clicker-v2), which was created after working through the course.
 
 ![Preview](docs/preview.png "A preview screenshot.")
 
