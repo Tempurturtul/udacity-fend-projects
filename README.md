@@ -1,9 +1,24 @@
-# fend-frogger
+# Escape By Water! (A Frogger Clone)
 
-**Play here:** [tempurturtul.github.io/fend-frogger](http://tempurturtul.github.io/fend-frogger/)
+This is the **3rd** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program. It provides art assets and a simple game engine that must be used to build a frogger clone. I am required to implement only the basic game, but am encouraged to implement additional features of my choosing.
 
-**Controls:** Use the arrow keys or the WASD keys to move. If on a touch-enabled device (mobile for example) you may also use touches to move.
+**[Play here.](http://tempurturtul.github.io/fend-frogger/)**
 
-This is the third project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program. It provides art assets and a game engine that must be used to build a frogger clone. I am required to implement only the basic game, but am encouraged to implement additional features of my choosing.
+## Controls
 
-Source code may be found in the `src/client` directory. The game is intended to be played at the link above, but may also be played by opening the `src/client/index.html`  file in your browser of choice.
+- Use the **arrow keys** or the **WASD keys** to move.
+- If on a touch-enabled device (mobile for example) you may also use **touches** to move.
+
+## Quickstart For Local Development
+
+- Install [Node](https://nodejs.org/en/) and [Gulp](http://gulpjs.com/).
+- Clone this repository and install dependencies.
+```
+  git clone https://github.com/Tempurturtul/fend-frogger.git
+  cd fend-frogger/
+  npm install
+```
+- Run the default gulp task to lint and serve source files. *(See `gulpfile.js` for additional tasks.)*
+```
+  gulp
+```
