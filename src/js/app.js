@@ -210,8 +210,9 @@ $(document).ready(function() {
             'url': 'https://www.udacity.com/course/javascript-design-patterns--ud989-nd',
             'description': 'Required as part of Udacity\'s Front-End Web Developer ' +
             'nanodegree. Teaches methods for organizing code and the importance of ' +
-            'separating concerns, all without using an organizational library or ' +
-            'framework.'
+            'separating concerns. Introduces the Model-View-* organizational ' +
+            'method and the Knockout and Backbone frameworks. Also covers refactoring ' +
+            'unorganized code and working with an unknown codebase.'
           },
           {
             'title': 'JavaScript Basics',
