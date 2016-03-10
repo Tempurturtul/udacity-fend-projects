@@ -2,7 +2,7 @@
 
 This repository contains my work for Udacity's [JavaScript Design Patterns course](https://www.udacity.com/course/ud989-nd).
 
-The final project for the course is located in the [fend-neighborhood-map repository](https://github.com/Tempurturtul/fend-neighborhood-map).
+The final project for the course is located in [Tempurturtul/fend-neighborhood-map](https://github.com/Tempurturtul/fend-neighborhood-map).
 
 ## Contents
 
