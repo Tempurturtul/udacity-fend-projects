@@ -1,28 +1,23 @@
-# fend-resume
-This is the second project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program.
+# Resume
+This is the **2nd** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program.
+
+**[View here.](http://tempurturtul.github.io/fend-resume)**
 
 In this project I was required to complete Udacity's [JavaScript Basics](https://www.udacity.com/course/javascript-basics--ud804) course, which covers the construction of the basic resume site using a provided template. I was then allowed to personalize the result.
 
-I used the Polymer iron-collapse component in order to achieve the "Exceeds Specifications" evaluation.  I also used Gulp and Bower during development to aid my workflow.
+I used the [Polymer](https://www.polymer-project.org/) `iron-collapse` component in order to achieve the "Exceeds Specifications" evaluation, and used Gulp and Bower during development to aid my workflow.
 
-## Project Notes
+## Quickstart
 
-The live site may be viewed at [tempurturtul.github.io/fend-resume](http://tempurturtul.github.io/fend-resume).
-
-The client-side source files are located in the `src` folder.
-
-## Setup
-
-**Prerequisites**
-- [Node](https://nodejs.org/en/)
-- [Gulp](http://gulpjs.com/)
-- [Bower](http://bower.io/)
-
-**Install dependencies.**
-- In project directory: `npm install`.
-
-**Install front-end dependencies.**
-- In project directory: `bower install`.
-
-**Run Gulp tasks.**
-- In project directory: `gulp` or `gulp --tasks` for list of available tasks.
+- Install [Node](https://nodejs.org/en/), [Gulp](http://gulpjs.com/), and [Bower](http://bower.io/).
+- Clone this repository and install dependencies.
+```
+  git clone https://github.com/Tempurturtul/fend-resume.git
+  cd fend-resume/
+  npm install
+  bower install
+```
+- Run the default gulp task to serve source files. *(See `gulpfile.js` for additional tasks.)*
+```
+  gulp
+```
