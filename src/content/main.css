@@ -129,8 +129,9 @@ section:not(:last-of-type) {
 }
 
 #about p {
-  margin: 10px 15px;
   text-indent: 3em;
+  width: 100%;
+  padding: 10px 15px;
 }
 
 h2 {
