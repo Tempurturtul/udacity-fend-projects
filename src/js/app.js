@@ -192,6 +192,9 @@
 
       // Call selectPlaces when the user selects a search result.
       map.onPlacesChanged(selectPlaces);
+
+      // Call createCustomMarker when the user double clicks on the map.
+      map.onMapDblClick(createCustomMarker);
     }
 
     /**
@@ -203,8 +206,7 @@
 
     /**
      * Called when the user selects a place or set of places in the map search box.
-     * Opens a form that the user can use to modify and confirm or cancel map marker
-     * creation.
+     * Opens the markers form populated with the place(s) selected.
      */
     function selectPlaces() {
       var places = this.getPlaces();
@@ -234,6 +236,32 @@
       self.markersForm.toggle();
     }
 
+    /**
+     * Called when the user double clicks on the map. Opens the markers form populated
+     * with a marker created using the location clicked.
+     */
+    function createCustomMarker(e) {
+      // Clear the pending markers array.
+      self.markersForm.pendingMarkers([]);
+
+      // Create a marker for the location clicked.
+      var marker = new Marker({
+        title: 'Custom Marker',
+        position: {
+          lat: e.latLng.lat(),
+          lng: e.latLng.lng()
+        }
+      });
+
+      // Push the created marker to the pending markers array.
+      self.markersForm.pendingMarkers.push({
+        marker: marker,
+        confirmed: ko.observable(true)
+      });
+
+      // Open the confirm markers form.
+      self.markersForm.toggle();
+    }
   }
 
   ko.applyBindings(new AppViewModel());

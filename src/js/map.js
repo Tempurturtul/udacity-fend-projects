@@ -13,7 +13,8 @@
           //  backgroundColor - The background color visible when panning.
           //  mapTypeId - The map type. (HYBRID, ROADMAP, SATELLITE, TERRAIN)
           center: {lat: 35.689, lng: 139.692},  // Tokyo, Japan.
-          zoom: 10
+          zoom: 10,
+          disableDoubleClickZoom: true
         }
       },
       map,            // The Google Map.
@@ -76,17 +77,26 @@
   function removeMarker(data) {}
 
   /**
-   * Adds a places_changed event listener to the search box and calls the given
+   * Adds a `places_changed` event listener to the search box and calls the given
    * function `fn` when the event fires.
    */
   function onPlacesChanged(fn) {
     searchBox.addListener('places_changed', fn);
   }
 
+  /**
+   * Adds a `dblclick` event listener to the mao and calls the function `fn` when
+   * the event fires.
+   */
+  function onMapDblClick(fn) {
+    map.addListener('dblclick', fn);
+  }
+
   global.map = {
     addMarker: addMarker,
     modifyMarker: modifyMarker,
     removeMarker: removeMarker,
-    onPlacesChanged: onPlacesChanged
+    onPlacesChanged: onPlacesChanged,
+    onMapDblClick: onMapDblClick
   };
 })(this);
