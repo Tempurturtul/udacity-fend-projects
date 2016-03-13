@@ -62,7 +62,7 @@
 
     // Open an info window when the marker is clicked.
     marker.addListener('click', function() {
-      // TODO Set info window content with ko bindings in the context of the marker.
+      // TODO Set info window content, preferably with ko bindings in the context of the marker.
       console.log('TODO: Add info window content.');
       infowindow.open(map, marker);
     });
