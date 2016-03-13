@@ -54,16 +54,20 @@
    * Creates a marker and adds it to the map.
    */
   function addMarker(data) {
-    // TODO Additional properties to consider:
-    //  data.draggable - Makes the marker draggable.
-    //  data.icon - Icon for the marker.
-    //  data.label - First letter of this string is displayed on marker.
-    //  data.visible - Useful for hiding markers.
-    //  data.zIndex - Useful for sorting markers by folder depth.
-
     data.map = map;
     data.animation = google.maps.Animation.DROP;
-    markers.push(new google.maps.Marker(data));
+
+    var marker = new google.maps.Marker(data);
+    var infowindow = new google.maps.InfoWindow();
+
+    // Open an info window when the marker is clicked.
+    marker.addListener('click', function() {
+      // TODO Set info window content with ko bindings in the context of the marker.
+      console.log('TODO: Add info window content.');
+      infowindow.open(map, marker);
+    });
+
+    markers.push(marker);
   }
 
   /**
@@ -85,7 +89,7 @@
   }
 
   /**
-   * Adds a `dblclick` event listener to the mao and calls the function `fn` when
+   * Adds a `dblclick` event listener to the map and calls the function `fn` when
    * the event fires.
    */
   function onMapDblClick(fn) {

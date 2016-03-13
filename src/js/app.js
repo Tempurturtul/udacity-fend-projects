@@ -29,6 +29,10 @@
                   {
                     position: {lat: 35.65, lng: 139.7},
                     title: 'Default Marker 1.1.1'
+                  },
+                  {
+                    position: {lat: 35.64, lng: 139.7},
+                    title: 'Default Marker 1.1.2'
                   }
                 ]
               }
@@ -44,6 +48,13 @@
 
   // Marker Model
   function Marker(data) {
+    // TODO Additional (google.maps) properties to consider:
+    //  data.draggable - Makes the marker draggable.
+    //  data.icon - Icon for the marker.
+    //  data.label - First letter of this string is displayed on marker.
+    //  data.visible - Useful for hiding markers.
+    //  data.zIndex - Useful for sorting markers by folder depth.
+
     this.position = ko.observable(data.position);
     this.title = ko.observable(data.title);
   }
@@ -93,6 +104,7 @@
       expanded: ko.observable(false),
 
       toggle: function() {
+        console.log('sidebar toggle');
         self.sidebar.expanded(!self.sidebar.expanded());
       },
 
@@ -153,16 +165,6 @@
         map.addMarker(ko.toJS(marker));
         self.markers.push(marker);
         storeMarkers();
-      },
-
-      modifyMarker: function(marker) {
-        // Modify a marker.
-
-      },
-
-      removeMarker: function(marker) {
-        // Remove a marker.
-
       }
     };
 
@@ -185,8 +187,10 @@
           self.markers.push(new MarkerFolder(data));
         } else {
           // Marker.
-          map.addMarker(data);
-          self.markers.push(new Marker(data));
+          var marker = new Marker(data);
+
+          map.addMarker(ko.toJS(marker));
+          self.markers.push(marker);
         }
       });
 
