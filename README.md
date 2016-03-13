@@ -86,12 +86,14 @@ using to make API calls.
 
 - User can view a map that initializes either with the options from the user's most recent visit or with pre-defined defaults.
 - ***(WiP)*** User can add, remove, and edit persistent map markers that will be displayed on the map.
+  - A marker may be added by selecting a search result, or by double-clicking/double-tapping on the map.
+  - A marker may be modified or removed via buttons located in the information window displayed when clicking the marker or list entry.
 - On the user's first visit, five default map markers will exist.
 - User can use a search bar to find locations from which to create new map markers.
 - User can view a list of map markers.
 - ***(WiP)*** User can sort and categorize map markers in the list.
 - ***(WiP)*** User can filter map markers in the list and the map will update its displayed markers accordingly.
 - ***(WiP)*** User can click on a map marker on the map or the list to view (within a Google Maps infoWindow) information on the location from various (not all Google API-related) sources.
-- ***(WiP)*** User can view an animation effect on a map marker whenever that map marker is selected on the map or in the list.
+- ***(WiP)*** User can view an animation effect on a map marker and corresponding list entry whenever that map marker is selected on the map or in the list.
 - ***(WiP)*** User can click on an icon next to a map marker category in the list to center and zoom the map in such a way that all the markers contained in that category are visible on the map.
 - ***(WiP)*** User can experience errors (for example, resulting from unexpected third-party API results) in a gracefully handled manner. (Either with a helpful error message, or with no negative repercussions to the UI.)

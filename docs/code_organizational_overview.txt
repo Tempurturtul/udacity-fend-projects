@@ -37,3 +37,5 @@ Exposed:
 		Function for removing a google.maps Marker.
 	map.onPlacesChanged
 		Function for adding a listener to the google.maps SearchBox's `places_changed` event.
+	map.onMapDblClick
+		Function for adding a listener to the google.maps Map's `dblclick` event.
