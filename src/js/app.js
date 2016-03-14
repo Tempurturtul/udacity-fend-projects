@@ -3,6 +3,7 @@
 (function(global) {
   var ko = global.ko,
       uuid = global.UUID,
+      document = global.document,
       localStorage = global.localStorage,
       storageKeys = {
         MARKERS: 'markers'
@@ -51,7 +52,8 @@
           }
         ]
       },
-      map = global.map;
+      map = global.map,
+      appViewModel = new AppViewModel();
 
   // Marker Model
   function Marker(data) {
@@ -207,8 +209,12 @@
       var infoWindow = map.createInfoWindow();
 
       map.onMarkerClick(data.id, function() {
-        map.updateInfoWindowContent(infoWindow, '<p>...</p>');
+        var content = createInfoWindowContent(marker);
+
+        map.setInfoWindowContent(infoWindow, content);
         map.openInfoWindow(infoWindow, data.id);
+
+        ko.applyBindings(appViewModel, document.getElementById('marker-' + data.id));
       });
 
       return marker;
@@ -242,11 +248,19 @@
     }
 
     /**
+     * Returns an HTML string intended for use as an info window's content.
+     * It is identified by an id equal to the related marker's id prefixed with
+     * 'marker-', and utilizes the custom component 'info-window'.
+     */
+    function createInfoWindowContent(marker) {
+      return '<div id="marker-' + marker.id() + '" data-bind="component: { name: \'info-window\', params: { id: \'' + marker.id() + '\' } }"></div>';
+    }
+
+    /**
      * Destroys a created marker (the opposite of `createMarker(data)`).
      */
     function removeMarker(marker) {
       map.removeMarker(marker.id());
-      // TODO Confirm removal of related event listener and info window.
     }
 
     /**
@@ -312,5 +326,46 @@
     }
   }
 
-  ko.applyBindings(new AppViewModel());
+  // Custom Component
+  ko.components.register('info-window', {
+    viewModel: function(params) {
+      this.info = '<p>[' + getMarker(params.id).title().toUpperCase() + ' INFORMATION]</p>';
+      this.test = appViewModel.sidebar.toggle;
+
+      /**
+       * Gets the marker with the given id from the appViewModel.markers array.
+       */
+      function getMarker(id) {
+        return search(appViewModel.markers());
+
+        function search(arr) {
+          var deeper = [];
+
+          for (var i = 0; i < arr.length; i++) {
+            if (arr[i].contents) {
+              // Folder
+              var contents = arr[i].contents();
+
+              for (var j = 0; j < contents.length; j++) {
+                deeper.push(contents[j]);
+              }
+            } else if (arr[i].id().toString() === id) {
+              return arr[i];
+            }
+          }
+
+          // Need to search deeper.
+          if (deeper.length) {
+            return search(deeper);
+          } else {
+            return null;
+          }
+        }
+      }
+    },
+
+    template: '<div data-bind="html: info"></div><button data-bind="click: test">Test</button>'
+  });
+
+  ko.applyBindings(appViewModel);
 })(this);

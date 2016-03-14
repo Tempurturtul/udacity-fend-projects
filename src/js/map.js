@@ -124,9 +124,9 @@
   }
 
   /**
-   * Updates the content of the info window.
+   * Sets the content of the info window.
    */
-  function updateInfoWindowContent(infoWindow, content) {
+  function setInfoWindowContent(infoWindow, content) {
     infoWindow.setContent(content);
   }
 
@@ -153,6 +153,6 @@
     onMarkerClick: onMarkerClick,
     openInfoWindow: openInfoWindow,
     createInfoWindow: createInfoWindow,
-    updateInfoWindowContent: updateInfoWindowContent
+    setInfoWindowContent: setInfoWindowContent
   };
 })(this);
