@@ -4,10 +4,13 @@ Scope:
 	Handle core knockout-controlled functionality.
 Variables:
 	ko,
+	uuid,
+	document,
 	localStorage,
 	storageKeys.MARKERS,
 	defaults.markers,
-	map (exposed map.js values)
+	map (exposed map.js values),
+	appViewModel
 Exposed:
 	N/A
 
@@ -39,3 +42,11 @@ Exposed:
 		Function for adding a listener to the google.maps SearchBox's `places_changed` event.
 	map.onMapDblClick
 		Function for adding a listener to the google.maps Map's `dblclick` event.
+	map.onMarkerClick
+		Function for adding a listener to a google.maps Marker's `click` event.
+	map.openInfoWindow
+		Function for opening a google.maps InfoWindow.
+	map.createInfoWindow
+		Function for creating a google.maps InfoWindow.
+	map.setInfoWindowContent
+		Function for setting a google.maps InfoWindow's content.

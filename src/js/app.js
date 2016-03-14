@@ -1,5 +1,7 @@
 // Core knockout-controlled functionality.
 
+// TODO Consider using one info window instead of multiple.
+
 (function(global) {
   var ko = global.ko,
       uuid = global.UUID,
