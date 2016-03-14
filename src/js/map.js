@@ -53,19 +53,11 @@
   /**
    * Creates a marker and adds it to the map.
    */
-  function addMarker(data) {
-    data.map = map;
-    data.animation = google.maps.Animation.DROP;
+  function addMarker(markerData) {
+    markerData.map = map;
+    markerData.animation = google.maps.Animation.DROP;
 
-    var marker = new google.maps.Marker(data);
-    var infowindow = new google.maps.InfoWindow();
-
-    // Open an info window when the marker is clicked.
-    marker.addListener('click', function() {
-      // TODO Set info window content, preferably with ko bindings in the context of the marker.
-      console.log('TODO: Add info window content.');
-      infowindow.open(map, marker);
-    });
+    var marker = new google.maps.Marker(markerData);
 
     markers.push(marker);
   }
@@ -73,12 +65,21 @@
   /**
    * Modifies a marker on the map.
    */
-  function modifyMarker(origData, newData) {}
+  function modifyMarker(markerID, newMarkerData) {}
 
   /**
    * Removes a marker from the map.
    */
-  function removeMarker(data) {}
+  function removeMarker(markerID) {
+    var marker = getMarker(markerID);
+
+    if (marker) {
+      marker.setMap(null);
+      markers.splice(markers.indexOf(marker), 1);
+    } else {
+      console.warn('Failed to remove marker because marker wasn\'t found.');
+    }
+  }
 
   /**
    * Adds a `places_changed` event listener to the search box and calls the given
@@ -96,11 +97,62 @@
     map.addListener('dblclick', fn);
   }
 
+  /**
+   * Adds a `click` event listener to the marker and calls the function `fn` when
+   * the event fires.
+   */
+  function onMarkerClick(markerID, fn) {
+    var marker = getMarker(markerID);
+
+    marker.addListener('click', fn);
+  }
+
+  /**
+   * Opens the info window on the marker.
+   */
+  function openInfoWindow(infoWindow, markerID) {
+    var marker = getMarker(markerID);
+
+    infoWindow.open(map, marker);
+  }
+
+  /**
+   * Creates and returns an info window.
+   */
+  function createInfoWindow(opts) {
+    return new google.maps.InfoWindow(opts);
+  }
+
+  /**
+   * Updates the content of the info window.
+   */
+  function updateInfoWindowContent(infoWindow, content) {
+    infoWindow.setContent(content);
+  }
+
+  /**
+   * Returns the marker matching the given id.
+   */
+  function getMarker(id) {
+    for (var i = 0; i < markers.length; i++) {
+      if (markers[i].id === id) {
+        return markers[i];
+      }
+    }
+
+    // If we made it here, the marker wasn't found.
+    return null;
+  }
+
   global.map = {
     addMarker: addMarker,
     modifyMarker: modifyMarker,
     removeMarker: removeMarker,
     onPlacesChanged: onPlacesChanged,
-    onMapDblClick: onMapDblClick
+    onMapDblClick: onMapDblClick,
+    onMarkerClick: onMarkerClick,
+    openInfoWindow: openInfoWindow,
+    createInfoWindow: createInfoWindow,
+    updateInfoWindowContent: updateInfoWindowContent
   };
 })(this);

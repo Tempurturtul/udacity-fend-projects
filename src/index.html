@@ -29,7 +29,7 @@
       <form data-bind="visible: markersForm.visible">
         <fieldset>
           <legend>Pending Map Markers</legend>
-          <!-- ko foreach: markersForm.pendingMarkers -->
+          <!-- ko foreach: markersForm.pending -->
           <div class="pending-marker">
             <input class="add-marker" type="checkbox" data-bind="checked: confirmed">
             <span data-bind="text: marker.title"></span>
@@ -61,6 +61,9 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFjYsMLSna2dvG5DIL-zXcXRQs5-UY-Zs&libraries=places"></script>
     <!-- Knockout (via Bower). -->
     <script src="bower_components/knockout/dist/knockout.js"></script>
+    <!-- UUID generator (via Bower). -->
+    <script src="bower_components/uuid.js/dist/uuid.core.js"></script>
+
 
     <!-- App-specific scripts. -->
     <!-- build:js scripts.js -->

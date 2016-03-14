@@ -2,6 +2,7 @@
 
 (function(global) {
   var ko = global.ko,
+      uuid = global.UUID,
       localStorage = global.localStorage,
       storageKeys = {
         MARKERS: 'markers'
@@ -9,10 +10,12 @@
       defaults = {
         markers: [
           {
+            id: 0,
             position: {lat: 35.67, lng: 139.6},
             title: 'Default Marker 1'
           },
           {
+            id: 1,
             position: {lat: 35.67, lng: 139.7},
             title: 'Default Marker 2'
           },
@@ -20,6 +23,7 @@
             name: 'Default Folder 1',
             contents: [
               {
+                id: 2,
                 position: {lat: 35.66, lng: 139.7},
                 title: 'Default Marker 1.1'
               },
@@ -27,10 +31,12 @@
                 name: 'Default Folder 1.1',
                 contents: [
                   {
+                    id: 3,
                     position: {lat: 35.65, lng: 139.7},
                     title: 'Default Marker 1.1.1'
                   },
                   {
+                    id: 4,
                     position: {lat: 35.64, lng: 139.7},
                     title: 'Default Marker 1.1.2'
                   }
@@ -39,6 +45,7 @@
             ]
           },
           {
+            id: 5,
             position: {lat: 35.67, lng: 139.8},
             title: 'Default Marker 3'
           }
@@ -55,37 +62,17 @@
     //  data.visible - Useful for hiding markers.
     //  data.zIndex - Useful for sorting markers by folder depth.
 
+    this.id = ko.observable(data.id);
     this.position = ko.observable(data.position);
     this.title = ko.observable(data.title);
   }
 
-  // Marker Folder Model
-  function MarkerFolder(data) {
+  // Folder Model
+  function Folder(data) {
     // The name of the folder.
     this.name = ko.observable(data.name);
     // The folder contents (marker and/or marker folder array).
-    this.contents = ko.observableArray(createContents());
-
-    /**
-     * Creates an array of markers and marker folders from data.contents. If any
-     * markers are created, adds them to the map.
-     */
-    function createContents() {
-      var results = [];
-
-      data.contents.forEach(function(item) {
-        if (item.contents) {
-          // Folder.
-          results.push(new MarkerFolder(item));
-        } else {
-          // Marker.
-          map.addMarker(item);
-          results.push(new Marker(item));
-        }
-      });
-
-      return results;
-    }
+    this.contents = ko.observableArray(data.contents);
   }
 
   // App View Model
@@ -110,9 +97,6 @@
 
       addFolder: function(folder) {
         // Add a folder.
-
-        self.markers.push(folder);
-        storeMarkers();
       },
 
       modifyFolder: function(folder) {
@@ -128,43 +112,57 @@
 
     // Markers form functionality.
     self.markersForm = {
-      pendingMarkers: ko.observableArray([]),
+      pending: ko.observableArray([]),
 
       visible: ko.observable(false),
 
-      toggle: function() {
-        self.markersForm.visible(!self.markersForm.visible());
+      open: function() {
+        if (!self.markersForm.visible()) {
+          self.markersForm.visible(true);
+        }
+      },
+
+      close: function() {
+        if (self.markersForm.visible()) {
+          self.markersForm.visible(false);
+        }
       },
 
       submit: function() {
-        // Add the confirmed markers.
-        self.markersForm.pendingMarkers().forEach(function(pending) {
-          if (pending.confirmed()) {
-            self.markersForm.addMarker(pending.marker);
-          }
-        });
+        // Close the markers form.
+        self.markersForm.close();
 
-        // Toggle the markers form.
-        self.markersForm.toggle();
+        // Filter the confirmed markers out of the pending array and into the markers
+        // array.
+        self.markersForm.pending(self.markersForm.pending().filter(function(pending) {
+          if (pending.confirmed()) {
+            // Move to the markers array.
+            self.markers.push(pending.marker);
+            // TODO Save. Subscribe a save method to self.markers?
+            return false;
+          } else {
+            return true;
+          }
+        }));
 
         // Clear the pending markers array.
-        self.markersForm.pendingMarkers([]);
+        self.markersForm.clearPending();
       },
 
       cancel: function() {
-        // Toggle the markers form.
-        self.markersForm.toggle();
+        // Close the markers form.
+        self.markersForm.close();
 
         // Clear the pending markers array.
-        self.markersForm.pendingMarkers([]);
+        self.markersForm.clearPending();
       },
 
-      addMarker: function(marker) {
-        // Add a marker.
+      clearPending: function() {
+        self.markersForm.pending().forEach(function(pending) {
+          removeMarker(pending.marker);
+        });
 
-        map.addMarker(ko.toJS(marker));
-        self.markers.push(marker);
-        storeMarkers();
+        self.markersForm.pending([]);
       }
     };
 
@@ -183,13 +181,10 @@
 
       arr.forEach(function(data) {
         if (data.contents) {
-          // Folder.
-          self.markers.push(new MarkerFolder(data));
+          var folder = createFolder(data);
+          self.markers.push(folder);
         } else {
-          // Marker.
-          var marker = new Marker(data);
-
-          map.addMarker(ko.toJS(marker));
+          var marker = createMarker(data);
           self.markers.push(marker);
         }
       });
@@ -197,14 +192,67 @@
       // Call selectPlaces when the user selects a search result.
       map.onPlacesChanged(selectPlaces);
 
-      // Call createCustomMarker when the user double clicks on the map.
-      map.onMapDblClick(createCustomMarker);
+      // Call confirmCustomMarker when the user double clicks on the map.
+      map.onMapDblClick(confirmCustomMarker);
     }
 
     /**
-     * Stores self.markers to local storage as a JSON string.
+     * Creates and returns a marker.
      */
-    function storeMarkers() {
+    function createMarker(data) {
+      var marker = new Marker(data);
+
+      map.addMarker(data);
+
+      var infoWindow = map.createInfoWindow();
+
+      map.onMarkerClick(data.id, function() {
+        map.updateInfoWindowContent(infoWindow, '<p>...</p>');
+        map.openInfoWindow(infoWindow, data.id);
+      });
+
+      return marker;
+    }
+
+    /**
+     * Creates and returns a folder.
+     */
+    function createFolder(data) {
+      data.contents = createFolderContents(data.contents);
+      var folder = new Folder(data);
+
+      return folder;
+    }
+
+    /**
+     * Creates and returns an array of markers and/or folders.
+     */
+    function createFolderContents(contents) {
+      var results = [];
+
+      contents.forEach(function(data) {
+        if (data.contents) {
+          results.push(createFolder(data));
+        } else {
+          results.push(createMarker(data));
+        }
+      });
+
+      return results;
+    }
+
+    /**
+     * Destroys a created marker (the opposite of `createMarker(data)`).
+     */
+    function removeMarker(marker) {
+      map.removeMarker(marker.id());
+      // TODO Confirm removal of related event listener and info window.
+    }
+
+    /**
+     * Saves self.markers to local storage as a JSON string.
+     */
+    function saveMarkers() {
       localStorage.setItem(storageKeys.MARKERS, ko.toJSON(self.markers));
     }
 
@@ -215,14 +263,12 @@
     function selectPlaces() {
       var places = this.getPlaces();
 
-      // Clear the pending markers array.
-      self.markersForm.pendingMarkers([]);
-
       // Create a marker for each place and push it to the pending markers array
       // along with the default confirmed value.
       places.forEach(function(place) {
         // TODO Icon, etc.
-        var marker = new Marker({
+        var marker = createMarker({
+          id: uuid.generate(),
           title: place.name,
           position: {
             lat: place.geometry.location.lat(),
@@ -230,26 +276,24 @@
           }
         });
 
-        self.markersForm.pendingMarkers.push({
+        self.markersForm.pending.push({
           marker: marker,
           confirmed: ko.observable(true)
         });
       });
 
       // Open the confirm markers form.
-      self.markersForm.toggle();
+      self.markersForm.open();
     }
 
     /**
      * Called when the user double clicks on the map. Opens the markers form populated
      * with a marker created using the location clicked.
      */
-    function createCustomMarker(e) {
-      // Clear the pending markers array.
-      self.markersForm.pendingMarkers([]);
-
+    function confirmCustomMarker(e) {
       // Create a marker for the location clicked.
-      var marker = new Marker({
+      var marker = createMarker({
+        id: uuid.generate(),
         title: 'Custom Marker',
         position: {
           lat: e.latLng.lat(),
@@ -258,13 +302,13 @@
       });
 
       // Push the created marker to the pending markers array.
-      self.markersForm.pendingMarkers.push({
+      self.markersForm.pending.push({
         marker: marker,
         confirmed: ko.observable(true)
       });
 
       // Open the confirm markers form.
-      self.markersForm.toggle();
+      self.markersForm.open();
     }
   }
 
