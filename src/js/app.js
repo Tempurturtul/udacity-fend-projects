@@ -344,6 +344,8 @@
         marker.title('Test');
         map.removeMarker(marker.id());
 
+        // TODO This is largely copy-pasted from appViewModel's createMarker
+        // method. Would it be appropriate to instead reuse that code somehow?
         recreateMarker(marker);
 
         /**
