@@ -333,20 +333,50 @@
   // Custom Component
   ko.components.register('info-window', {
     viewModel: function(params) {
-      var marker = getMarker(params.id);
+      // TODO This is getting all tangled with AppViewModel. Separate concerns, fool.
+      
+      var self = this;
 
-      this.info = '<p>[' + marker.title().toUpperCase() + ' INFORMATION]</p>';
+      self.marker = ko.observable(getMarker(params.id));
 
-      // TODO WiP
-      this.modify = function() {
-        // Testing.
-        console.log('Modify the marker...');
-        marker.title('Test');
-        map.removeMarker(marker.id());
+      var preChangeMarkerData = ko.toJS(self.marker());
+
+      self.displayInfo = ko.observable(true);
+      self.displayEdit = ko.observable(false);
+
+      self.modify = function() {
+        self.displayInfo(false);
+        self.displayEdit(true);
+      };
+
+      self.remove = function() {
+        // Remove the marker from the array it's a part of.
+        var obsArr = getContainingArray(self.marker().id()),
+            arr = obsArr(),
+            index;
+
+        if (arr.length && arr[0].marker) {
+          // The pending array. Markers are contained within the marker property.
+          index = arr
+            .map(function(data) {
+              return data.marker;
+            })
+            .indexOf(marker);
+        }
+
+        arr.splice(index, 1);
+        obsArr(arr);
+
+        // Remove the marker from the map.
+        map.removeMarker(self.marker().id());
+      };
+
+      self.update = function() {
+        map.removeMarker(self.marker().id());
 
         // TODO This is largely copy-pasted from appViewModel's createMarker
         // method. Would it be appropriate to instead reuse that code somehow?
-        recreateMarker(marker);
+        recreateMarker(self.marker());
 
         /**
          * Recreates a marker on the map. (Similar to appViewModel.createMarker.)
@@ -387,26 +417,8 @@
         }
       };
 
-      this.remove = function() {
-        // Remove the marker from the array it's a part of.
-        var obsArr = getContainingArray(marker.id()),
-            arr = obsArr(),
-            index;
-
-        if (arr.length && arr[0].marker) {
-          // The pending array. Markers are contained within the marker property.
-          index = arr
-            .map(function(data) {
-              return data.marker;
-            })
-            .indexOf(marker);
-        }
-
-        arr.splice(index, 1);
-        obsArr(arr);
-
-        // Remove the marker from the map.
-        map.removeMarker(marker.id());
+      self.restore = function() {
+        self.marker().title(preChangeMarkerData.title);
       };
 
       /**
@@ -498,9 +510,16 @@
       }
     },
 
-    template: '<div data-bind="html: info"></div>' +
+    template: '<div data-bind="visible: displayInfo">' +
+              '<p>[INFO]</p>' +
               '<button data-bind="click: modify">Modify</button>' +
-              '<button data-bind="click: remove">Remove</button>'
+              '<button data-bind="click: remove">Remove</button>'+
+              '</div>' +
+              '<div data-bind="visible: displayEdit">' +
+              '<input data-bind="value: marker().title"></input>' +
+              '<button data-bind="click: restore">Cancel</button>' +
+              '<button data-bind="click: update">Confirm</button>' +
+              '</div>'
   });
 
   ko.applyBindings(appViewModel);
