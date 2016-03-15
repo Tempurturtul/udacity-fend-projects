@@ -46,7 +46,7 @@ Exposed:
 		Function for adding a listener to a google.maps Marker's `click` event.
 	map.openInfoWindow
 		Function for opening a google.maps InfoWindow.
-	map.createInfoWindow
-		Function for creating a google.maps InfoWindow.
+	map.closeInfoWindow
+		Function for closing a google.maps InfoWindow.
 	map.setInfoWindowContent
 		Function for setting a google.maps InfoWindow's content.
