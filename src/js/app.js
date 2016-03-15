@@ -340,8 +340,33 @@
   // Custom Component
   ko.components.register('info-window', {
     viewModel: function(params) {
-      this.info = '<p>[' + getMarker(params.id).title().toUpperCase() + ' INFORMATION]</p>';
-      this.test = appViewModel.sidebar.toggle;
+      var marker = getMarker(params.id);
+
+      this.info = '<p>[' + marker.title().toUpperCase() + ' INFORMATION]</p>';
+      this.modify = function() {
+        console.log('Modify the marker...');
+      };
+      this.remove = function() {
+        // Remove the marker from the array it's a part of.
+        var obsArr = getContainingArray(marker.id()),
+            arr = obsArr(),
+            index;
+
+        if (arr.length && arr[0].marker) {
+          // The pending array. Markers are contained within the marker property.
+          index = arr
+            .map(function(data) {
+              return data.marker;
+            })
+            .indexOf(marker);
+        }
+
+        arr.splice(index, 1);
+        obsArr(arr);
+
+        // Remove the marker from the map.
+        map.removeMarker(marker.id());
+      };
 
       /**
        * Gets the marker with the given id from the appViewModel.markers array
@@ -382,9 +407,59 @@
           }
         }
       }
+
+      /**
+       * Gets the observable array directly containing the marker with the given id.
+       */
+      function getContainingArray(id) {
+        return search([appViewModel.markers, appViewModel.markersForm.pending]);
+
+        function search(obsArrs) {
+          var deeper = [],
+              obsArr,
+              i, j, len;
+
+          // For each observable array...
+          for (i = 0; i < obsArrs.length; i++) {
+            obsArr = obsArrs[i];
+
+            if (obsArr().length && obsArr()[0].marker) {
+              // The pending array. The actual marker is stored in the marker
+              // property and there are no folders to worry about.
+              for (j = 0, len = obsArr().length; j < len; j++) {
+                if (obsArr()[j].marker.id() === id) {
+                  // The observable array we're looking for.
+                  return obsArr;
+                }
+              }
+            } else {
+              // The markers array or a contents array. There may be a mix of
+              // markers and folders.
+              for (j = 0, len = obsArr().length; j < len; j++) {
+                if (obsArr()[j].contents) {
+                  // Folder
+                  deeper.push(obsArr()[j].contents);
+                } else if (obsArr()[j].id() === id) {
+                  // The observable array we're looking for.
+                  return obsArr;
+                }
+              }
+            }
+          }
+
+          // Not found yet, keep looking if possible.
+          if (deeper.length) {
+            return search(deeper);
+          } else {
+            return null;
+          }
+        }
+      }
     },
 
-    template: '<div data-bind="html: info"></div><button data-bind="click: test">Test</button>'
+    template: '<div data-bind="html: info"></div>' +
+              '<button data-bind="click: modify">Modify</button>' +
+              '<button data-bind="click: remove">Remove</button>'
   });
 
   ko.applyBindings(appViewModel);
