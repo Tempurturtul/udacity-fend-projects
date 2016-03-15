@@ -21,6 +21,7 @@
       markers = [],   // The Google Map Markers.
       places,         // The Google Places Service.
       searchBox,      // The Google Places SearchBox.
+      infoWindow,     // The Google Map InfoWindow.
       searchBoxID = 'places-search';
 
   init();
@@ -48,6 +49,9 @@
     map.addListener('bounds_changed', function() {
       searchBox.setBounds(map.getBounds());
     });
+
+    // Initialize the info window.
+    infoWindow = new google.maps.InfoWindow();
   }
 
   /**
@@ -108,25 +112,25 @@
   }
 
   /**
-   * Opens the info window on the marker.
+   * Opens the info window on the identified marker.
    */
-  function openInfoWindow(infoWindow, markerID) {
+  function openInfoWindow(markerID) {
     var marker = getMarker(markerID);
 
     infoWindow.open(map, marker);
   }
 
   /**
-   * Creates and returns an info window.
+   * Closes the infowindow.
    */
-  function createInfoWindow(opts) {
-    return new google.maps.InfoWindow(opts);
+  function closeInfoWindow() {
+    infoWindow.close();
   }
 
   /**
    * Sets the content of the info window.
    */
-  function setInfoWindowContent(infoWindow, content) {
+  function setInfoWindowContent(content) {
     infoWindow.setContent(content);
   }
 
@@ -152,7 +156,7 @@
     onMapDblClick: onMapDblClick,
     onMarkerClick: onMarkerClick,
     openInfoWindow: openInfoWindow,
-    createInfoWindow: createInfoWindow,
+    closeInfoWindow: closeInfoWindow,
     setInfoWindowContent: setInfoWindowContent
   };
 })(this);

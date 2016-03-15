@@ -1,7 +1,5 @@
 // Core knockout-controlled functionality.
 
-// TODO Consider using one info window instead of multiple.
-
 (function(global) {
   var ko = global.ko,
       uuid = global.UUID,
@@ -208,15 +206,19 @@
 
       map.addMarker(data);
 
-      var infoWindow = map.createInfoWindow();
-
       map.onMarkerClick(data.id, function() {
+        // Create new content for the info window related to this marker.
         var content = createInfoWindowContent(marker);
 
-        map.setInfoWindowContent(infoWindow, content);
-        map.openInfoWindow(infoWindow, data.id);
+        // Close the info window if it's open.
+        map.closeInfoWindow();
+        // Change the info window's content.
+        map.setInfoWindowContent(content);
+        // Open the info window on this marker.
+        map.openInfoWindow(data.id);
 
-        ko.applyBindings(appViewModel, document.getElementById('marker-' + data.id));
+        // Apply knockout bindings to the info window's newly created content.
+        ko.applyBindings(appViewModel, content);
       });
 
       return marker;
@@ -250,12 +252,19 @@
     }
 
     /**
-     * Returns an HTML string intended for use as an info window's content.
-     * It is identified by an id equal to the related marker's id prefixed with
-     * 'marker-', and utilizes the custom component 'info-window'.
+     * Returns an element intended for use as an info window's content. It
+     * utilizes the custom component 'info-window'.
      */
     function createInfoWindowContent(marker) {
-      return '<div id="marker-' + marker.id() + '" data-bind="component: { name: \'info-window\', params: { id: \'' + marker.id() + '\' } }"></div>';
+      var content = document.createElement('div');
+
+      content.dataset.bind = 'component: { ' +
+                               'name: \'info-window\', ' +
+                               'params: { ' +
+                                 'id: \'' + marker.id() + '\' ' +
+                               '} ' +
+                             '}';
+      return content;
     }
 
     /**
@@ -335,15 +344,24 @@
       this.test = appViewModel.sidebar.toggle;
 
       /**
-       * Gets the marker with the given id from the appViewModel.markers array.
+       * Gets the marker with the given id from the appViewModel.markers array
+       * or the appViewModel.markersForm.pending array.
        */
       function getMarker(id) {
-        return search(appViewModel.markers());
+        return search(appViewModel.markers()) || search(appViewModel.markersForm.pending());
 
         function search(arr) {
           var deeper = [];
 
+          // Handle the pending array where the actual marker is stored in the marker property.
+          if (arr[0].marker) {
+            arr = arr.map(function(obj) {
+              return obj.marker;
+            });
+          }
+
           for (var i = 0; i < arr.length; i++) {
+
             if (arr[i].contents) {
               // Folder
               var contents = arr[i].contents();
