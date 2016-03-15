@@ -84,10 +84,10 @@ using to make API calls.
 
 ## User Stories
 
-- User can view a map that initializes either with the options from the user's most recent visit or with pre-defined defaults.
+- ***(WiP)*** User can view a map that initializes either with the options from the user's most recent visit or with pre-defined defaults.
 - ***(WiP)*** User can add, remove, and edit persistent map markers that will be displayed on the map.
   - A marker may be added by selecting a search result, or by double-clicking/double-tapping on the map.
-  - A marker may be modified or removed via buttons located in the information window displayed when clicking the marker or list entry.
+  - ***(WiP)*** A marker may be modified or removed via buttons located in the information window displayed when clicking the marker or list entry.
 - ***(WiP)*** On the user's first visit, five default map markers will exist.
 - User can use a search bar to find locations from which to create new map markers.
 - User can view a list of map markers.
