@@ -64,7 +64,7 @@
     //  data.visible - Useful for hiding markers.
     //  data.zIndex - Useful for sorting markers by folder depth.
 
-    this.id = ko.observable(data.id);
+    this.id = ko.observable(data.id.toString());
     this.position = ko.observable(data.position);
     this.title = ko.observable(data.title);
   }
@@ -168,41 +168,107 @@
       }
     };
 
-    // Initialize the App View Model.
-    init();
+    // Method for retrieving a marker by id.
+    self.getMarker = function(id) {
+      // Normalize id as a string.
+      id = id.toString();
 
-    // Private methods.
+      return search(self.markers()) || search(self.markersForm.pending());
 
-    /**
-     * Initializes self.markers with markers and marker folders from local storage,
-     * or from defaults if local storage is empty; adds initial markers to the map;
-     * Adds an event listener to the map search box.
-     */
-    function init() {
-      var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
+      function search(arr) {
+        var deeper = [];
 
-      arr.forEach(function(data) {
-        if (data.contents) {
-          var folder = createFolder(data);
-          self.markers.push(folder);
-        } else {
-          var marker = createMarker(data);
-          self.markers.push(marker);
+        // Handle the pending array where the actual marker is stored in the marker property.
+        if (arr.length && arr[0].marker) {
+          arr = arr.map(function(obj) {
+            return obj.marker;
+          });
         }
-      });
 
-      // Call selectPlaces when the user selects a search result.
-      map.onPlacesChanged(selectPlaces);
+        for (var i = 0; i < arr.length; i++) {
 
-      // Call confirmCustomMarker when the user double clicks on the map.
-      map.onMapDblClick(confirmCustomMarker);
-    }
+          if (arr[i].contents) {
+            // Folder
+            var contents = arr[i].contents();
+
+            for (var j = 0; j < contents.length; j++) {
+              deeper.push(contents[j]);
+            }
+          } else if (arr[i].id().toString() === id) {
+            return arr[i];
+          }
+        }
+
+        // Need to search deeper.
+        if (deeper.length) {
+          return search(deeper);
+        } else {
+          return null;
+        }
+      }
+    };
+
+    // Method for retrieving a marker's most immediate containing array.
+    self.getContainingArray = function(id) {
+      // Normalize id as a string.
+      id = id.toString();
+
+      return search([self.markers, self.markersForm.pending]);
+
+      function search(obsArrs) {
+        var deeper = [],
+            obsArr,
+            i, j, len;
+
+        // For each observable array...
+        for (i = 0; i < obsArrs.length; i++) {
+          obsArr = obsArrs[i];
+
+          if (obsArr().length && obsArr()[0].marker) {
+            // The pending array. The actual marker is stored in the marker
+            // property and there are no folders to worry about.
+            for (j = 0, len = obsArr().length; j < len; j++) {
+              if (obsArr()[j].marker.id() === id) {
+                // The observable array we're looking for.
+                return obsArr;
+              }
+            }
+          } else {
+            // The markers array or a contents array. There may be a mix of
+            // markers and folders.
+            for (j = 0, len = obsArr().length; j < len; j++) {
+              if (obsArr()[j].contents) {
+                // Folder
+                deeper.push(obsArr()[j].contents);
+              } else if (obsArr()[j].id() === id) {
+                // The observable array we're looking for.
+                return obsArr;
+              }
+            }
+          }
+        }
+
+        // Not found yet, keep looking if possible.
+        if (deeper.length) {
+          return search(deeper);
+        } else {
+          return null;
+        }
+      }
+    };
 
     /**
-     * Creates and returns a marker.
+     * Creates or recreates a marker, then returns the marker.
      */
-    function createMarker(data) {
-      var marker = new Marker(data);
+    self.createOrRecreateMarker = function(marker) {
+      var data;
+
+      if (marker instanceof Marker) {
+        data = ko.toJS(marker);
+      } else {
+        data = marker;
+        marker = new Marker(marker);
+      }
 
       map.addMarker(data);
 
@@ -233,11 +299,44 @@
         content.dataset.bind = 'component: { ' +
                                  'name: \'info-window\', ' +
                                  'params: { ' +
-                                   'id: \'' + marker.id() + '\' ' +
+                                   'markerID: \'' + marker.id() + '\', ' +
+                                   'getMarker: $root.getMarker, ' +
+                                   'getContainingArray: $root.getContainingArray, ' +
+                                   'recreateMarker: $root.createOrRecreateMarker' +
                                  '} ' +
                                '}';
         return content;
       }
+    };
+
+    // Initialize the App View Model.
+    init();
+
+    // Private methods.
+
+    /**
+     * Initializes self.markers with markers and marker folders from local storage,
+     * or from defaults if local storage is empty; adds initial markers to the map;
+     * Adds an event listener to the map search box.
+     */
+    function init() {
+      var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
+
+      arr.forEach(function(data) {
+        if (data.contents) {
+          var folder = createFolder(data);
+          self.markers.push(folder);
+        } else {
+          var marker = self.createOrRecreateMarker(data);
+          self.markers.push(marker);
+        }
+      });
+
+      // Call selectPlaces when the user selects a search result.
+      map.onPlacesChanged(selectPlaces);
+
+      // Call confirmCustomMarker when the user double clicks on the map.
+      map.onMapDblClick(confirmCustomMarker);
     }
 
     /**
@@ -260,7 +359,7 @@
         if (data.contents) {
           results.push(createFolder(data));
         } else {
-          results.push(createMarker(data));
+          results.push(self.createOrRecreateMarker(data));
         }
       });
 
@@ -285,7 +384,7 @@
       // along with the default confirmed value.
       places.forEach(function(place) {
         // TODO Icon, etc.
-        var marker = createMarker({
+        var marker = self.createOrRecreateMarker({
           id: uuid.generate(),
           title: place.name,
           position: {
@@ -310,7 +409,7 @@
      */
     function confirmCustomMarker(e) {
       // Create a marker for the location clicked.
-      var marker = createMarker({
+      var marker = self.createOrRecreateMarker({
         id: uuid.generate(),
         title: 'Custom Marker',
         position: {
@@ -333,11 +432,13 @@
   // Custom Component
   ko.components.register('info-window', {
     viewModel: function(params) {
-      // TODO This is getting all tangled with AppViewModel. Separate concerns, fool.
-      
-      var self = this;
+      var self = this,
+          markerID = params.markerID,
+          getMarker = params.getMarker,
+          getContainingArray = params.getContainingArray,
+          recreateMarker = params.recreateMarker;
 
-      self.marker = ko.observable(getMarker(params.id));
+      self.marker = ko.observable(getMarker(markerID));
 
       var preChangeMarkerData = ko.toJS(self.marker());
 
@@ -361,7 +462,9 @@
             .map(function(data) {
               return data.marker;
             })
-            .indexOf(marker);
+            .indexOf(self.marker());
+        } else {
+          index = arr.indexOf(self.marker());
         }
 
         arr.splice(index, 1);
@@ -374,140 +477,12 @@
       self.update = function() {
         map.removeMarker(self.marker().id());
 
-        // TODO This is largely copy-pasted from appViewModel's createMarker
-        // method. Would it be appropriate to instead reuse that code somehow?
         recreateMarker(self.marker());
-
-        /**
-         * Recreates a marker on the map. (Similar to appViewModel.createMarker.)
-         */
-        function recreateMarker(marker) {
-          map.addMarker(ko.toJS(marker));
-
-          map.onMarkerClick(marker.id(), function() {
-            // Create new content for the info window related to this marker.
-            var content = createInfoWindowContent(marker);
-
-            // Close the info window if it's open.
-            map.closeInfoWindow();
-            // Change the info window's content.
-            map.setInfoWindowContent(content);
-            // Open the info window on this marker.
-            map.openInfoWindow(marker.id());
-
-            // Apply knockout bindings to the info window's newly created content.
-            ko.applyBindings(appViewModel, content);
-          });
-
-          /**
-           * Returns an element intended for use as an info window's content. It
-           * utilizes the custom component 'info-window'.
-           */
-          function createInfoWindowContent(marker) {
-            var content = document.createElement('div');
-
-            content.dataset.bind = 'component: { ' +
-                                     'name: \'info-window\', ' +
-                                     'params: { ' +
-                                       'id: \'' + marker.id() + '\' ' +
-                                     '} ' +
-                                   '}';
-            return content;
-          }
-        }
       };
 
       self.restore = function() {
         self.marker().title(preChangeMarkerData.title);
       };
-
-      /**
-       * Gets the marker with the given id from the appViewModel.markers array
-       * or the appViewModel.markersForm.pending array.
-       */
-      function getMarker(id) {
-        return search(appViewModel.markers()) || search(appViewModel.markersForm.pending());
-
-        function search(arr) {
-          var deeper = [];
-
-          // Handle the pending array where the actual marker is stored in the marker property.
-          if (arr[0].marker) {
-            arr = arr.map(function(obj) {
-              return obj.marker;
-            });
-          }
-
-          for (var i = 0; i < arr.length; i++) {
-
-            if (arr[i].contents) {
-              // Folder
-              var contents = arr[i].contents();
-
-              for (var j = 0; j < contents.length; j++) {
-                deeper.push(contents[j]);
-              }
-            } else if (arr[i].id().toString() === id) {
-              return arr[i];
-            }
-          }
-
-          // Need to search deeper.
-          if (deeper.length) {
-            return search(deeper);
-          } else {
-            return null;
-          }
-        }
-      }
-
-      /**
-       * Gets the observable array directly containing the marker with the given id.
-       */
-      function getContainingArray(id) {
-        return search([appViewModel.markers, appViewModel.markersForm.pending]);
-
-        function search(obsArrs) {
-          var deeper = [],
-              obsArr,
-              i, j, len;
-
-          // For each observable array...
-          for (i = 0; i < obsArrs.length; i++) {
-            obsArr = obsArrs[i];
-
-            if (obsArr().length && obsArr()[0].marker) {
-              // The pending array. The actual marker is stored in the marker
-              // property and there are no folders to worry about.
-              for (j = 0, len = obsArr().length; j < len; j++) {
-                if (obsArr()[j].marker.id() === id) {
-                  // The observable array we're looking for.
-                  return obsArr;
-                }
-              }
-            } else {
-              // The markers array or a contents array. There may be a mix of
-              // markers and folders.
-              for (j = 0, len = obsArr().length; j < len; j++) {
-                if (obsArr()[j].contents) {
-                  // Folder
-                  deeper.push(obsArr()[j].contents);
-                } else if (obsArr()[j].id() === id) {
-                  // The observable array we're looking for.
-                  return obsArr;
-                }
-              }
-            }
-          }
-
-          // Not found yet, keep looking if possible.
-          if (deeper.length) {
-            return search(deeper);
-          } else {
-            return null;
-          }
-        }
-      }
     },
 
     template: '<div data-bind="visible: displayInfo">' +

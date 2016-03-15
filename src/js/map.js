@@ -61,6 +61,9 @@
     markerData.map = map;
     markerData.animation = google.maps.Animation.DROP;
 
+    // Normalize id to string.
+    markerData.id = markerData.id.toString();
+
     var marker = new google.maps.Marker(markerData);
 
     markers.push(marker);
@@ -138,6 +141,9 @@
    * Returns the marker matching the given id.
    */
   function getMarker(id) {
+    // Normalize id to string.
+    id = id.toString();
+
     for (var i = 0; i < markers.length; i++) {
       if (markers[i].id === id) {
         return markers[i];
