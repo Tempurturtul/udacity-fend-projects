@@ -161,7 +161,7 @@
 
       clearPending: function() {
         self.markersForm.pending().forEach(function(pending) {
-          removeMarker(pending.marker);
+          map.removeMarker(pending.marker.id());
         });
 
         self.markersForm.pending([]);
@@ -265,13 +265,6 @@
                                '} ' +
                              '}';
       return content;
-    }
-
-    /**
-     * Destroys a created marker (the opposite of `createMarker(data)`).
-     */
-    function removeMarker(marker) {
-      map.removeMarker(marker.id());
     }
 
     /**
