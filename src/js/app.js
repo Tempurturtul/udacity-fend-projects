@@ -222,6 +222,22 @@
       });
 
       return marker;
+
+      /**
+       * Returns an element intended for use as an info window's content. It
+       * utilizes the custom component 'info-window'.
+       */
+      function createInfoWindowContent(marker) {
+        var content = document.createElement('div');
+
+        content.dataset.bind = 'component: { ' +
+                                 'name: \'info-window\', ' +
+                                 'params: { ' +
+                                   'id: \'' + marker.id() + '\' ' +
+                                 '} ' +
+                               '}';
+        return content;
+      }
     }
 
     /**
@@ -249,22 +265,6 @@
       });
 
       return results;
-    }
-
-    /**
-     * Returns an element intended for use as an info window's content. It
-     * utilizes the custom component 'info-window'.
-     */
-    function createInfoWindowContent(marker) {
-      var content = document.createElement('div');
-
-      content.dataset.bind = 'component: { ' +
-                               'name: \'info-window\', ' +
-                               'params: { ' +
-                                 'id: \'' + marker.id() + '\' ' +
-                               '} ' +
-                             '}';
-      return content;
     }
 
     /**
@@ -336,9 +336,55 @@
       var marker = getMarker(params.id);
 
       this.info = '<p>[' + marker.title().toUpperCase() + ' INFORMATION]</p>';
+
+      // TODO WiP
       this.modify = function() {
+        // Testing.
         console.log('Modify the marker...');
+        marker.title('Test');
+        map.removeMarker(marker.id());
+
+        recreateMarker(marker);
+
+        /**
+         * Recreates a marker on the map. (Similar to appViewModel.createMarker.)
+         */
+        function recreateMarker(marker) {
+          map.addMarker(ko.toJS(marker));
+
+          map.onMarkerClick(marker.id(), function() {
+            // Create new content for the info window related to this marker.
+            var content = createInfoWindowContent(marker);
+
+            // Close the info window if it's open.
+            map.closeInfoWindow();
+            // Change the info window's content.
+            map.setInfoWindowContent(content);
+            // Open the info window on this marker.
+            map.openInfoWindow(marker.id());
+
+            // Apply knockout bindings to the info window's newly created content.
+            ko.applyBindings(appViewModel, content);
+          });
+
+          /**
+           * Returns an element intended for use as an info window's content. It
+           * utilizes the custom component 'info-window'.
+           */
+          function createInfoWindowContent(marker) {
+            var content = document.createElement('div');
+
+            content.dataset.bind = 'component: { ' +
+                                     'name: \'info-window\', ' +
+                                     'params: { ' +
+                                       'id: \'' + marker.id() + '\' ' +
+                                     '} ' +
+                                   '}';
+            return content;
+          }
+        }
       };
+
       this.remove = function() {
         // Remove the marker from the array it's a part of.
         var obsArr = getContainingArray(marker.id()),
