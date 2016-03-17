@@ -6,7 +6,6 @@
 
 // WORK ON THIS LATER:
 // - Hide markers on the map when they're hidden on the list.
-// - Collapse buttons for folders.
 // - Reordering of list items (including moving markers in to and out of folders).
 // - Drag handles for list items.
 // - Map centering for markers.
