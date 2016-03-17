@@ -92,12 +92,13 @@ $(document).ready(function() {
       // Handle success.
       .done(function(data, textStatus, jqXHR) {
         // Check if the message was sent.
-        if (data[0].status === 'sent') {
+        if (data.success) {
           // Notify user that the message was sent.
           displayNotification($contactNotification, 'Message sent!', true);
         } else {
           // Notify user that the message failed to send.
-          displayNotification($contactNotification, ['Message failed to send...', data.message]);
+          displayNotification($contactNotification, ['Sorry! Your message failed to send.', data[0]]);
+          console.warn(data);
           // Re-enable form inputs.
           $('#contact-form').find('button').prop('disabled', false);
           $('#contact-form').find('input').prop('disabled', false);
@@ -123,26 +124,17 @@ $(document).ready(function() {
     var email = $('#email').val().toString() || 'placeholder@notreal.net';
     var message = $('#message').val().toString();
 
-    // Return mandrill API call.
+    // Return formspree API call.
     return $.ajax({
-      url: 'https://mandrillapp.com/api/1.0/messages/send.json',
+      url: "//formspree.io/tempurturtul@gmail.com",
+      method: "POST",
       data: {
-        'key': 'fBENb5Z2RPSpqs-mTRa_VA',  // Expires after 2000 emails.
-        'message': {
-          'text': message,
-          'subject': 'Portfolio Contact Form',
-          'from_email': email,
-          'from_name': name,
-          'to': [
-            {
-              'email': 'tempurturtul@gmail.com',
-              'name': 'Tempurturtul',
-              'type': 'to'
-            }
-          ]
-        }
+        email: email,
+        name: name,
+        message: message,
+        _subject: 'Portfolio Contact Form'
       },
-      method: 'POST'
+      dataType: "json"
     });
   }
 
