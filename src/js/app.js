@@ -257,9 +257,7 @@
       }
     };
 
-    /**
-     * Creates or recreates a marker, then returns the marker.
-     */
+    // Method for creating or recreating a marker. Returns the marker.
     self.createOrRecreateMarker = function(marker) {
       var data;
 
@@ -273,21 +271,26 @@
       map.addMarker(data);
 
       map.onMarkerClick(data.id, function() {
-        // Create new content for the info window related to this marker.
-        var content = createInfoWindowContent(marker);
-
-        // Close the info window if it's open.
-        map.closeInfoWindow();
-        // Change the info window's content.
-        map.setInfoWindowContent(content);
-        // Open the info window on this marker.
-        map.openInfoWindow(data.id);
-
-        // Apply knockout bindings to the info window's newly created content.
-        ko.applyBindings(appViewModel, content);
+        self.openInfoWindow(marker);
       });
 
       return marker;
+    };
+
+    // Method for opening the info window on a marker.
+    self.openInfoWindow = function(marker) {
+      // Create new content for the info window related to this marker.
+      var content = createInfoWindowContent(marker);
+
+      // Close the info window if it's open.
+      map.closeInfoWindow();
+      // Change the info window's content.
+      map.setInfoWindowContent(content);
+      // Open the info window on this marker.
+      map.openInfoWindow(marker.id());
+
+      // Apply knockout bindings to the info window's newly created content.
+      ko.applyBindings(appViewModel, content);
 
       /**
        * Returns an element intended for use as an info window's content. It
@@ -308,6 +311,7 @@
         return content;
       }
     };
+
 
     // Initialize the App View Model.
     init();
@@ -427,7 +431,7 @@
       // Open the confirm markers form.
       self.markersForm.open();
     }
-  }
+}
 
   // Custom Component
   ko.components.register('info-window', {
@@ -476,17 +480,17 @@
 
       self.update = function() {
         map.removeMarker(self.marker().id());
-
         recreateMarker(self.marker());
       };
 
       self.restore = function() {
         self.marker().title(preChangeMarkerData.title);
+        map.closeInfoWindow();
       };
     },
 
     template: '<div data-bind="visible: displayInfo">' +
-              '<p>[INFO]</p>' +
+              '<p data-bind="text: marker().title"></p>' +
               '<button data-bind="click: modify">Modify</button>' +
               '<button data-bind="click: remove">Remove</button>'+
               '</div>' +
