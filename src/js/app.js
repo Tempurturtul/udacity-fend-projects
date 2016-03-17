@@ -144,7 +144,9 @@ $(document).ready(function() {
             'project in Udacity\'s Front-End Web Development Nanodegree program. ' +
             'It features a navigation bar that docks to the top of the window and ' +
             'indicates the section currently being viewed, and a contact form that ' +
-            'uses the Mandrill API to send emails to my inbox.',
+            'originally used the Mandrill API to send emails to my inbox. Mandrill ' +
+            'ended support for their free-tier accounts in April 2016, at which ' +
+            'point I migrated the contact form to Formspree.',
             'images': [
               'img/fend-portfolio-top.png',
               'img/fend-portfolio-work.png',
