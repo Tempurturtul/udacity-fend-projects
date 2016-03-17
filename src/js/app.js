@@ -64,17 +64,19 @@
     //  data.visible - Useful for hiding markers.
     //  data.zIndex - Useful for sorting markers by folder depth.
 
-    this.id = ko.observable(data.id.toString());
-    this.position = ko.observable(data.position);
-    this.title = ko.observable(data.title);
+    this.id = ko.observable(data.id.toString() || uuid.generate().toString());
+    this.position = ko.observable(data.position || {lat: 0, lng: 0});
+    this.title = ko.observable(data.title || 'New Marker');
   }
 
   // Folder Model
   function Folder(data) {
     // The name of the folder.
-    this.name = ko.observable(data.name);
+    this.name = ko.observable(data.name || 'New Folder');
     // The folder contents (marker and/or marker folder array).
-    this.contents = ko.observableArray(data.contents);
+    this.contents = ko.observableArray(data.contents || []);
+    // Whether or not the folder is collapsed.
+    this.collapsed = ko.observable(data.collapsed || false);
   }
 
   // App View Model
@@ -312,6 +314,10 @@
       }
     };
 
+    // Method for opening or closing a folder.
+    self.toggleFolder = function(folder) {
+      folder.collapsed(!folder.collapsed());
+    };
 
     // Initialize the App View Model.
     init();
@@ -431,7 +437,7 @@
       // Open the confirm markers form.
       self.markersForm.open();
     }
-}
+  }
 
   // Custom Component
   ko.components.register('info-window', {
@@ -500,6 +506,15 @@
               '<button data-bind="click: update">Confirm</button>' +
               '</div>'
   });
+
+  // Custom Binding (Source: http://stackoverflow.com/a/10573792)
+  ko.bindingHandlers.hidden = {
+    update: function(element, valueAccessor) {
+      ko.bindingHandlers.visible.update(element, function() {
+        return !ko.utils.unwrapObservable(valueAccessor());
+      });
+    }
+  };
 
   ko.applyBindings(appViewModel);
 })(this);
