@@ -202,7 +202,7 @@ form input:first-of-type {
 form textarea {
   width: 100%;
   padding: 4px;
-  height: 20em;
+  height: 10em;
   resize: none;
 }
 
