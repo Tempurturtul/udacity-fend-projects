@@ -115,7 +115,6 @@
       expanded: ko.observable(false),
 
       toggle: function() {
-        console.log('sidebar toggle');
         self.sidebar.expanded(!self.sidebar.expanded());
       },
 
@@ -129,8 +128,19 @@
       },
 
       removeFolder: function(folder) {
-        // Remove a folder.
+        var obsArr = self.getContainingArray(folder),
+            arr = obsArr(),
+            index = arr.indexOf(folder),
+            toRemove = getAllMarkers(folder.contents());
 
+        // First remove all the markers contained within this folder and its subfolders from the map.
+        toRemove.forEach(function(marker) {
+          map.removeMarker(marker.id());
+        });
+
+        // Then remove this folder (and it's contents) from its containing array.
+        arr.splice(index, 1);
+        obsArr(arr);
       },
 
       toggleFolder: function(folder) {
@@ -234,10 +244,13 @@
       }
     };
 
-    // Method for retrieving a marker's most immediate containing array.
-    self.getContainingArray = function(id) {
-      // Normalize id as a string.
-      id = id.toString();
+    // Method for retrieving a marker's or folder's most immediate containing array.
+    self.getContainingArray = function(idOrFolder) {
+      var id = '';
+
+      if (!(idOrFolder instanceof Folder)) {
+        id = idOrFolder.toString();
+      }
 
       return search([self.markers, self.markersForm.pending]);
 
@@ -265,9 +278,15 @@
             for (j = 0, len = obsArr().length; j < len; j++) {
               if (obsArr()[j].contents) {
                 // Folder
-                deeper.push(obsArr()[j].contents);
+                if (obsArr()[j] === idOrFolder) {
+                  // The folder we're searching for.
+                  return obsArr;
+                } else {
+                  // Push the contents to the deeper search array.
+                  deeper.push(obsArr()[j].contents);
+                }
               } else if (obsArr()[j].id() === id) {
-                // The observable array we're looking for.
+                // The marker we're looking for.
                 return obsArr;
               }
             }
@@ -456,6 +475,42 @@
 
       // Open the confirm markers form.
       self.markersForm.open();
+    }
+
+    /**
+     * Searches an array and returns all markers within it and within any sub-arrays.
+     */
+    function getAllMarkers(arr) {
+      var result = [];
+
+      arr.forEach(function(elem) {
+        elem = ko.unwrap(elem);
+
+        // For every element in the given array...
+        if (elem instanceof Marker) {
+          // If the element is a marker, push it to the accumulation array.
+          result.push(elem);
+        } else if (Array.isArray(elem)) {
+          // Else if it's an array, search it and concat the results to the accumulation array.
+          result = result.concat(getAllMarkers(elem));
+        } else if (typeof elem === 'object') {
+          // Else if it's an object...
+          for (var prop in elem) {
+            prop = ko.unwrap(elem[prop]);
+
+            // For each of its properties...
+            if (Array.isArray(prop)) {
+              // If it's an array, search it and concat the results to the accumulation array.
+              result = result.concat(getAllMarkers(prop));
+            } else if (prop instanceof Marker) {
+              // Else if it's a marker, push it to the accumulation array.
+              result.push(prop);
+            }
+          }
+        }
+      });
+
+      return result;
     }
   }
 

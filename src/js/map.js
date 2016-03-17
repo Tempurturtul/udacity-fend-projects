@@ -1,5 +1,8 @@
 // Google Maps functionality.
 
+// WORK ON THIS NEXT:
+// - Abort gracefully if google isn't found on global.
+
 (function(global) {
   var document = global.document,
       localStorage = global.localStorage,

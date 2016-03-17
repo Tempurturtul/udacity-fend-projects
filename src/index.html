@@ -53,6 +53,8 @@
         <button data-bind="click: $root.sidebar.toggleFolder">v</button>
         <input data-bind="visible: editing, value: name, hasFocus: editing">
         <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
+        <button data-bind="click: $root.sidebar.removeFolder">x</button>
+        <button>o</button>
         <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
         </ul>
       </li>
