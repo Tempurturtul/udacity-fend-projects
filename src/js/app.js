@@ -1,5 +1,24 @@
 // Core knockout-controlled functionality.
 
+// WORK ON THIS NEXT:
+// - Creating and renaming folders.
+// - Sidebar toggling.
+// - Marker filtering.
+
+// WORK ON THIS LATER:
+// - Hide markers on the map when they're hidden on the list.
+// - Collapse buttons for folders.
+// - Reordering of list items (including moving markers in to and out of folders).
+// - Drag handles for list items.
+// - Map centering for markers.
+// - Map centering for folders (including center buttons).
+// - Information for the info window (including error handling).
+// - Allow the user to edit/set more things when creating/modifying markers.
+// - Useful defaults.
+// - Saving markers, folders, and map options.
+// - ...?
+// - Styling.
+
 (function(global) {
   var ko = global.ko,
       uuid = global.UUID,
