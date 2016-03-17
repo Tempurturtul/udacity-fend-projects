@@ -1,7 +1,6 @@
 // Core knockout-controlled functionality.
 
 // WORK ON THIS NEXT:
-// - Creating and renaming folders.
 // - Sidebar toggling.
 // - Marker filtering.
 
@@ -120,18 +119,22 @@
         self.sidebar.expanded(!self.sidebar.expanded());
       },
 
-      addFolder: function(folder) {
-        // Add a folder.
+      addFolder: function(formElem) {
+        var name = document.getElementById('new-folder-name').value.toString();
+        self.markers.push(new Folder({name: name}));
       },
 
       modifyFolder: function(folder) {
-        // Modify a folder.
-
+        folder.editing(true);
       },
 
       removeFolder: function(folder) {
         // Remove a folder.
 
+      },
+
+      toggleFolder: function(folder) {
+        folder.collapsed(!folder.collapsed());
       }
     };
 
@@ -335,26 +338,6 @@
       }
     };
 
-    // Method for opening or closing a folder.
-    self.toggleFolder = function(folder) {
-      folder.collapsed(!folder.collapsed());
-    };
-
-    // Method for renaming a folder.
-    self.toggleRenameFolder = function(folder) {
-      // If this was called via the "submit" binding, "folder" param is the form
-      // element and "this" is the actual folder.
-      if (!(folder instanceof Folder)) {
-        folder = this;
-      }
-      folder.editing(!folder.editing());
-    };
-
-    // Method for creating a new folder.
-    self.newFolder = function(formElement) {
-      var name = document.getElementById('new-folder-name').value.toString();
-      self.markers.push(new Folder({name: name}));
-    };
 
     // Initialize the App View Model.
     init();

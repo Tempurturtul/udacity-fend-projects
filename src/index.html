@@ -21,7 +21,7 @@
       </fieldset>
       <ul class="marker-list" data-bind="template: { name: 'listTemplate', foreach: markers }">
       </ul>
-      <form data-bind="submit: newFolder">
+      <form data-bind="submit: sidebar.addFolder">
         <input id="new-folder-name" type="text" placeholder="New Folder">
       </form>
     </header>
@@ -50,15 +50,9 @@
     <script type="text/html" id="listTemplate">
       <!-- ko if: $data.contents -->
       <li data-bind="hidden: $parent.collapsed">
-        <button data-bind="click: $root.toggleFolder">v</button>
-        <!-- ko if: $data.editing -->
-        <form data-bind="submit: $root.toggleRenameFolder">
-          <input data-bind="textInput: name">
-        </form>
-        <!-- /ko -->
-        <!-- ko ifnot: $data.editing -->
-        <span data-bind="text: name, click: $root.toggleRenameFolder"></span>
-        <!-- /ko -->
+        <button data-bind="click: $root.sidebar.toggleFolder">v</button>
+        <input data-bind="visible: editing, value: name, hasFocus: editing">
+        <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
         <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
         </ul>
       </li>
