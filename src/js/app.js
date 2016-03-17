@@ -96,6 +96,8 @@
     this.contents = ko.observableArray(data.contents || []);
     // Whether or not the folder is collapsed.
     this.collapsed = ko.observable(data.collapsed || false);
+    // Whether or not the folder's name is being edited.
+    this.editing = ko.observable(data.editing || false);
   }
 
   // App View Model
@@ -338,6 +340,22 @@
       folder.collapsed(!folder.collapsed());
     };
 
+    // Method for renaming a folder.
+    self.toggleRenameFolder = function(folder) {
+      // If this was called via the "submit" binding, "folder" param is the form
+      // element and "this" is the actual folder.
+      if (!(folder instanceof Folder)) {
+        folder = this;
+      }
+      folder.editing(!folder.editing());
+    };
+
+    // Method for creating a new folder.
+    self.newFolder = function(formElement) {
+      var name = document.getElementById('new-folder-name').value.toString();
+      self.markers.push(new Folder({name: name}));
+    };
+
     // Initialize the App View Model.
     init();
 
@@ -520,7 +538,7 @@
               '<button data-bind="click: remove">Remove</button>'+
               '</div>' +
               '<div data-bind="visible: displayEdit">' +
-              '<input data-bind="value: marker().title"></input>' +
+              '<input data-bind="textInput: marker().title"></input>' +
               '<button data-bind="click: restore">Cancel</button>' +
               '<button data-bind="click: update">Confirm</button>' +
               '</div>'
