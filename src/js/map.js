@@ -75,7 +75,19 @@
   /**
    * Modifies a marker on the map.
    */
-  function modifyMarker(markerID, newMarkerData) {}
+  function modifyMarker(markerID, newData) {
+    var marker = getMarker(markerID);
+
+    if (marker) {
+      // TODO Other data modifications.
+
+      if (newData.hasOwnProperty('visible')) {
+        marker.setVisible(newData.visible);
+      }
+    } else {
+      console.warn('Failed to modify marker because it wasn\'t found.');
+    }
+  }
 
   /**
    * Removes a marker from the map.
@@ -87,7 +99,7 @@
       marker.setMap(null);
       markers.splice(markers.indexOf(marker), 1);
     } else {
-      console.warn('Failed to remove marker because marker wasn\'t found.');
+      console.warn('Failed to remove marker because it wasn\'t found.');
     }
   }
 

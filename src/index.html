@@ -16,8 +16,8 @@
       <button class="sidebar-toggle" data-bind="click: sidebar.toggle">Toggle Sidebar</button>
       <fieldset>
         <legend>Map Marker Filters</legend>
-        <input type="text" placeholder="Search Markers">
-        <label><input type="checkbox">Visible Only</label>
+        <input type="text" placeholder="Search Markers" data-bind="textInput: sidebar.search">
+        <label><input type="checkbox" data-bind="checked: sidebar.visibleOnly">Visible Only</label>
       </fieldset>
       <ul class="marker-list" data-bind="template: { name: 'listTemplate', foreach: markers }">
       </ul>

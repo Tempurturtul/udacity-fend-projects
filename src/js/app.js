@@ -1,7 +1,6 @@
 // Core knockout-controlled functionality.
 
 // WORK ON THIS NEXT:
-// - Sidebar toggling.
 // - Marker filtering.
 
 // WORK ON THIS LATER:
@@ -74,16 +73,18 @@
 
   // Marker Model
   function Marker(data) {
+    // NOTE Add new properties for use with map to the map.modifyMarker method.
+
     // TODO Additional (google.maps) properties to consider:
     //  data.draggable - Makes the marker draggable.
     //  data.icon - Icon for the marker.
     //  data.label - First letter of this string is displayed on marker.
-    //  data.visible - Useful for hiding markers.
     //  data.zIndex - Useful for sorting markers by folder depth.
 
     this.id = ko.observable(data.id.toString() || uuid.generate().toString());
     this.position = ko.observable(data.position || {lat: 0, lng: 0});
     this.title = ko.observable(data.title || 'New Marker');
+    this.visible = ko.observable(data.visible || true);
   }
 
   // Folder Model
@@ -112,6 +113,12 @@
     //  - Provide methods for filtering markers by title and visibility.
     self.sidebar = {
       expanded: ko.observable(false),
+
+      // Only display markers that are within the map's current bounds.
+      visibleOnly: ko.observable(false),
+
+      // Filter markers by title.
+      search: ko.observable(),
 
       toggle: function() {
         self.sidebar.expanded(!self.sidebar.expanded());
@@ -144,6 +151,42 @@
 
       toggleFolder: function(folder) {
         folder.collapsed(!folder.collapsed());
+      },
+
+      filterByVisible: function() {},
+
+      filterByTitle: function() {
+        var filter = self.sidebar.search().toLowerCase(),
+            filtered = self.markers();
+
+        recurse(filtered);
+
+        // Sets each marker's visibility in the array according to whether or not
+        // it matches the filter. Recursively searches the contents of folders and
+        // does the same.
+        function recurse(arr) {
+          for (var i = 0; i < arr.length; i++) {
+            if (arr[i].contents) {
+              // Folder.
+              recurse(arr[i].contents());
+            } else {
+              // Marker.
+              if (arr[i].title().toLowerCase().indexOf(filter) !== -1) {
+                // Match, set visibility to true if not already.
+                if (!arr[i].visible()) {
+                  arr[i].visible(true);
+                  map.modifyMarker(arr[i].id(), {visible: true});
+                }
+              } else {
+                // No match, set visibility to false if not already.
+                if (arr[i].visible()) {
+                  arr[i].visible(false);
+                  map.modifyMarker(arr[i].id(), {visible: false});
+                }
+              }
+            }
+          }
+        }
       }
     };
 
@@ -385,6 +428,11 @@
 
       // Call confirmCustomMarker when the user double clicks on the map.
       map.onMapDblClick(confirmCustomMarker);
+
+      // Call sidebar.filterByVisible when sidebar.visibleOnly changes.
+      self.sidebar.visibleOnly.subscribe(self.sidebar.filterByVisible);
+      // Call sidebar.filterByTitle when sidebar.search changes.
+      self.sidebar.search.subscribe(self.sidebar.filterByTitle);
     }
 
     /**
