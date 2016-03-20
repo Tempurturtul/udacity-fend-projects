@@ -1,14 +1,10 @@
 // Core knockout-controlled functionality.
 
 // WORK ON THIS NEXT:
-// - Marker filtering.
-
-// WORK ON THIS LATER:
-// - Hide markers on the map when they're hidden on the list.
 // - Reordering of list items (including moving markers in to and out of folders).
 // - Drag handles for list items.
-// - Map centering for markers.
-// - Map centering for folders (including center buttons).
+
+// WORK ON THIS LATER:
 // - Information for the info window (including error handling).
 // - Allow the user to edit/set more things when creating/modifying markers.
 // - Useful defaults.
@@ -118,7 +114,7 @@
       map.addMarker(data);
 
       map.onMarkerClick(data.id, function() {
-        self.openInfoWindow(marker);
+        openInfoWindow(marker);
       });
 
       return marker;
@@ -281,41 +277,6 @@
       visible: ko.observable(false)
     };
 
-    // Method for opening the info window on a marker.
-    self.openInfoWindow = function(marker) {
-      // Create new content for the info window related to this marker.
-      var content = createInfoWindowContent(marker);
-
-      // Close the info window if it's open.
-      map.closeInfoWindow();
-      // Change the info window's content.
-      map.setInfoWindowContent(content);
-      // Open the info window on this marker.
-      map.openInfoWindow(marker.id());
-
-      // Apply knockout bindings to the info window's newly created content.
-      ko.applyBindings(appViewModel, content);
-
-      /**
-       * Returns an element intended for use as an info window's content. It
-       * utilizes the custom component 'info-window'.
-       */
-      function createInfoWindowContent(marker) {
-        var content = document.createElement('div');
-
-        content.dataset.bind = 'component: { ' +
-                                 'name: \'info-window\', ' +
-                                 'params: { ' +
-                                   'markerID: \'' + marker.id() + '\', ' +
-                                   'getMarker: $root.getMarker, ' +
-                                   'getContainingArray: $root.getContainingArray, ' +
-                                   'recreateMarker: $root.createOrRecreateMarker' +
-                                 '} ' +
-                               '}';
-        return content;
-      }
-    };
-
     // Sidebar functionality.
     // TODO:
     //  - Provide a method for toggling a marker folder between collapsed and expanded.
@@ -327,7 +288,24 @@
         self.markers.push(new Folder({name: name}));
       },
 
+      centerOnContents: function(folder) {
+        var markerIDs = getAllMarkers(folder.contents())
+                          .map(function(marker) {
+                            return marker.id();
+                          });
+
+        map.centerOn(markerIDs);
+      },
+
       expanded: ko.observable(false),
+
+      markerClicked: function(marker) {
+        // Center the map on the marker.
+        map.centerOn(marker.id());
+
+        // Open the marker's info window.
+        openInfoWindow(marker);
+      },
 
       modifyFolder: function(folder) {
         folder.editing(true);
@@ -592,6 +570,43 @@
 
       // Call boundsChanged when the map bounds change.
       map.onBoundsChange(boundsChanged);
+    }
+
+    /**
+     * Opens the info window on a marker.
+     */
+    function openInfoWindow(marker) {
+      // Create new content for the info window related to this marker.
+      var content = createInfoWindowContent(marker);
+
+      // Close the info window if it's open.
+      map.closeInfoWindow();
+      // Change the info window's content.
+      map.setInfoWindowContent(content);
+      // Open the info window on this marker.
+      map.openInfoWindow(marker.id());
+
+      // Apply knockout bindings to the info window's newly created content.
+      ko.applyBindings(appViewModel, content);
+
+      /**
+       * Returns an element intended for use as an info window's content. It
+       * utilizes the custom component 'info-window'.
+       */
+      function createInfoWindowContent(marker) {
+        var content = document.createElement('div');
+
+        content.dataset.bind = 'component: { ' +
+                                 'name: \'info-window\', ' +
+                                 'params: { ' +
+                                   'markerID: \'' + marker.id() + '\', ' +
+                                   'getMarker: $root.getMarker, ' +
+                                   'getContainingArray: $root.getContainingArray, ' +
+                                   'recreateMarker: $root.createOrRecreateMarker' +
+                                 '} ' +
+                               '}';
+        return content;
+      }
     }
 
     /**

@@ -54,13 +54,13 @@
         <input data-bind="visible: editing, value: name, hasFocus: editing">
         <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
         <button data-bind="click: $root.sidebar.removeFolder">x</button>
-        <button>o</button>
+        <button data-bind="click: $root.sidebar.centerOnContents">o</button>
         <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
         </ul>
       </li>
       <!-- /ko -->
       <!-- ko ifnot: $data.contents -->
-      <li data-bind="text: title, click: $root.openInfoWindow, visible: visible"></li>
+      <li data-bind="text: title, click: $root.sidebar.markerClicked, visible: visible"></li>
       <!-- /ko -->
     </script>
 

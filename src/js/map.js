@@ -45,6 +45,28 @@
   }
 
   /**
+   * Centers the map on the marker or set of markers.
+   */
+  function centerOn(markerIDs) {
+    if (!Array.isArray(markerIDs)) {
+      // Simple case: A single marker was passed.
+
+      var marker = getMarker(markerIDs);
+      map.panTo(marker.getPosition());
+    } else {
+      // An array of multiple markers.
+
+      var bounds = new google.maps.LatLngBounds();
+
+      markerIDs.forEach(function(id) {
+        bounds.extend(getMarker(id).getPosition());
+      });
+
+      map.fitBounds(bounds);
+    }
+  }
+
+  /**
    * Closes the infowindow.
    */
   function closeInfoWindow() {
@@ -189,6 +211,7 @@
 
   global.map = {
     addMarker: addMarker,
+    centerOn: centerOn,
     closeInfoWindow: closeInfoWindow,
     modifyMarker: modifyMarker,
     onBoundsChange: onBoundsChange,
