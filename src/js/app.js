@@ -437,8 +437,6 @@
         for (var i = 0; i < arr.length; i++) {
 
           if (visible !== undefined) {
-            console.log(visible, i);
-
             // Simple case: Visibility is defined by the value of visible.
 
             if (arr[i].visible() !== visible) {
@@ -471,7 +469,6 @@
               // Is the folder collapsed?
               if (arr[i].collapsed()) {
                 // Yes, set the contents to not visible.
-                console.log('Folder is collapsed.');
                 recurse(arr[i].contents(), false);
               } else {
                 // No, proceed with checking the contents' visibility.
