@@ -48,8 +48,18 @@
 
     <!-- List template. -->
     <script type="text/html" id="listTemplate">
-      <!-- ko if: $data.contents -->
-      <li data-bind="visible: visible">
+      <li data-bind="visible: visible,
+                     dragZone: {
+                       name: 'sortable',
+                       dragStart: $root.sidebar.dragStart,
+                       dragEnd: $root.sidebar.dragEnd
+                     },
+                     dragEvents: {
+                       accepts: 'sortable',
+                       dragOver: $root.sidebar.reorder,
+                       data: { items: $root.markers, item: $data }
+                     }">
+        <!-- ko if: $data.contents -->
         <button data-bind="click: $root.sidebar.toggleFolder">v</button>
         <input data-bind="visible: editing, value: name, hasFocus: editing">
         <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
@@ -57,17 +67,19 @@
         <button data-bind="click: $root.sidebar.centerOnContents">o</button>
         <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
         </ul>
+        <!-- /ko -->
+        <!-- ko ifnot: $data.contents -->
+        <span data-bind="text:title, click: $root.sidebar.markerClicked"></span>
+        <!-- /ko -->
       </li>
-      <!-- /ko -->
-      <!-- ko ifnot: $data.contents -->
-      <li data-bind="text: title, click: $root.sidebar.markerClicked, visible: visible"></li>
-      <!-- /ko -->
     </script>
 
     <!-- Google Maps API and Places library. -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFjYsMLSna2dvG5DIL-zXcXRQs5-UY-Zs&libraries=places"></script>
     <!-- Knockout (via Bower). -->
     <script src="bower_components/knockout/dist/knockout.js"></script>
+    <!-- Knockout-dragdrop (via Bower). -->
+    <script src="bower_components/knockout-dragdrop/lib/knockout.dragdrop.js"></script>
     <!-- UUID generator (via Bower). -->
     <script src="bower_components/uuid.js/dist/uuid.core.js"></script>
 

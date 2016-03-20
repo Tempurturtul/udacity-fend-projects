@@ -121,13 +121,7 @@
     };
 
     // Method for retrieving a marker's or folder's most immediate containing array.
-    self.getContainingArray = function(idOrFolder) {
-      var id = '';
-
-      if (!(idOrFolder instanceof Folder)) {
-        id = idOrFolder.toString();
-      }
-
+    self.getContainingArray = function(markerOrFolder) {
       return search([self.markers, self.markersForm.pending]);
 
       function search(obsArrs) {
@@ -143,7 +137,7 @@
             // The pending array. The actual marker is stored in the marker
             // property and there are no folders to worry about.
             for (j = 0, len = obsArr().length; j < len; j++) {
-              if (obsArr()[j].marker.id() === id) {
+              if (obsArr()[j].marker === markerOrFolder) {
                 // The observable array we're looking for.
                 return obsArr;
               }
@@ -154,14 +148,14 @@
             for (j = 0, len = obsArr().length; j < len; j++) {
               if (obsArr()[j].contents) {
                 // Folder
-                if (obsArr()[j] === idOrFolder) {
+                if (obsArr()[j] === markerOrFolder) {
                   // The folder we're searching for.
                   return obsArr;
                 } else {
                   // Push the contents to the deeper search array.
                   deeper.push(obsArr()[j].contents);
                 }
-              } else if (obsArr()[j].id() === id) {
+              } else if (obsArr()[j] === markerOrFolder) {
                 // The marker we're looking for.
                 return obsArr;
               }
@@ -297,6 +291,10 @@
         map.centerOn(markerIDs);
       },
 
+      dragStart: function(item) {},
+
+      dragEnd: function(item) {},
+
       expanded: ko.observable(false),
 
       markerClicked: function(marker) {
@@ -325,6 +323,21 @@
         // Then remove this folder (and it's contents) from its containing array.
         arr.splice(index, 1);
         obsArr(arr);
+      },
+
+      reorder: function(event, dragData, zoneData) {
+        // TODO Finalize functionality.
+
+        // if (dragData !== zoneData.item) {
+        //   console.log(dragData, zoneData.item);
+        //
+        //   // The next and previous list elements.
+        //   var next = sidebar.getNext(dragData),
+        //       prev = sidebar.getPrev(dragData);
+        //
+        //   console.log('next:', next,
+        //               '\nprev:', prev);
+        // }
       },
 
       // Filter markers by title.
@@ -644,7 +657,7 @@
     }
   }
 
-  // Custom Component
+  // Info-Window Custom Component
   ko.components.register('info-window', {
     viewModel: function(params) {
       var self = this,
@@ -667,7 +680,7 @@
 
       self.remove = function() {
         // Remove the marker from the array it's a part of.
-        var obsArr = getContainingArray(self.marker().id()),
+        var obsArr = getContainingArray(self.marker()),
             arr = obsArr(),
             index;
 
