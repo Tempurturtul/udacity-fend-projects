@@ -92,7 +92,7 @@ using to make API calls.
 - User can use a search bar to find locations from which to create new map markers.
 - User can view a list of map markers.
 - ***(WiP)*** User can sort and categorize map markers in the list.
-- ***(WiP)*** User can filter map markers in the list and the map will update its displayed markers accordingly.
+- User can filter map markers in the list and the map will update its displayed markers accordingly.
 - ***(WiP)*** User can click on a map marker on the map or the list to view (within a Google Maps infoWindow) information on the location from various (not all Google API-related) sources.
 - ***(WiP)*** User can view an animation effect on a map marker and corresponding list entry whenever that map marker is selected on the map or in the list.
 - ***(WiP)*** User can click on an icon next to a map marker category in the list to center and zoom the map in such a way that all the markers contained in that category are visible on the map.
