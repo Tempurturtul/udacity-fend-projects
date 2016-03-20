@@ -97,193 +97,31 @@
     this.collapsed = ko.observable(data.collapsed || false);
     // Whether or not the folder's name is being edited.
     this.editing = ko.observable(data.editing || false);
+    this.visible = ko.observable(data.visible || true);
   }
 
   // App View Model
   function AppViewModel() {
     var self = this;
 
-    // A collection of map markers and folders.
-    self.markers = ko.observableArray([]);
+    // Method for creating or recreating a marker. Returns the marker.
+    self.createOrRecreateMarker = function(marker) {
+      var data;
 
-    // Sidebar functionality.
-    // TODO:
-    //  - Provide a method for toggling a marker folder between collapsed and expanded.
-    //  - Provide a method for centering on a marker or set of markers.
-    //  - Provide methods for filtering markers by title and visibility.
-    self.sidebar = {
-      expanded: ko.observable(false),
-
-      // Only display markers that are within the map's current bounds.
-      visibleOnly: ko.observable(false),
-
-      // Filter markers by title.
-      search: ko.observable(),
-
-      toggle: function() {
-        self.sidebar.expanded(!self.sidebar.expanded());
-      },
-
-      addFolder: function(formElem) {
-        var name = document.getElementById('new-folder-name').value.toString();
-        self.markers.push(new Folder({name: name}));
-      },
-
-      modifyFolder: function(folder) {
-        folder.editing(true);
-      },
-
-      removeFolder: function(folder) {
-        var obsArr = self.getContainingArray(folder),
-            arr = obsArr(),
-            index = arr.indexOf(folder),
-            toRemove = getAllMarkers(folder.contents());
-
-        // First remove all the markers contained within this folder and its subfolders from the map.
-        toRemove.forEach(function(marker) {
-          map.removeMarker(marker.id());
-        });
-
-        // Then remove this folder (and it's contents) from its containing array.
-        arr.splice(index, 1);
-        obsArr(arr);
-      },
-
-      toggleFolder: function(folder) {
-        folder.collapsed(!folder.collapsed());
-      },
-
-      filterByVisible: function() {},
-
-      filterByTitle: function() {
-        var filter = self.sidebar.search().toLowerCase(),
-            filtered = self.markers();
-
-        recurse(filtered);
-
-        // Sets each marker's visibility in the array according to whether or not
-        // it matches the filter. Recursively searches the contents of folders and
-        // does the same.
-        function recurse(arr) {
-          for (var i = 0; i < arr.length; i++) {
-            if (arr[i].contents) {
-              // Folder.
-              recurse(arr[i].contents());
-            } else {
-              // Marker.
-              if (arr[i].title().toLowerCase().indexOf(filter) !== -1) {
-                // Match, set visibility to true if not already.
-                if (!arr[i].visible()) {
-                  arr[i].visible(true);
-                  map.modifyMarker(arr[i].id(), {visible: true});
-                }
-              } else {
-                // No match, set visibility to false if not already.
-                if (arr[i].visible()) {
-                  arr[i].visible(false);
-                  map.modifyMarker(arr[i].id(), {visible: false});
-                }
-              }
-            }
-          }
-        }
+      if (marker instanceof Marker) {
+        data = ko.toJS(marker);
+      } else {
+        data = marker;
+        marker = new Marker(marker);
       }
-    };
 
-    // Markers form functionality.
-    self.markersForm = {
-      pending: ko.observableArray([]),
+      map.addMarker(data);
 
-      visible: ko.observable(false),
+      map.onMarkerClick(data.id, function() {
+        self.openInfoWindow(marker);
+      });
 
-      open: function() {
-        if (!self.markersForm.visible()) {
-          self.markersForm.visible(true);
-        }
-      },
-
-      close: function() {
-        if (self.markersForm.visible()) {
-          self.markersForm.visible(false);
-        }
-      },
-
-      submit: function() {
-        // Close the markers form.
-        self.markersForm.close();
-
-        // Filter the confirmed markers out of the pending array and into the markers
-        // array.
-        self.markersForm.pending(self.markersForm.pending().filter(function(pending) {
-          if (pending.confirmed()) {
-            // Move to the markers array.
-            self.markers.push(pending.marker);
-            // TODO Save. Subscribe a save method to self.markers?
-            return false;
-          } else {
-            return true;
-          }
-        }));
-
-        // Clear the pending markers array.
-        self.markersForm.clearPending();
-      },
-
-      cancel: function() {
-        // Close the markers form.
-        self.markersForm.close();
-
-        // Clear the pending markers array.
-        self.markersForm.clearPending();
-      },
-
-      clearPending: function() {
-        self.markersForm.pending().forEach(function(pending) {
-          map.removeMarker(pending.marker.id());
-        });
-
-        self.markersForm.pending([]);
-      }
-    };
-
-    // Method for retrieving a marker by id.
-    self.getMarker = function(id) {
-      // Normalize id as a string.
-      id = id.toString();
-
-      return search(self.markers()) || search(self.markersForm.pending());
-
-      function search(arr) {
-        var deeper = [];
-
-        // Handle the pending array where the actual marker is stored in the marker property.
-        if (arr.length && arr[0].marker) {
-          arr = arr.map(function(obj) {
-            return obj.marker;
-          });
-        }
-
-        for (var i = 0; i < arr.length; i++) {
-
-          if (arr[i].contents) {
-            // Folder
-            var contents = arr[i].contents();
-
-            for (var j = 0; j < contents.length; j++) {
-              deeper.push(contents[j]);
-            }
-          } else if (arr[i].id().toString() === id) {
-            return arr[i];
-          }
-        }
-
-        // Need to search deeper.
-        if (deeper.length) {
-          return search(deeper);
-        } else {
-          return null;
-        }
-      }
+      return marker;
     };
 
     // Method for retrieving a marker's or folder's most immediate containing array.
@@ -344,24 +182,103 @@
       }
     };
 
-    // Method for creating or recreating a marker. Returns the marker.
-    self.createOrRecreateMarker = function(marker) {
-      var data;
+    // Method for retrieving a marker by id.
+    self.getMarker = function(id) {
+      // Normalize id as a string.
+      id = id.toString();
 
-      if (marker instanceof Marker) {
-        data = ko.toJS(marker);
-      } else {
-        data = marker;
-        marker = new Marker(marker);
+      return search(self.markers()) || search(self.markersForm.pending());
+
+      function search(arr) {
+        var deeper = [];
+
+        // Handle the pending array where the actual marker is stored in the marker property.
+        if (arr.length && arr[0].marker) {
+          arr = arr.map(function(obj) {
+            return obj.marker;
+          });
+        }
+
+        for (var i = 0; i < arr.length; i++) {
+
+          if (arr[i].contents) {
+            // Folder
+            var contents = arr[i].contents();
+
+            for (var j = 0; j < contents.length; j++) {
+              deeper.push(contents[j]);
+            }
+          } else if (arr[i].id().toString() === id) {
+            return arr[i];
+          }
+        }
+
+        // Need to search deeper.
+        if (deeper.length) {
+          return search(deeper);
+        } else {
+          return null;
+        }
       }
+    };
 
-      map.addMarker(data);
+    // A collection of map markers and folders.
+    self.markers = ko.observableArray([]);
 
-      map.onMarkerClick(data.id, function() {
-        self.openInfoWindow(marker);
-      });
+    // Markers form functionality.
+    self.markersForm = {
+      cancel: function() {
+        // Close the markers form.
+        self.markersForm.close();
 
-      return marker;
+        // Clear the pending markers array.
+        self.markersForm.clearPending();
+      },
+
+      clearPending: function() {
+        self.markersForm.pending().forEach(function(pending) {
+          map.removeMarker(pending.marker.id());
+        });
+
+        self.markersForm.pending([]);
+      },
+
+      close: function() {
+        if (self.markersForm.visible()) {
+          self.markersForm.visible(false);
+        }
+      },
+
+      open: function() {
+        if (!self.markersForm.visible()) {
+          self.markersForm.visible(true);
+        }
+      },
+
+      pending: ko.observableArray([]),
+
+      submit: function() {
+        // Close the markers form.
+        self.markersForm.close();
+
+        // Filter the confirmed markers out of the pending array and into the markers
+        // array.
+        self.markersForm.pending(self.markersForm.pending().filter(function(pending) {
+          if (pending.confirmed()) {
+            // Move to the markers array.
+            self.markers.push(pending.marker);
+            // TODO Save. Subscribe a save method to self.markers?
+            return false;
+          } else {
+            return true;
+          }
+        }));
+
+        // Clear the pending markers array.
+        self.markersForm.clearPending();
+      },
+
+      visible: ko.observable(false)
     };
 
     // Method for opening the info window on a marker.
@@ -399,6 +316,62 @@
       }
     };
 
+    // Sidebar functionality.
+    // TODO:
+    //  - Provide a method for toggling a marker folder between collapsed and expanded.
+    //  - Provide a method for centering on a marker or set of markers.
+    //  - Provide methods for filtering markers by title and visibility.
+    self.sidebar = {
+      addFolder: function(formElem) {
+        var name = document.getElementById('new-folder-name').value.toString();
+        self.markers.push(new Folder({name: name}));
+      },
+
+      expanded: ko.observable(false),
+
+      modifyFolder: function(folder) {
+        folder.editing(true);
+      },
+
+      removeFolder: function(folder) {
+        var obsArr = self.getContainingArray(folder),
+            arr = obsArr(),
+            index = arr.indexOf(folder),
+            toRemove = getAllMarkers(folder.contents());
+
+        // First remove all the markers contained within this folder and its subfolders from the map.
+        toRemove.forEach(function(marker) {
+          map.removeMarker(marker.id());
+        });
+
+        // Then remove this folder (and it's contents) from its containing array.
+        arr.splice(index, 1);
+        obsArr(arr);
+      },
+
+      // Filter markers by title.
+      search: ko.observable(''),
+
+      toggle: function() {
+        self.sidebar.expanded(!self.sidebar.expanded());
+      },
+
+      toggleFolder: function(folder) {
+        // Toggle collapsed state.
+        folder.collapsed(!folder.collapsed());
+
+        // Update the visibility of all contents.
+        if (folder.collapsed()) {
+          updateVisibility(folder.contents(), false);
+        } else {
+          updateVisibility(folder.contents());
+        }
+      },
+
+      // Only display markers that are within the map's current bounds.
+      visibleOnly: ko.observable(false)
+    };
+
 
     // Initialize the App View Model.
     init();
@@ -406,33 +379,38 @@
     // Private methods.
 
     /**
-     * Initializes self.markers with markers and marker folders from local storage,
-     * or from defaults if local storage is empty; adds initial markers to the map;
-     * Adds an event listener to the map search box.
+     * Called when the map's bounds change. Calls updateVisibility only if
+     * necessary.
      */
-    function init() {
-      var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
+    function boundsChanged() {
+      if (self.sidebar.visibleOnly()) {
+        updateVisibility();
+      }
+    }
 
-      arr.forEach(function(data) {
-        if (data.contents) {
-          var folder = createFolder(data);
-          self.markers.push(folder);
-        } else {
-          var marker = self.createOrRecreateMarker(data);
-          self.markers.push(marker);
+    /**
+     * Called when the user double clicks on the map. Opens the markers form populated
+     * with a marker created using the location clicked.
+     */
+    function confirmCustomMarker(e) {
+      // Create a marker for the location clicked.
+      var marker = self.createOrRecreateMarker({
+        id: uuid.generate(),
+        title: 'Custom Marker',
+        position: {
+          lat: e.latLng.lat(),
+          lng: e.latLng.lng()
         }
       });
 
-      // Call selectPlaces when the user selects a search result.
-      map.onPlacesChanged(selectPlaces);
+      // Push the created marker to the pending markers array.
+      self.markersForm.pending.push({
+        marker: marker,
+        confirmed: ko.observable(true)
+      });
 
-      // Call confirmCustomMarker when the user double clicks on the map.
-      map.onMapDblClick(confirmCustomMarker);
-
-      // Call sidebar.filterByVisible when sidebar.visibleOnly changes.
-      self.sidebar.visibleOnly.subscribe(self.sidebar.filterByVisible);
-      // Call sidebar.filterByTitle when sidebar.search changes.
-      self.sidebar.search.subscribe(self.sidebar.filterByTitle);
+      // Open the confirm markers form.
+      self.markersForm.open();
     }
 
     /**
@@ -460,6 +438,160 @@
       });
 
       return results;
+    }
+
+    /**
+     * Updates the visibility of all folders and markers. If visible is defined,
+     * uses its value.
+     */
+    function updateVisibility(arr, visible) {
+      var search = self.sidebar.search().toLowerCase(),
+          visibleOnly = self.sidebar.visibleOnly();
+
+      // If no array is provided, use the markers array.
+      if (!Array.isArray(arr)) {
+        arr = self.markers();
+      }
+
+      recurse(arr, visible);
+
+      function recurse(arr, visible) {
+        for (var i = 0; i < arr.length; i++) {
+
+          if (visible !== undefined) {
+            console.log(visible, i);
+
+            // Simple case: Visibility is defined by the value of visible.
+
+            if (arr[i].visible() !== visible) {
+              arr[i].visible(visible);
+
+              if (!arr[i].contents) {
+                // Marker.
+                map.modifyMarker(arr[i].id(), {visible: visible});
+              }
+            }
+
+            if (arr[i].contents) {
+              // Folder.
+              recurse(arr[i].contents(), visible);
+            }
+          } else {
+            // More complex case: Visibility is defined by the sidebar search
+            // filter and potentially the current map bounds.
+
+            if (arr[i].contents) {
+              // Folder.
+
+              // Folders are only not visible if their containing folders are
+              // collapsed, in which case the passed visible parameter wouldn't
+              // be undefined and we wouldn't reach this point.
+              if (!arr[i].visible()) {
+                arr[i].visible(true);
+              }
+
+              // Is the folder collapsed?
+              if (arr[i].collapsed()) {
+                // Yes, set the contents to not visible.
+                console.log('Folder is collapsed.');
+                recurse(arr[i].contents(), false);
+              } else {
+                // No, proceed with checking the contents' visibility.
+                recurse(arr[i].contents());
+              }
+            } else {
+              //Marker.
+
+              var result;
+
+              // First filter by title.
+              if (arr[i].title().toLowerCase().indexOf(search) !== -1) {
+                result = true;
+              } else {
+                result = false;
+              }
+
+              // Then filter by map visibility if required.
+              if (self.sidebar.visibleOnly() && result) {
+                result = map.visibleOnMap(arr[i].id());
+              }
+
+              if (arr[i].visible() !== result) {
+                arr[i].visible(result);
+                map.modifyMarker(arr[i].id(), {visible: result});
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Searches an array and returns all markers within it and within any sub-arrays.
+     */
+    function getAllMarkers(arr) {
+      var result = [];
+
+      arr.forEach(function(elem) {
+        elem = ko.unwrap(elem);
+
+        // For every element in the given array...
+        if (elem instanceof Marker) {
+          // If the element is a marker, push it to the accumulation array.
+          result.push(elem);
+        } else if (Array.isArray(elem)) {
+          // Else if it's an array, search it and concat the results to the accumulation array.
+          result = result.concat(getAllMarkers(elem));
+        } else if (typeof elem === 'object') {
+          // Else if it's an object...
+          for (var prop in elem) {
+            prop = ko.unwrap(elem[prop]);
+
+            // For each of its properties...
+            if (Array.isArray(prop)) {
+              // If it's an array, search it and concat the results to the accumulation array.
+              result = result.concat(getAllMarkers(prop));
+            } else if (prop instanceof Marker) {
+              // Else if it's a marker, push it to the accumulation array.
+              result.push(prop);
+            }
+          }
+        }
+      });
+
+      return result;
+    }
+
+    /**
+     * Initializes self.markers with markers and marker folders from local storage,
+     * or from defaults if local storage is empty; adds initial markers to the map;
+     * Adds an event listener to the map search box.
+     */
+    function init() {
+      var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
+
+      arr.forEach(function(data) {
+        if (data.contents) {
+          var folder = createFolder(data);
+          self.markers.push(folder);
+        } else {
+          var marker = self.createOrRecreateMarker(data);
+          self.markers.push(marker);
+        }
+      });
+
+      // Call selectPlaces when the user selects a search result.
+      map.onPlacesChanged(selectPlaces);
+
+      // Call confirmCustomMarker when the user double clicks on the map.
+      map.onMapDblClick(confirmCustomMarker);
+
+      // Subscribe updateVisibility to sidebar visibility filters.
+      self.sidebar.visibleOnly.subscribe(updateVisibility);
+      self.sidebar.search.subscribe(updateVisibility);
+
+      // Call boundsChanged when the map bounds change.
+      map.onBoundsChange(boundsChanged);
     }
 
     /**
@@ -497,67 +629,6 @@
 
       // Open the confirm markers form.
       self.markersForm.open();
-    }
-
-    /**
-     * Called when the user double clicks on the map. Opens the markers form populated
-     * with a marker created using the location clicked.
-     */
-    function confirmCustomMarker(e) {
-      // Create a marker for the location clicked.
-      var marker = self.createOrRecreateMarker({
-        id: uuid.generate(),
-        title: 'Custom Marker',
-        position: {
-          lat: e.latLng.lat(),
-          lng: e.latLng.lng()
-        }
-      });
-
-      // Push the created marker to the pending markers array.
-      self.markersForm.pending.push({
-        marker: marker,
-        confirmed: ko.observable(true)
-      });
-
-      // Open the confirm markers form.
-      self.markersForm.open();
-    }
-
-    /**
-     * Searches an array and returns all markers within it and within any sub-arrays.
-     */
-    function getAllMarkers(arr) {
-      var result = [];
-
-      arr.forEach(function(elem) {
-        elem = ko.unwrap(elem);
-
-        // For every element in the given array...
-        if (elem instanceof Marker) {
-          // If the element is a marker, push it to the accumulation array.
-          result.push(elem);
-        } else if (Array.isArray(elem)) {
-          // Else if it's an array, search it and concat the results to the accumulation array.
-          result = result.concat(getAllMarkers(elem));
-        } else if (typeof elem === 'object') {
-          // Else if it's an object...
-          for (var prop in elem) {
-            prop = ko.unwrap(elem[prop]);
-
-            // For each of its properties...
-            if (Array.isArray(prop)) {
-              // If it's an array, search it and concat the results to the accumulation array.
-              result = result.concat(getAllMarkers(prop));
-            } else if (prop instanceof Marker) {
-              // Else if it's a marker, push it to the accumulation array.
-              result.push(prop);
-            }
-          }
-        }
-      });
-
-      return result;
     }
   }
 
@@ -628,15 +699,6 @@
               '<button data-bind="click: update">Confirm</button>' +
               '</div>'
   });
-
-  // Custom Binding (Source: http://stackoverflow.com/a/10573792)
-  ko.bindingHandlers.hidden = {
-    update: function(element, valueAccessor) {
-      ko.bindingHandlers.visible.update(element, function() {
-        return !ko.utils.unwrapObservable(valueAccessor());
-      });
-    }
-  };
 
   ko.applyBindings(appViewModel);
 })(this);

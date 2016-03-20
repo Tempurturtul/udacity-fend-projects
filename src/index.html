@@ -49,7 +49,7 @@
     <!-- List template. -->
     <script type="text/html" id="listTemplate">
       <!-- ko if: $data.contents -->
-      <li data-bind="hidden: $parent.collapsed">
+      <li data-bind="visible: visible">
         <button data-bind="click: $root.sidebar.toggleFolder">v</button>
         <input data-bind="visible: editing, value: name, hasFocus: editing">
         <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
@@ -60,7 +60,7 @@
       </li>
       <!-- /ko -->
       <!-- ko ifnot: $data.contents -->
-      <li data-bind="text: title, click: $root.openInfoWindow, hidden: $parent.collapsed"></li>
+      <li data-bind="text: title, click: $root.openInfoWindow, visible: visible"></li>
       <!-- /ko -->
     </script>
 

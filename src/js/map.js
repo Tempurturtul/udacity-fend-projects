@@ -30,6 +30,45 @@
   init();
 
   /**
+   * Creates a marker and adds it to the map.
+   */
+  function addMarker(markerData) {
+    markerData.map = map;
+    markerData.animation = google.maps.Animation.DROP;
+
+    // Normalize id to string.
+    markerData.id = markerData.id.toString();
+
+    var marker = new google.maps.Marker(markerData);
+
+    markers.push(marker);
+  }
+
+  /**
+   * Closes the infowindow.
+   */
+  function closeInfoWindow() {
+    infoWindow.close();
+  }
+
+  /**
+   * Returns the marker matching the given id.
+   */
+  function getMarker(id) {
+    // Normalize id to string.
+    id = id.toString();
+
+    for (var i = 0; i < markers.length; i++) {
+      if (markers[i].id === id) {
+        return markers[i];
+      }
+    }
+
+    // If we made it here, the marker wasn't found.
+    return null;
+  }
+
+  /**
    * Initializes the map, places service, and places search box.
    */
   function init() {
@@ -58,21 +97,6 @@
   }
 
   /**
-   * Creates a marker and adds it to the map.
-   */
-  function addMarker(markerData) {
-    markerData.map = map;
-    markerData.animation = google.maps.Animation.DROP;
-
-    // Normalize id to string.
-    markerData.id = markerData.id.toString();
-
-    var marker = new google.maps.Marker(markerData);
-
-    markers.push(marker);
-  }
-
-  /**
    * Modifies a marker on the map.
    */
   function modifyMarker(markerID, newData) {
@@ -90,25 +114,11 @@
   }
 
   /**
-   * Removes a marker from the map.
+   * Adds a `bounds_changed` event listener to the map and calls the function `fn`
+   * when the event fires.
    */
-  function removeMarker(markerID) {
-    var marker = getMarker(markerID);
-
-    if (marker) {
-      marker.setMap(null);
-      markers.splice(markers.indexOf(marker), 1);
-    } else {
-      console.warn('Failed to remove marker because it wasn\'t found.');
-    }
-  }
-
-  /**
-   * Adds a `places_changed` event listener to the search box and calls the given
-   * function `fn` when the event fires.
-   */
-  function onPlacesChanged(fn) {
-    searchBox.addListener('places_changed', fn);
+  function onBoundsChange(fn) {
+    map.addListener('bounds_changed', fn);
   }
 
   /**
@@ -130,6 +140,14 @@
   }
 
   /**
+   * Adds a `places_changed` event listener to the search box and calls the given
+   * function `fn` when the event fires.
+   */
+  function onPlacesChanged(fn) {
+    searchBox.addListener('places_changed', fn);
+  }
+
+  /**
    * Opens the info window on the identified marker.
    */
   function openInfoWindow(markerID) {
@@ -139,10 +157,17 @@
   }
 
   /**
-   * Closes the infowindow.
+   * Removes a marker from the map.
    */
-  function closeInfoWindow() {
-    infoWindow.close();
+  function removeMarker(markerID) {
+    var marker = getMarker(markerID);
+
+    if (marker) {
+      marker.setMap(null);
+      markers.splice(markers.indexOf(marker), 1);
+    } else {
+      console.warn('Failed to remove marker because it wasn\'t found.');
+    }
   }
 
   /**
@@ -153,31 +178,26 @@
   }
 
   /**
-   * Returns the marker matching the given id.
+   * Returns true if the marker is currently within the map's visible bounds,
+   * otherwise returns false.
    */
-  function getMarker(id) {
-    // Normalize id to string.
-    id = id.toString();
+  function visibleOnMap(markerID) {
+    var marker = getMarker(markerID);
 
-    for (var i = 0; i < markers.length; i++) {
-      if (markers[i].id === id) {
-        return markers[i];
-      }
-    }
-
-    // If we made it here, the marker wasn't found.
-    return null;
+    return map.getBounds().contains(marker.getPosition());
   }
 
   global.map = {
     addMarker: addMarker,
+    closeInfoWindow: closeInfoWindow,
     modifyMarker: modifyMarker,
-    removeMarker: removeMarker,
-    onPlacesChanged: onPlacesChanged,
+    onBoundsChange: onBoundsChange,
     onMapDblClick: onMapDblClick,
     onMarkerClick: onMarkerClick,
+    onPlacesChanged: onPlacesChanged,
     openInfoWindow: openInfoWindow,
-    closeInfoWindow: closeInfoWindow,
-    setInfoWindowContent: setInfoWindowContent
+    removeMarker: removeMarker,
+    setInfoWindowContent: setInfoWindowContent,
+    visibleOnMap: visibleOnMap
   };
 })(this);
