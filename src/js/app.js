@@ -291,7 +291,20 @@
         map.centerOn(markerIDs);
       },
 
-      dragStart: function(item) {},
+      dragStart: function(dragData, event) {
+        var insideDragHandle = getClosest(event.target, '.drag-handle') !== null;
+        if (insideDragHandle) {
+
+          // If trying to drag a folder, make sure it's collapsed.
+          if (dragData.item instanceof Folder && !dragData.item.collapsed()) {
+            self.sidebar.toggleFolder(dragData.item);
+          }
+
+          return true;
+        } else {
+          return false;
+        }
+      },
 
       dragEnd: function(item) {},
 
@@ -326,18 +339,27 @@
       },
 
       reorder: function(event, dragData, zoneData) {
-        // TODO Finalize functionality.
-
-        // if (dragData !== zoneData.item) {
-        //   console.log(dragData, zoneData.item);
-        //
-        //   // The next and previous list elements.
-        //   var next = sidebar.getNext(dragData),
-        //       prev = sidebar.getPrev(dragData);
-        //
-        //   console.log('next:', next,
-        //               '\nprev:', prev);
-        // }
+        // If the item isn't being dragged over itself...
+        if (dragData.item !== zoneData.item) {
+          // If the other item is a folder and the dragged item exists in the same set of items as the folder...
+          if (zoneData.item instanceof Folder && zoneData.items.indexOf(dragData.item) !== -1) {
+            // If the folder is empty...
+            if (!zoneData.item.contents().length) {
+              // Place the dragged item in the folder and update its items set.
+              dragData.items.remove(dragData.item);
+              zoneData.item.contents.push(dragData.item);
+              dragData.items = zoneData.item.contents;
+            }
+          }
+          // Else if the other item is a marker...
+          else if (zoneData.item instanceof Marker) {
+            // Place the dragged item in the new position and update its items set.
+            var index = zoneData.items.indexOf(zoneData.item);
+            dragData.items.remove(dragData.item);
+            zoneData.items.splice(index, 0, dragData.item);
+            dragData.items = zoneData.items;
+          }
+        }
       },
 
       // Filter markers by title.
@@ -551,6 +573,19 @@
     }
 
     /**
+     * Returns the closest element in the DOM matching the selector.
+     */
+    function getClosest(element, selector) {
+      do {
+        if (matches(element, selector)) {
+          return element;
+        }
+        element = element.parentNode;
+      } while (element);
+      return null;
+    }
+
+    /**
      * Initializes self.markers with markers and marker folders from local storage,
      * or from defaults if local storage is empty; adds initial markers to the map;
      * Adds an event listener to the map search box.
@@ -580,6 +615,18 @@
 
       // Call boundsChanged when the map bounds change.
       map.onBoundsChange(boundsChanged);
+    }
+
+    /**
+     * Checks if the element matches the selector.
+     */
+    function matches(element, selector) {
+      if (!element.tagName) {
+        return null;
+      }
+      var docEl = document.documentElement;
+      var match = docEl.matches || docEl.matchesSelector || docEl.webkitMatchesSelector || docEl.mozMatchesSelector || docEl.msMatchesSelector || docEl.oMatchesSelector;
+      return match.call(element, selector);
     }
 
     /**

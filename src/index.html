@@ -48,17 +48,18 @@
 
     <!-- List template. -->
     <script type="text/html" id="listTemplate">
-      <li data-bind="visible: visible,
-                     dragZone: {
-                       name: 'sortable',
-                       dragStart: $root.sidebar.dragStart,
-                       dragEnd: $root.sidebar.dragEnd
-                     },
-                     dragEvents: {
-                       accepts: 'sortable',
-                       dragOver: $root.sidebar.reorder,
-                       data: { items: $root.markers, item: $data }
-                     }">
+      <li data-bind="visible: visible, dragZone: {
+                                         name: 'sortable',
+                                         dragStart: $root.sidebar.dragStart,
+                                         dragEnd: $root.sidebar.dragEnd,
+                                         data: { items: $parent.contents || $parent.markers, item: $data }
+                                       },
+                                       dragEvents: {
+                                         accepts: 'sortable',
+                                         dragOver: $root.sidebar.reorder,
+                                         data: { items: $parent.contents || $parent.markers, item: $data }
+                                       }">
+        <span class="drag-handle">=</span>
         <!-- ko if: $data.contents -->
         <button data-bind="click: $root.sidebar.toggleFolder">v</button>
         <input data-bind="visible: editing, value: name, hasFocus: editing">
