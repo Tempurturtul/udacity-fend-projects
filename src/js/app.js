@@ -1,11 +1,9 @@
 // Core knockout-controlled functionality.
 
 // WORK ON THIS NEXT:
-// - Reordering of list items (including moving markers in to and out of folders).
-// - Drag handles for list items.
+// - Information for the info window (including error handling).
 
 // WORK ON THIS LATER:
-// - Information for the info window (including error handling).
 // - Allow the user to edit/set more things when creating/modifying markers.
 // - Useful defaults.
 // - Saving markers, folders, and map options.
