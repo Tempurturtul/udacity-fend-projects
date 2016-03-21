@@ -584,35 +584,41 @@
     }
 
     /**
-     * Initializes self.markers with markers and marker folders from local storage,
-     * or from defaults if local storage is empty; adds initial markers to the map;
-     * Adds an event listener to the map search box.
+     * Initializes the AppViewModel.
      */
     function init() {
-      var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
+      if (map) {
+        var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
 
-      arr.forEach(function(data) {
-        if (data.contents) {
-          var folder = createFolder(data);
-          self.markers.push(folder);
-        } else {
-          var marker = self.createOrRecreateMarker(data);
-          self.markers.push(marker);
-        }
-      });
+        arr.forEach(function(data) {
+          if (data.contents) {
+            var folder = createFolder(data);
+            self.markers.push(folder);
+          } else {
+            var marker = self.createOrRecreateMarker(data);
+            self.markers.push(marker);
+          }
+        });
 
-      // Call selectPlaces when the user selects a search result.
-      map.onPlacesChanged(selectPlaces);
+        // Call selectPlaces when the user selects a search result.
+        map.onPlacesChanged(selectPlaces);
 
-      // Call confirmCustomMarker when the user double clicks on the map.
-      map.onMapDblClick(confirmCustomMarker);
+        // Call confirmCustomMarker when the user double clicks on the map.
+        map.onMapDblClick(confirmCustomMarker);
 
-      // Subscribe updateVisibility to sidebar visibility filters.
-      self.sidebar.visibleOnly.subscribe(updateVisibility);
-      self.sidebar.search.subscribe(updateVisibility);
+        // Subscribe updateVisibility to sidebar visibility filters.
+        self.sidebar.visibleOnly.subscribe(updateVisibility);
+        self.sidebar.search.subscribe(updateVisibility);
 
-      // Call boundsChanged when the map bounds change.
-      map.onBoundsChange(boundsChanged);
+        // Call boundsChanged when the map bounds change.
+        map.onBoundsChange(boundsChanged);
+      } else {
+        // The app isn't functional without map; replace the document body with an error message.
+        document.body.innerHTML = '<div style="text-align:center; margin: 10px; border: solid red 1px;">' +
+                                  '<h1>Error</h1>' +
+                                  '<p>Google Maps API not found.</p>' +
+                                  '</div>';
+      }
     }
 
     /**

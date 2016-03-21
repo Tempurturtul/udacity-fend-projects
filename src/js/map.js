@@ -1,8 +1,5 @@
 // Google Maps functionality.
 
-// WORK ON THIS NEXT:
-// - Abort gracefully if google isn't found on global.
-
 (function(global) {
   var document = global.document,
       localStorage = global.localStorage,
@@ -91,31 +88,51 @@
   }
 
   /**
-   * Initializes the map, places service, and places search box.
+   * Initializes the map and related services, and defines the global map property.
    */
   function init() {
-    var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)) || defaults.mapOptions,
-        inputElem = document.getElementById(searchBoxID);
+    if (google) {
+      var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)) || defaults.mapOptions,
+          inputElem = document.getElementById(searchBoxID);
 
-    // Initialize the map.
-    map = new google.maps.Map(document.getElementById('map'), mapOptions);
+      // Initialize the map.
+      map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-    // Initialize the places service.
-    places = new google.maps.places.PlacesService(map);
+      // Initialize the places service.
+      places = new google.maps.places.PlacesService(map);
 
-    // Initialize the places search box.
-    searchBox = new google.maps.places.SearchBox(inputElem);
+      // Initialize the places search box.
+      searchBox = new google.maps.places.SearchBox(inputElem);
 
-    // Add the search box to the map controls.
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(inputElem);
+      // Add the search box to the map controls.
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(inputElem);
 
-    // Bias the search box results towards the map's viewport.
-    map.addListener('bounds_changed', function() {
-      searchBox.setBounds(map.getBounds());
-    });
+      // Bias the search box results towards the map's viewport.
+      map.addListener('bounds_changed', function() {
+        searchBox.setBounds(map.getBounds());
+      });
 
-    // Initialize the info window.
-    infoWindow = new google.maps.InfoWindow();
+      // Initialize the info window.
+      infoWindow = new google.maps.InfoWindow();
+
+      global.map = {
+        addMarker: addMarker,
+        centerOn: centerOn,
+        closeInfoWindow: closeInfoWindow,
+        modifyMarker: modifyMarker,
+        onBoundsChange: onBoundsChange,
+        onMapDblClick: onMapDblClick,
+        onMarkerClick: onMarkerClick,
+        onPlacesChanged: onPlacesChanged,
+        openInfoWindow: openInfoWindow,
+        removeMarker: removeMarker,
+        setInfoWindowContent: setInfoWindowContent,
+        visibleOnMap: visibleOnMap
+      };
+    } else {
+      console.warn('Google Maps API not found.');
+      global.map = null;  // Needs to be set explicitly since an element with id of "map" might be returned instead.
+    }
   }
 
   /**
@@ -208,19 +225,4 @@
 
     return map.getBounds().contains(marker.getPosition());
   }
-
-  global.map = {
-    addMarker: addMarker,
-    centerOn: centerOn,
-    closeInfoWindow: closeInfoWindow,
-    modifyMarker: modifyMarker,
-    onBoundsChange: onBoundsChange,
-    onMapDblClick: onMapDblClick,
-    onMarkerClick: onMarkerClick,
-    onPlacesChanged: onPlacesChanged,
-    openInfoWindow: openInfoWindow,
-    removeMarker: removeMarker,
-    setInfoWindowContent: setInfoWindowContent,
-    visibleOnMap: visibleOnMap
-  };
 })(this);
