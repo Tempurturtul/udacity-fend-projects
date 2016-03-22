@@ -7,50 +7,57 @@ $(document).ready(function() {
   // On scroll...
   $(window).on('scroll', handleNav);
 
-  // On .popup-source click...
-  $('.popup-source').on('click', function(e) {
-    var msg = '';
-    var pos = {
-      x: e.pageX,
-      y: e.pageY
-    };
+  // On click...
+  $('body').on('click', function(e) {
+    // Remove any existing popups.
+    $('body').children('.popup').remove();
 
-    switch (this.id) {
-      case 'languages':
-        msg = '<ul>' +
-              '<li>JavaScript</li>' +
-              '<li>C#</li>' +
-              '<li>Python</li>' +
-              '<li>Ruby</li>' +
-              '<li>SML</li>' +
-              '<li>Racket</li>' +
-              '</ul>';
-        break;
-      case 'web-technologies':
-        msg = '<ul>' +
-              '<li>jQuery</li>' +
-              '<li>Knockout</li>' +
-              '<li>Polymer</li>' +
-              '<li>AngularJS</li>' +
-              '<li>Node.js</li>' +
-              '<li>Gulp</li>' +
-              '<li>Grunt</li>' +
-              '<li>Bower</li>' +
-              '<li>Vagrant</li>' +
-              '<li>Git</li>' +
-              '</ul>';
-        break;
-      case 'new-things':
-        msg = '<ul>' +
-              '<li>Web Workers</li>' +
-              '<li>Service Workers</li>' +
-              '<li>IndexedDB API</li>' +
-              '<li>SQL and NoSQL Databases</li>' +
-              '</ul>';
-        break;
+    // If the click was on a .popup-source element...
+    if (e.target.classList.contains('popup-source')) {
+      // Open a new popup.
+      var msg = '';
+      var pos = {
+        x: e.pageX,
+        y: e.pageY
+      };
+
+      switch (e.target.id) {
+        case 'languages':
+          msg = '<ul>' +
+                '<li>JavaScript</li>' +
+                '<li>C#</li>' +
+                '<li>Python</li>' +
+                '<li>Ruby</li>' +
+                '<li>SML</li>' +
+                '<li>Racket</li>' +
+                '</ul>';
+          break;
+        case 'web-technologies':
+          msg = '<ul>' +
+                '<li>jQuery</li>' +
+                '<li>Knockout</li>' +
+                '<li>Polymer</li>' +
+                '<li>AngularJS</li>' +
+                '<li>Node.js</li>' +
+                '<li>Gulp</li>' +
+                '<li>Grunt</li>' +
+                '<li>Bower</li>' +
+                '<li>Vagrant</li>' +
+                '<li>Git</li>' +
+                '</ul>';
+          break;
+        case 'new-things':
+          msg = '<ul>' +
+                '<li>Web Workers</li>' +
+                '<li>Service Workers</li>' +
+                '<li>IndexedDB API</li>' +
+                '<li>SQL and NoSQL Databases</li>' +
+                '</ul>';
+          break;
+      }
+
+      popup(msg, pos);
     }
-
-    popup(msg, pos);
   });
 
   // On contact form submit...
@@ -230,21 +237,14 @@ $(document).ready(function() {
       pos.x = 0;
     }
 
-    var popupClass = 'popup';
     var requiredStyling = 'max-width: 300px;' +
                           'position: absolute;' +
                           'top: ' + pos.y + 'px;' +
                           'left: ' + pos.x + 'px;';
-    var elem = '<div class="' + popupClass + '" style="' + requiredStyling + '">' + msg + '</div>';
+    var elem = '<div class="popup" style="' + requiredStyling + '">' + msg + '</div>';
 
-    // Dismiss existing popups.
-    $body.children('.' + popupClass).remove();
     // Add new popup.
     $body.append(elem);
-    // Dismiss popup on click.
-    $('.' + popupClass).click(function() {
-      $(this).remove();
-    });
   }
 
 });
