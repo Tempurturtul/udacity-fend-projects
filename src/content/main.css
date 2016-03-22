@@ -1,3 +1,5 @@
+/* Udacity logo: #00b1e4. */
+
 /******************************
  Global styles.
 ******************************/
@@ -44,12 +46,14 @@ header {
 }
 
 /* The Udacity logo. */
+header a,
 header img {
-  height: 64px;
+  height: 100%;
 }
 
 /* The title and subtitle container. */
 header div {
+  height: 100%;
   flex: 1 1;
   text-align: right;
   display: flex;
@@ -102,13 +106,14 @@ nav ul li a {
   justify-content: center;
   align-items: center;
   height: 100%;
-  color: #d17e13;
+  color: #00b1e4;
   font-size: 0.9em;
+  font-weight: bold;
   background: #f7f7f7;
 }
 
 nav ul li a:hover {
-  background: #f3f3f3;
+  background: #eee;
 }
 
 
@@ -154,11 +159,11 @@ article time {
 }
 
 section a {
-  color: #177;
+  color: #0096C2;
 }
 
 section a:hover {
-  color: #044;
+  color: #006F8F;
 }
 
 
@@ -257,6 +262,33 @@ form button:disabled {
   align-items: center;
 }
 
+.popup-source {
+  cursor: pointer;
+  font-size: .9em;
+  font-weight: bold;
+}
+
+.popup-source:hover {
+  color: #444;
+}
+
+.popup {
+  text-align: center;
+  color: #333;
+  background: white;
+  border: solid 2px #444;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.popup ul {
+  list-style: none;
+  margin: 0 50px;
+  padding: 0;
+}
+
 .github-logo {
   max-width: 32px;
   padding: 5px;
@@ -272,7 +304,7 @@ form button:disabled {
 }
 
 .work-preview:hover {
-  border: solid 2px #f7971c;  /* Color of Udacity logo. */
+  border: solid 2px #00b1e4;
 }
 
 .message-overlay {

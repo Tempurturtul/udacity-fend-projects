@@ -7,6 +7,52 @@ $(document).ready(function() {
   // On scroll...
   $(window).on('scroll', handleNav);
 
+  // On .popup-source click...
+  $('.popup-source').on('click', function(e) {
+    var msg = '';
+    var pos = {
+      x: e.pageX,
+      y: e.pageY
+    };
+
+    switch (this.id) {
+      case 'languages':
+        msg = '<ul>' +
+              '<li>JavaScript</li>' +
+              '<li>C#</li>' +
+              '<li>Python</li>' +
+              '<li>Ruby</li>' +
+              '<li>SML</li>' +
+              '<li>Racket</li>' +
+              '</ul>';
+        break;
+      case 'web-technologies':
+        msg = '<ul>' +
+              '<li>jQuery</li>' +
+              '<li>Knockout</li>' +
+              '<li>Polymer</li>' +
+              '<li>AngularJS</li>' +
+              '<li>Node.js</li>' +
+              '<li>Gulp</li>' +
+              '<li>Grunt</li>' +
+              '<li>Bower</li>' +
+              '<li>Vagrant</li>' +
+              '<li>Git</li>' +
+              '</ul>';
+        break;
+      case 'new-things':
+        msg = '<ul>' +
+              '<li>Web Workers</li>' +
+              '<li>Service Workers</li>' +
+              '<li>IndexedDB API</li>' +
+              '<li>SQL and NoSQL Databases</li>' +
+              '</ul>';
+        break;
+    }
+
+    popup(msg, pos);
+  });
+
   // On contact form submit...
   $('#contact-form').on('submit', submitContactForm);
 
@@ -158,6 +204,47 @@ $(document).ready(function() {
 
     // Unhide the notification.
     $element.removeClass('hidden');
+  }
+
+  /**
+   * Creates a dismissable popup message at the given position.
+   * @param {string} msg
+   * @param {Object} pos
+   * @param {number} pos.x
+   * @param {number} pos.y
+   */
+  function popup(msg, pos) {
+    var $body = $('body');
+
+    // If the body is wider than 300 px...
+    if ($body.width() >= 300) {
+      // If the popup would extend beyond the edge of the body...
+      if (pos.x + 300 > $body.width()) {
+        // Reposition the popup so it doesn't extend beyond the edge of the body.
+        pos.x = $body.width() - 300;
+      }
+    }
+    // Otherwise...
+    else {
+      // Reposition the popup to the left edge of the body.
+      pos.x = 0;
+    }
+
+    var popupClass = 'popup';
+    var requiredStyling = 'max-width: 300px;' +
+                          'position: absolute;' +
+                          'top: ' + pos.y + 'px;' +
+                          'left: ' + pos.x + 'px;';
+    var elem = '<div class="' + popupClass + '" style="' + requiredStyling + '">' + msg + '</div>';
+
+    // Dismiss existing popups.
+    $body.children('.' + popupClass).remove();
+    // Add new popup.
+    $body.append(elem);
+    // Dismiss popup on click.
+    $('.' + popupClass).click(function() {
+      $(this).remove();
+    });
   }
 
 });
