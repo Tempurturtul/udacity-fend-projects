@@ -89,7 +89,7 @@ var browsers = ['google-chrome', 'firefox'];
 // Path to root url for gh-pages (/project-name).
 var ghRoot = '/fend-portfolio';
 // CSS selectors ignored by uncss.
-var uncssIgnoredSelectors = ['.stick-top', '.current'];
+var uncssIgnoredSelectors = ['.stick-top', '.current', /\.popup.*/];
 // Path to page tested by psi.
 var psiPath = '/';
 // Cache-control values for local server.

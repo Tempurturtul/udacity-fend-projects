@@ -269,7 +269,7 @@ form button:disabled {
 }
 
 .popup-source:hover {
-  color: #444;
+  color: #555;
 }
 
 .popup {
@@ -280,7 +280,7 @@ form button:disabled {
   border-radius: 5px;
   box-sizing: border-box;
   padding: 10px;
-  cursor: pointer;
+  cursor: default;
 }
 
 .popup ul {
