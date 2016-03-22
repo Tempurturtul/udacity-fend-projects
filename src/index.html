@@ -94,11 +94,9 @@
         <!-- autocomplete="off" prevents firefox from keeping form disabled on refresh. -->
         <form autocomplete="off">
           <h2>Send Me A Message</h2>
-          <div class="row">
-            <input id="name" type="text" placeholder="Name" maxlength="100">
-            <input id="email" type="email" placeholder="Email" maxlength="100">
-          </div>
-          <textarea id="message" placeholder="Message" maxlength="9000" required></textarea>
+          <label><span>Name:</span><input id="name" type="text" maxlength="100"></label>
+          <label><span>Email:</span><input id="email" type="email" maxlength="100"></label>
+          <textarea id="message" maxlength="9000" placeholder="Your message." required></textarea>
           <button>Send</button>
           <div id="contact-notification" class="message-overlay hidden click-to-hide">
             <p>Placeholder message.</p>

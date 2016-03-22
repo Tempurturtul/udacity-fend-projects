@@ -177,7 +177,7 @@ section a:hover {
 form {
   text-align: center;
   position: relative;
-  width: 800px;
+  width: 400px;
   max-width: 90%;
   padding: 10px;
   display: flex;
@@ -186,22 +186,29 @@ form {
   align-items: center;
 }
 
-form > * {
-  margin: 5px 0;
+/* The section title. */
+form h2 {
+  margin-bottom: 20px;
 }
 
-/* The input row. */
-form div {
+/* The name and email form items. */
+form label {
   width: 100%;
+  display: flex;
+  margin-bottom: 5px;
+  align-items: center;
 }
 
-form input {
-  padding: 4px;
-  width: 100%;
+form label span {
+  flex: 0 0 60px;
+  text-align: right;
+  padding-right: 4px;
+  color: #444;
 }
 
-form input:first-of-type {
-  margin-right: 5px;
+form label input {
+  min-width: 150px;
+  flex: 1 1 auto;
 }
 
 form textarea {
@@ -209,31 +216,15 @@ form textarea {
   padding: 4px;
   height: 10em;
   resize: none;
+  margin-bottom: 10px;
 }
 
 form button {
   padding: 3px 20px;
-  width: 100px;
 }
 
 form button:disabled {
   color: #555;
-}
-
-/* Vendor-specific styling for placeholder text. */
-::-webkit-input-placeholder {
-  color: #666;
-  opacity:  1;
-}
-
-::-moz-placeholder {
-  color:    #666;
-  opacity:  1;
-}
-
-:-ms-input-placeholder {
-  color:    #666;
-  opacity:  1;
 }
 
 
@@ -345,7 +336,6 @@ form button:disabled {
 /* Assigned to nav link linking to the currently scrolled-to nav target. */
 .current {
   color: red;
-  /* d17e13 */
 }
 
 .hidden {

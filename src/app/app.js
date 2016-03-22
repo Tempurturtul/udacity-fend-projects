@@ -51,7 +51,7 @@ $(document).ready(function() {
                 '<li>Web Workers</li>' +
                 '<li>Service Workers</li>' +
                 '<li>IndexedDB API</li>' +
-                '<li>SQL and NoSQL Databases</li>' +
+                '<li>SQL and NoSQL</li>' +
                 '</ul>';
           break;
       }
