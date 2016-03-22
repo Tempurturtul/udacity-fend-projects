@@ -2,8 +2,15 @@
 
 (function(global) {
 
-  var sources = {};
+  var $ = global.jQuery,
+      sources = {};
 
+  // Abort if jquery isn't found.
+  if (!$) {
+    console.warn('placeInfo.js requires jQuery');
+    global.placeInfo = null;
+    return;
+  }
 
   sources.flickr = function(place) {};
 
