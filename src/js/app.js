@@ -104,11 +104,12 @@ $(document).ready(function() {
           {
             'title': 'Frogger Clone',
             'dates': 'January 2016',
-            'description': 'A clone of the popular frogger game built using ' +
-            'a barebones game engine provided by Udacity. I worked heavily with ' +
-            'the HTML5 canvas element and used JavaScript inheritance, the ' +
-            'browser\'s local storage, and the Web Audio API. The game features a ' +
-            'persistent scoreboard, menus, canvas-drawn buttons, and mobile support.',
+            'description': 'A clone of the popular frogger game built using a ' +
+            'barebones game engine provided by Udacity. I worked heavily with ' +
+            'the HTML5 canvas element in this project, and used JavaScript ' +
+            'inheritance, the browser\'s local storage, and the Web Audio API ' +
+            'while implementing various features. The game features a persistent ' +
+            'scoreboard, menus, canvas-drawn buttons, and mobile support.',
             'images': [
               'img/fend-frogger-start.png',
               'img/fend-frogger-gameplay.png',
@@ -128,7 +129,7 @@ $(document).ready(function() {
             'also expanded my workflow options with this project by learning to ' +
             'use Bower and by refining my usage of Gulp. I refactored the project ' +
             'two months after completing it to use a Model-View-Controller design ' +
-            'pattern, as part of Udactiy\'s JavaScript Design Patterns course.',
+            'pattern as part of Udactiy\'s JavaScript Design Patterns course.',
             'images': [
               'img/fend-resume-top.png',
               'img/fend-resume-mid.png',
