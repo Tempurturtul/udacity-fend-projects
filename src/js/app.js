@@ -99,7 +99,7 @@ $(document).ready(function() {
               'img/fend-optimization-pizzeria.png'
             ],
             'github': 'https://github.com/Tempurturtul/fend-optimization',
-            'url': 'http://tempurturtul.github.io/fend-optimization/'
+            'url': 'https://tempurturtul.github.io/fend-optimization/'
           },
           {
             'title': 'Frogger Clone',
@@ -116,7 +116,7 @@ $(document).ready(function() {
               'img/fend-frogger-scores.png'
             ],
             'github': 'https://github.com/Tempurturtul/fend-frogger',
-            'url': 'http://tempurturtul.github.io/fend-frogger/'
+            'url': 'https://tempurturtul.github.io/fend-frogger/'
           },
           {
             'title': 'Resume',
@@ -136,7 +136,7 @@ $(document).ready(function() {
               'img/fend-resume-bot.png'
             ],
             'github': 'https://github.com/Tempurturtul/fend-resume',
-            'url': 'http://tempurturtul.github.io/fend-resume/'
+            'url': 'https://tempurturtul.github.io/fend-resume/'
           },
           {
             'title': 'Portfolio',
@@ -154,7 +154,7 @@ $(document).ready(function() {
               'img/fend-portfolio-contact.png'
             ],
             'github': 'https://github.com/Tempurturtul/fend-portfolio',
-            'url': 'http://tempurturtul.github.io/fend-portfolio/'
+            'url': 'https://tempurturtul.github.io/fend-portfolio/'
           },
           {
             'title': 'Twitch Streamers - Angular Refactor',
@@ -197,7 +197,7 @@ $(document).ready(function() {
             'degree': 'BS',
             'majors': ['Security Management'],
             'dates': 2011,
-            'url': 'http://www.centralpenn.edu/',
+            'url': 'https://www.centralpenn.edu/',
             'description': 'An accelerated four-year degree program focusing on ' +
             'intelligence analysis, management, and police work. I obtained an ' +
             'Intelligence Analysis certificate and completed a 400-hour internship ' +
@@ -230,7 +230,7 @@ $(document).ready(function() {
             'title': 'Workshoppers',
             'school': 'NodeSchool',
             'date': 2015,
-            'url': 'http://nodeschool.io/#workshopper-list',
+            'url': 'https://nodeschool.io/#workshopper-list',
             'description': 'Learned essential skills for working with Node.js. ' +
             'Various topics covered such as Git and Github, asynchronous i/o, ' +
             'npm modules, streams, express.js framework basics, promises, MongoDB ' +
