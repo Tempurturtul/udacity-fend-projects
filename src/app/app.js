@@ -48,10 +48,12 @@ $(document).ready(function() {
           break;
         case 'new-things':
           msg = '<ul>' +
+                '<li>CSS Preprocessors</li>' +
                 '<li>Web Workers</li>' +
                 '<li>Service Workers</li>' +
                 '<li>IndexedDB API</li>' +
                 '<li>SQL and NoSQL</li>' +
+                '<li>many more...</li>' +
                 '</ul>';
           break;
       }

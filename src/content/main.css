@@ -264,18 +264,17 @@ form button:disabled {
 }
 
 .popup {
-  text-align: center;
+  /*text-align: center;*/
   color: #333;
   background: white;
   border: solid 2px #444;
   border-radius: 5px;
-  box-sizing: border-box;
   padding: 10px;
   cursor: default;
 }
 
 .popup ul {
-  list-style: none;
+  list-style: circle;
   margin: 0 50px;
   padding: 0;
 }
