@@ -40,7 +40,7 @@ $(document).ready(function() {
           'mobile' : '717-303-9839',
           'email' : 'tempurturtul@gmail.com',
           'github' : 'https://github.com/Tempurturtul',
-          'twitter' : 'https://twitter.com/tempurturtul',
+          'linkedin' : 'https://www.linkedin.com/in/tempurturtul',
           'location' : 'Massena, NY'
         },
         'welcomeMessage' : 'I\'m currently seeking employment as a front-end web ' +
@@ -438,10 +438,10 @@ $(document).ready(function() {
         // Replace %data% with the substring occuring after the last '/' in bio.contacts.github.
                                                .replace(/%data%/g, bio.contacts.github.slice(bio.contacts.github.lastIndexOf('/') + 1));
 
-        // Replace %url-data% with the full bio.contacts.twitter value.
-        var formattedTwitter = helper.HTMLtwitter.replace(/%url-data%/g, bio.contacts.twitter)
-        // Replace %data% with the substring occuring after the last '/' in bio.contacts.twitter.
-                                                 .replace(/%data%/g, bio.contacts.twitter.slice(bio.contacts.twitter.lastIndexOf('/') + 1));
+        // Replace %url-data% with the full bio.contacts.linkedin value.
+        var formattedLinkedin = helper.HTMLlinkedin.replace(/%url-data%/g, bio.contacts.linkedin)
+        // Replace %data% with the substring occuring after the last '/' in bio.contacts.linkedin.
+                                                 .replace(/%data%/g, bio.contacts.linkedin.slice(bio.contacts.linkedin.lastIndexOf('/') + 1));
 
 
         var formattedLocation = helper.HTMLlocation.replace(/%data%/g, bio.contacts.location);
@@ -455,7 +455,7 @@ $(document).ready(function() {
         $('.contacts-list').append(formattedMobile)
                            .append(formattedEmail)
                            .append(formattedGithub)
-                           .append(formattedTwitter)
+                           .append(formattedLinkedin)
                            .append(formattedLocation);
 
         if (bio.skills.length) {
