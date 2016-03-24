@@ -1,5 +1,33 @@
 // Functionality for retrieving place information.
 
+/*
+* Noteworthy Flickr API restrictions:
+* - DO prominently place the following notice: "This product uses the Flickr API but is not endorsed or certified by Flickr."
+* - DO comply with photo owners' requirements/restrictions.
+* - DO link content back to its page on Flickr.
+* - DO NOT use the Flickr logo.
+* - DO NOT display more than 30 Flickr photos per page.
+* - DO NOT cache or store Flickr photos for more than reasonable periods.
+*
+* Noteworthy Foursquare API restrictions:
+* - DO attribute Foursquare either generally or contextually.
+* - DO link back to venue pages whenever displaying venue data.
+* - DO give visual attribution if displaying more than basic venue data.
+* - DO give visual attribution if displaying a list of venues.
+* - DO give visual attribution if displaying any non-venue data.
+* - DO NOT cache any data for more than 30 days.
+*
+* Noteworthy Google API restrictions:
+* - TODO
+*
+* Noteworthy Wikipedia API restrictions:
+* - DO identify the client with a `User-Agent` or `Api-User-Agent` header.
+* - ...I don't like this API's documentation.
+*
+* Noteworthy Yelp API restrictions:
+* - TODO
+*/
+
 (function(global) {
 
   var $ = global.jQuery,
@@ -11,14 +39,6 @@
     global.placeInfo = null;
     return;
   }
-
-  // Noteworthy Flickr API restrictions:
-  // - DO prominently place the following notice: "This product uses the Flickr API but is not endorsed or certified by Flickr."
-  // - DO comply with photo owners' requirements/restrictions.
-  // - DO link content back to its page on Flickr.
-  // - DO NOT use the Flickr logo.
-  // - DO NOT display more than 30 Flickr photos per page.
-  // - DO NOT cache or store Flickr photos for more than reasonable periods.
 
   /**
    * Returns an array of photos for the given place.
@@ -85,14 +105,6 @@
     });
   };
 
-  // Noteworthy Foursquare API restrictions:
-  // - DO attribute Foursquare either generally or contextually.
-  // - DO link back to venue pages whenever displaying venue data.
-  // - DO give visual attribution if displaying more than basic venue data.
-  // - DO give visual attribution if displaying a list of venues.
-  // - DO give visual attribution if displaying any non-venue data.
-  // - DO NOT cache any data for more than 30 days.
-
   /**
    * Returns an array of popular nearby venues.
    * @param {object} place - Data defining the place.
@@ -144,26 +156,14 @@
   // This one -might- be better off in map.js.
   sources.google = function(place) {};
 
-  // Noteworthy Wikipedia API restrictions:
-  // - DO identify the client with a `User-Agent` or `Api-User-Agent` header.
-
   /**
-   * TODO
+   * TODO - https://www.mediawiki.org/wiki/API:Showing_nearby_wiki_information
    */
   sources.wikipedia = function(place) {
     var results = [];
 
     $.ajax({
-      url: 'https://en.wikipedia.org/w/api.php',
-      data: {
-        action: 'query',
-        format: 'json'
-      },
-      type: 'POST',
-      headers: {
-        'Api-User-Agent': 'fend-neighborhood-map/1.0 (https://tempurturtul.github.io/fend-neighborhood-map/; tempurturtul@gmail.com)'
-      },
-      dataType: 'json'
+
     })
     .done(function(data) {
       console.log(data);
