@@ -144,21 +144,38 @@
   // This one -might- be better off in map.js.
   sources.google = function(place) {};
 
-  sources.wikipedia = function(place) {};
+  // Noteworthy Wikipedia API restrictions:
+  // - DO identify the client with a `User-Agent` or `Api-User-Agent` header.
+
+  /**
+   * TODO
+   */
+  sources.wikipedia = function(place) {
+    var results = [];
+
+    $.ajax({
+      url: 'https://en.wikipedia.org/w/api.php',
+      data: {
+        action: 'query',
+        format: 'json'
+      },
+      type: 'POST',
+      headers: {
+        'Api-User-Agent': 'fend-neighborhood-map/1.0 (https://tempurturtul.github.io/fend-neighborhood-map/; tempurturtul@gmail.com)'
+      },
+      dataType: 'json'
+    })
+    .done(function(data) {
+      console.log(data);
+    })
+    .always(function() {
+      return results;
+    });
+  };
 
   sources.yelp = function(place) {};
 
-
-  /**
-   * Gets place info from indicated sources or all sources if none are indicated.
-   * @param {object} place - An object with sufficient data (hopefully) to locate and identify a place.
-   * @param {string[]} [sources] - The sources from which to retrieve information.
-   */
-  function amalgamation(place, sources) {}
-
-
   global.placeInfo = {
-    amalgamation: amalgamation,
     sources: sources
   };
 })(this);
