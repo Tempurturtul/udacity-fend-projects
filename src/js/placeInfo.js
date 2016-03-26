@@ -43,18 +43,20 @@
   /**
    * Returns an array of photos for the given place.
    * @param {object} place - Data defining the place.
-   * @param {number} [limit=20] - The maximum number of results to return.
-   * @param {number|string} [place.lat]
-   * @param {number|string} [place.lng]
-   * @param {string} [place.bbox] - Comma delimited values representing: min lng, min lat, max lng, max lat.
-   * @param {number|string} [place.woeid]
+   * @param {number} [limit=10] - The maximum number of results to return.
+   * @param {number|string} place.lat
+   * @param {number|string} place.lng
    * @returns {object[]} - Each element includes `src`, `url`, and `title` properties.
    */
   sources.flickr = function(place, limit) {
     var results = [];
 
-    place = place || {};
-    limit = limit || 20;
+    // Abort if required parameters weren't passed.
+    if (!place || !(place.lat && place.lng)) {
+      return results;
+    }
+
+    limit = limit || 10;
 
     $.ajax({
       url: 'https://api.flickr.com/services/rest/',
@@ -64,8 +66,6 @@
         content_type: 1,  // Photos only.
         lat: place.lat,
         lon: place.lng,
-        bbox: place.bbox,
-        woe_id: place.woeid,
         per_page: limit,  // We're only checking the first page, so this serves to limit total photos returned.
         format: 'json',
         nojsoncallback: 1  // The flickr API returns JSON with a function wrapper by default.
@@ -157,15 +157,46 @@
   sources.google = function(place) {};
 
   /**
-   * TODO - https://www.mediawiki.org/wiki/API:Showing_nearby_wiki_information
+   * Returns an array of wikipedia results for nearby places.
+   * @param {object} place - Data defining the place.
+   * @param {number} [limit=5] - The maximum number of results to return.
+   * @param {number|string} place.lat
+   * @param {number|string} place.lng
+   * @returns {object[]} - TODO
    */
-  sources.wikipedia = function(place) {
+  sources.wikipedia = function(place, limit) {
+    // NOTE https://www.mediawiki.org/wiki/API:Showing_nearby_wiki_information
+
     var results = [];
 
-    $.ajax({
+    // Abort if required parameters weren't passed.
+    if (!place || !(place.lat && place.lng)) {
+      return results;
+    }
 
+    limit = limit || 5;
+
+    $.ajax({
+      type: 'GET',
+      url: 'https://en.wikipedia.org/w/api.php',
+      data: {
+        action: 'query',
+        format: 'json',
+        prop: 'coordinates|pageimages|pageterms',  // Which properties to get for the queried pages.
+        generator: 'geosearch',
+        colimit: limit,
+        piprop: 'thumbnail',
+        pithumbsize: 144,  // Maximum thumbnail dimension
+        pilimit: limit,
+        wbptterms: 'description',
+        ggscoord: place.lat + '|' + place.lng,
+        ggsradius: 10000,  // Search radius in meters.
+        ggslimit: limit
+      },
+      dataType: 'jsonp'
     })
     .done(function(data) {
+      // TODO
       console.log(data);
     })
     .always(function() {
