@@ -21,11 +21,7 @@
 * - TODO
 *
 * Noteworthy Wikipedia API restrictions:
-* - DO identify the client with a `User-Agent` or `Api-User-Agent` header.
-* - ...I don't like this API's documentation.
-*
-* Noteworthy Yelp API restrictions:
-* - TODO
+* - None other than DO eliminate unnecessary API calls...?
 */
 
 (function(global) {
@@ -52,7 +48,8 @@
     var results = [];
 
     // Abort if required parameters weren't passed.
-    if (!place || !(place.lat && place.lng)) {
+    /*jshint eqnull:true */
+    if (!place || (place.lat == null || place.lng == null)) {
       return results;
     }
 
@@ -117,7 +114,8 @@
     var results = [];
 
     // Abort if required parameters weren't passed.
-    if (!place || !(place.lat && place.lng)) {
+    /*jshint eqnull:true */
+    if (!place || (place.lat == null || place.lng == null)) {
       return results;
     }
 
@@ -162,7 +160,7 @@
    * @param {number} [limit=5] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
-   * @returns {object[]} - TODO
+   * @returns {object[]} - Each element includes the page's url, title, coordinates, and a thumbnail image.
    */
   sources.wikipedia = function(place, limit) {
     // NOTE https://www.mediawiki.org/wiki/API:Showing_nearby_wiki_information
@@ -170,7 +168,8 @@
     var results = [];
 
     // Abort if required parameters weren't passed.
-    if (!place || !(place.lat && place.lng)) {
+    /*jshint eqnull:true */
+    if (!place || (place.lat == null || place.lng == null)) {
       return results;
     }
 
@@ -182,7 +181,7 @@
       data: {
         action: 'query',
         format: 'json',
-        prop: 'coordinates|pageimages|pageterms',  // Which properties to get for the queried pages.
+        prop: 'coordinates|pageimages|pageterms|info',  // Which properties to get for the queried pages.
         generator: 'geosearch',
         colimit: limit,
         piprop: 'thumbnail',
@@ -191,20 +190,37 @@
         wbptterms: 'description',
         ggscoord: place.lat + '|' + place.lng,
         ggsradius: 10000,  // Search radius in meters.
-        ggslimit: limit
+        ggslimit: limit,
+        inprop: 'url'  // Basic info properties.
       },
       dataType: 'jsonp'
     })
     .done(function(data) {
-      // TODO
-      console.log(data);
+      if (data.error) {
+        console.warn(data.error.info);
+      } else {
+        // If there are results...
+        if (data.query && data.query.pages) {
+          for (var page in data.query.pages) {
+            page = data.query.pages[page];
+
+            results.push({
+              url: page.fullurl,
+              title: page.title,
+              thumbnail: page.thumbnail,
+              coordinates: {
+                lat: page.coordinates[0].lat,
+                lng: page.coordinates[0].lon
+              }
+            });
+          }
+        }
+      }
     })
     .always(function() {
       return results;
     });
   };
-
-  sources.yelp = function(place) {};
 
   global.placeInfo = {
     sources: sources
