@@ -38,7 +38,6 @@
     centerOn: centerOn,
     closeInfoWindow: closeInfoWindow,
     getPlaceDetails: getPlaceDetails,
-    getStreetView: getStreetView,
     modifyMarker: modifyMarker,
     onBoundsChange: onBoundsChange,
     onMapDblClick: onMapDblClick,
@@ -112,7 +111,7 @@
 
   /**
    * Invokes the callback with a Google Maps PlaceResult.
-   * @callback {googlePlaceResults} cb
+   * @callback {googlePlaceDetailsResults} cb
    * @param {string} markerID
    * @returns {object} - A Google Maps PlaceResult object, with properties specified here: https://developers.google.com/maps/documentation/javascript/reference#PlaceResult
    */
@@ -127,13 +126,6 @@
     });
 
     cb(result);
-  }
-
-  /**
-   * TODO
-   */
-  function getStreetView(cb, markerID) {
-
   }
 
   /**

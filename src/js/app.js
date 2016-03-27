@@ -2,6 +2,7 @@
 
 // WORK ON THIS NEXT:
 // - Information for the info window (including error handling).
+// - Google Street View.
 
 // WORK ON THIS LATER:
 // - Allow the user to edit/set more things when creating/modifying markers.
