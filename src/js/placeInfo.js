@@ -17,9 +17,6 @@
 * - DO give visual attribution if displaying any non-venue data.
 * - DO NOT cache any data for more than 30 days.
 *
-* Noteworthy Google API restrictions:
-* - TODO
-*
 * Noteworthy Wikipedia API restrictions:
 * - None other than DO eliminate unnecessary API calls...?
 */
@@ -37,20 +34,22 @@
   }
 
   /**
-   * Returns an array of photos for the given place.
+   * Invokes the callback with an array of photos for the given place.
+   * @param {flickrResults} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=10] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
    * @returns {object[]} - Each element includes `src`, `url`, and `title` properties.
    */
-  sources.flickr = function(place, limit) {
+  sources.flickr = function(cb, place, limit) {
     var results = [];
 
     // Abort if required parameters weren't passed.
     /*jshint eqnull:true */
     if (!place || (place.lat == null || place.lng == null)) {
-      return results;
+      cb(results);
+      return;
     }
 
     limit = limit || 10;
@@ -98,25 +97,27 @@
       }
     })
     .always(function() {
-      return results;
+      cb(results);
     });
   };
 
   /**
-   * Returns an array of popular nearby venues.
+   * Invokes the callback with an array of popular nearby venues.
+   * @param {foursquareResults} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=5] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
    * @returns {object[]} - Each element includes "Compact Object" data documented here: https://developer.foursquare.com/docs/responses/venue
    */
-  sources.foursquare = function(place, limit) {
+  sources.foursquare = function(cb, place, limit) {
     var results = [];
 
     // Abort if required parameters weren't passed.
     /*jshint eqnull:true */
     if (!place || (place.lat == null || place.lng == null)) {
-      return results;
+      cb(results);
+      return;
     }
 
     limit = limit || 5;
@@ -147,22 +148,20 @@
       }
     })
     .always(function() {
-      return results;
+      cb(results);
     });
   };
 
-  // This one -might- be better off in map.js.
-  sources.google = function(place) {};
-
   /**
-   * Returns an array of wikipedia results for nearby places.
+   * Invokes the callback with an array of wikipedia results for nearby places.
+   * @param {wikipediaResults} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=5] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
    * @returns {object[]} - Each element includes the page's url, title, coordinates, and a thumbnail image.
    */
-  sources.wikipedia = function(place, limit) {
+  sources.wikipedia = function(cb, place, limit) {
     // NOTE https://www.mediawiki.org/wiki/API:Showing_nearby_wiki_information
 
     var results = [];
@@ -170,7 +169,8 @@
     // Abort if required parameters weren't passed.
     /*jshint eqnull:true */
     if (!place || (place.lat == null || place.lng == null)) {
-      return results;
+      cb(results);
+      return;
     }
 
     limit = limit || 5;
@@ -196,29 +196,24 @@
       dataType: 'jsonp'
     })
     .done(function(data) {
-      if (data.error) {
-        console.warn(data.error.info);
-      } else {
-        // If there are results...
-        if (data.query && data.query.pages) {
-          for (var page in data.query.pages) {
-            page = data.query.pages[page];
+      if (data.query && data.query.pages) {
+        for (var page in data.query.pages) {
+          page = data.query.pages[page];
 
-            results.push({
-              url: page.fullurl,
-              title: page.title,
-              thumbnail: page.thumbnail,
-              coordinates: {
-                lat: page.coordinates[0].lat,
-                lng: page.coordinates[0].lon
-              }
-            });
-          }
+          results.push({
+            url: page.fullurl,
+            title: page.title,
+            thumbnail: page.thumbnail,
+            coordinates: {
+              lat: page.coordinates[0].lat,
+              lng: page.coordinates[0].lon
+            }
+          });
         }
       }
     })
     .always(function() {
-      return results;
+      cb(results);
     });
   };
 

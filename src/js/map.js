@@ -24,7 +24,31 @@
       infoWindow,     // The Google Map InfoWindow.
       searchBoxID = 'places-search';
 
+  // Abort if google isn't found.
+  if (!google) {
+    console.warn('Google Maps API not found.');
+    global.map = null;  // Needs to be set explicitly since an element with id of "map" might be returned instead.
+    return;
+  }
+
   init();
+
+  global.map = {
+    addMarker: addMarker,
+    centerOn: centerOn,
+    closeInfoWindow: closeInfoWindow,
+    getPlaceDetails: getPlaceDetails,
+    getStreetView: getStreetView,
+    modifyMarker: modifyMarker,
+    onBoundsChange: onBoundsChange,
+    onMapDblClick: onMapDblClick,
+    onMarkerClick: onMarkerClick,
+    onPlacesChanged: onPlacesChanged,
+    openInfoWindow: openInfoWindow,
+    removeMarker: removeMarker,
+    setInfoWindowContent: setInfoWindowContent,
+    visibleOnMap: visibleOnMap
+  };
 
   /**
    * Creates a marker and adds it to the map.
@@ -37,7 +61,6 @@
     markerData.id = markerData.id.toString();
 
     var marker = new google.maps.Marker(markerData);
-
     markers.push(marker);
   }
 
@@ -88,51 +111,57 @@
   }
 
   /**
-   * Initializes the map and related services, and defines the global map property.
+   * Invokes the callback with a Google Maps PlaceResult.
+   * @callback {googlePlaceResults} cb
+   * @param {string} markerID
+   * @returns {object} - A Google Maps PlaceResult object, with properties specified here: https://developers.google.com/maps/documentation/javascript/reference#PlaceResult
+   */
+  function getPlaceDetails(cb, markerID) {
+    var result;
+
+    // The marker ID is the place ID as long as the marker isn't custom.
+    places.getDetails({placeId: markerID}, function(place, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        result = place;
+      }
+    });
+
+    cb(result);
+  }
+
+  /**
+   * TODO
+   */
+  function getStreetView(cb, markerID) {
+
+  }
+
+  /**
+   * Initializes the map and related services.
    */
   function init() {
-    if (google) {
-      var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)) || defaults.mapOptions,
-          inputElem = document.getElementById(searchBoxID);
+    var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)) || defaults.mapOptions,
+        inputElem = document.getElementById(searchBoxID);
 
-      // Initialize the map.
-      map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    // Initialize the map.
+    map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-      // Initialize the places service.
-      places = new google.maps.places.PlacesService(map);
+    // Initialize the places service.
+    places = new google.maps.places.PlacesService(map);
 
-      // Initialize the places search box.
-      searchBox = new google.maps.places.SearchBox(inputElem);
+    // Initialize the places search box.
+    searchBox = new google.maps.places.SearchBox(inputElem);
 
-      // Add the search box to the map controls.
-      map.controls[google.maps.ControlPosition.TOP_LEFT].push(inputElem);
+    // Add the search box to the map controls.
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(inputElem);
 
-      // Bias the search box results towards the map's viewport.
-      map.addListener('bounds_changed', function() {
-        searchBox.setBounds(map.getBounds());
-      });
+    // Bias the search box results towards the map's viewport.
+    map.addListener('bounds_changed', function() {
+      searchBox.setBounds(map.getBounds());
+    });
 
-      // Initialize the info window.
-      infoWindow = new google.maps.InfoWindow();
-
-      global.map = {
-        addMarker: addMarker,
-        centerOn: centerOn,
-        closeInfoWindow: closeInfoWindow,
-        modifyMarker: modifyMarker,
-        onBoundsChange: onBoundsChange,
-        onMapDblClick: onMapDblClick,
-        onMarkerClick: onMarkerClick,
-        onPlacesChanged: onPlacesChanged,
-        openInfoWindow: openInfoWindow,
-        removeMarker: removeMarker,
-        setInfoWindowContent: setInfoWindowContent,
-        visibleOnMap: visibleOnMap
-      };
-    } else {
-      console.warn('Google Maps API not found.');
-      global.map = null;  // Needs to be set explicitly since an element with id of "map" might be returned instead.
-    }
+    // Initialize the info window.
+    infoWindow = new google.maps.InfoWindow();
   }
 
   /**

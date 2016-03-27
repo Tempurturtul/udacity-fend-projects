@@ -98,6 +98,16 @@
   function AppViewModel() {
     var self = this;
 
+    // Abort if map isn't found.
+    if (!map) {
+      // The app isn't functional without map; replace the document body with an error message.
+      document.body.innerHTML = '<div class="fullpage-error">' +
+                                '<h1>Error</h1>' +
+                                '<p>Google Maps API not found.</p>' +
+                                '</div>';
+      return;
+    }
+
     // Method for creating or recreating a marker. Returns the marker.
     self.createOrRecreateMarker = function(marker) {
       var data;
@@ -587,38 +597,30 @@
      * Initializes the AppViewModel.
      */
     function init() {
-      if (map) {
-        var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
+      var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
 
-        arr.forEach(function(data) {
-          if (data.contents) {
-            var folder = createFolder(data);
-            self.markers.push(folder);
-          } else {
-            var marker = self.createOrRecreateMarker(data);
-            self.markers.push(marker);
-          }
-        });
+      arr.forEach(function(data) {
+        if (data.contents) {
+          var folder = createFolder(data);
+          self.markers.push(folder);
+        } else {
+          var marker = self.createOrRecreateMarker(data);
+          self.markers.push(marker);
+        }
+      });
 
-        // Call selectPlaces when the user selects a search result.
-        map.onPlacesChanged(selectPlaces);
+      // Call selectPlaces when the user selects a search result.
+      map.onPlacesChanged(selectPlaces);
 
-        // Call confirmCustomMarker when the user double clicks on the map.
-        map.onMapDblClick(confirmCustomMarker);
+      // Call confirmCustomMarker when the user double clicks on the map.
+      map.onMapDblClick(confirmCustomMarker);
 
-        // Subscribe updateVisibility to sidebar visibility filters.
-        self.sidebar.visibleOnly.subscribe(updateVisibility);
-        self.sidebar.search.subscribe(updateVisibility);
+      // Subscribe updateVisibility to sidebar visibility filters.
+      self.sidebar.visibleOnly.subscribe(updateVisibility);
+      self.sidebar.search.subscribe(updateVisibility);
 
-        // Call boundsChanged when the map bounds change.
-        map.onBoundsChange(boundsChanged);
-      } else {
-        // The app isn't functional without map; replace the document body with an error message.
-        document.body.innerHTML = '<div style="text-align:center; margin: 10px; border: solid red 1px;">' +
-                                  '<h1>Error</h1>' +
-                                  '<p>Google Maps API not found.</p>' +
-                                  '</div>';
-      }
+      // Call boundsChanged when the map bounds change.
+      map.onBoundsChange(boundsChanged);
     }
 
     /**
@@ -688,8 +690,9 @@
       // along with the default confirmed value.
       places.forEach(function(place) {
         // TODO Icon, etc.
+
         var marker = self.createOrRecreateMarker({
-          id: uuid.generate(),
+          id: place.place_id,
           title: place.name,
           position: {
             lat: place.geometry.location.lat(),
