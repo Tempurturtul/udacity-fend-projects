@@ -2,7 +2,6 @@
 
 // WORK ON THIS NEXT:
 // - Information for the info window (including error handling).
-// - Google Street View.
 
 // WORK ON THIS LATER:
 // - Allow the user to edit/set more things when creating/modifying markers.
@@ -64,6 +63,7 @@
         ]
       },
       map = global.map,
+      placeInfo = global.placeInfo,
       appViewModel = new AppViewModel();
 
   // Marker Model
@@ -71,12 +71,11 @@
     // NOTE Add new properties for use with map to the map.modifyMarker method.
 
     // TODO Additional (google.maps) properties to consider:
-    //  data.draggable - Makes the marker draggable.
     //  data.icon - Icon for the marker.
     //  data.label - First letter of this string is displayed on marker.
-    //  data.zIndex - Useful for sorting markers by folder depth.
 
     this.id = ko.observable(data.id.toString() || uuid.generate().toString());
+    this.description = ko.observable(data.description || '');
     this.position = ko.observable(data.position || {lat: 0, lng: 0});
     this.title = ko.observable(data.title || 'New Marker');
     this.visible = ko.observable(data.visible || true);
@@ -650,7 +649,7 @@
       // Open the info window on this marker.
       map.openInfoWindow(marker.id());
 
-      // Apply knockout bindings to the info window's newly created content.
+      // Apply knockout bindings to the newly created content.
       ko.applyBindings(appViewModel, content);
 
       /**
@@ -669,6 +668,7 @@
                                    'recreateMarker: $root.createOrRecreateMarker' +
                                  '} ' +
                                '}';
+
         return content;
       }
     }
@@ -716,21 +716,25 @@
   ko.components.register('info-window', {
     viewModel: function(params) {
       var self = this,
-          markerID = params.markerID,
-          getMarker = params.getMarker,
           getContainingArray = params.getContainingArray,
+          getMarker = params.getMarker,
+          markerID = params.markerID,
           recreateMarker = params.recreateMarker;
 
       self.marker = ko.observable(getMarker(markerID));
 
       var preChangeMarkerData = ko.toJS(self.marker());
 
-      self.displayInfo = ko.observable(true);
-      self.displayEdit = ko.observable(false);
+      self.editing = ko.observable(false);
 
-      self.modify = function() {
-        self.displayInfo(false);
-        self.displayEdit(true);
+      // The HTML string representing additional information on this marker from the source defined in `self.infoSource`.
+      self.info = ko.observable();
+
+      // The source from which to retrieve additional information. May be either 'google', 'flickr', 'foursquare', or 'wikipedia'.
+      self.infoSource = ko.observable('google');
+
+      self.edit = function() {
+        self.editing(true);
       };
 
       self.remove = function() {
@@ -757,24 +761,36 @@
         map.removeMarker(self.marker().id());
       };
 
+      self.restore = function() {
+        self.marker().title(preChangeMarkerData.title);
+        self.marker().description(preChangeMarkerData.description);
+        self.editing(false);
+      };
+
       self.update = function() {
         map.removeMarker(self.marker().id());
         recreateMarker(self.marker());
       };
 
-      self.restore = function() {
-        self.marker().title(preChangeMarkerData.title);
-        map.closeInfoWindow();
-      };
+      // The second argument tells the method to remove existing event listeners.
+      map.onInfoWindowCloseClick(function() {
+        if (self.editing()) {
+          self.restore();
+        }
+      }, true);
     },
 
-    template: '<div data-bind="visible: displayInfo">' +
+    template: '<div data-bind="visible: !editing()">' +
               '<p data-bind="text: marker().title"></p>' +
-              '<button data-bind="click: modify">Modify</button>' +
+              '<p data-bind="text: marker().description"></p>' +
+              '<div data-bind="html: info"></div>' +
+              '<button data-bind="click: edit">Modify</button>' +
               '<button data-bind="click: remove">Remove</button>'+
               '</div>' +
-              '<div data-bind="visible: displayEdit">' +
-              '<input data-bind="textInput: marker().title"></input>' +
+              // The edit display.
+              '<div data-bind="visible: editing">' +
+              '<input data-bind="textInput: marker().title" placeholder="Title"></input>' +
+              '<input data-bind="textInput: marker().description" placeholder="Description"></input>' +
               '<button data-bind="click: restore">Cancel</button>' +
               '<button data-bind="click: update">Confirm</button>' +
               '</div>'

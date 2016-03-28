@@ -40,6 +40,7 @@
     getPlaceDetails: getPlaceDetails,
     modifyMarker: modifyMarker,
     onBoundsChange: onBoundsChange,
+    onInfoWindowCloseClick: onInfoWindowCloseClick,
     onMapDblClick: onMapDblClick,
     onMarkerClick: onMarkerClick,
     onPlacesChanged: onPlacesChanged,
@@ -178,7 +179,20 @@
    * when the event fires.
    */
   function onBoundsChange(fn) {
-    map.addListener('bounds_changed', fn);
+    return map.addListener('bounds_changed', fn);
+  }
+
+  /**
+   * Adds a `closeclick` event listener to the info window and calls the function `fn`
+   * when the event fires. If removeExisting is true, removes existing `closeclick`
+   * event listeners.
+   */
+  function onInfoWindowCloseClick(fn, removeExisting) {
+    if (removeExisting) {
+      google.maps.event.clearListeners(infoWindow, 'closeclick');
+    }
+
+    return infoWindow.addListener('closeclick', fn);
   }
 
   /**
@@ -186,7 +200,7 @@
    * the event fires.
    */
   function onMapDblClick(fn) {
-    map.addListener('dblclick', fn);
+    return map.addListener('dblclick', fn);
   }
 
   /**
@@ -196,7 +210,7 @@
   function onMarkerClick(markerID, fn) {
     var marker = getMarker(markerID);
 
-    marker.addListener('click', fn);
+    return marker.addListener('click', fn);
   }
 
   /**
@@ -204,7 +218,7 @@
    * function `fn` when the event fires.
    */
   function onPlacesChanged(fn) {
-    searchBox.addListener('places_changed', fn);
+    return searchBox.addListener('places_changed', fn);
   }
 
   /**
