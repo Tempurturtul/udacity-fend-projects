@@ -112,9 +112,9 @@
 
   /**
    * Invokes the callback with a Google Maps PlaceResult.
-   * @callback {googlePlaceDetailsResults} cb
+   * @callback {infoReady} cb
    * @param {string} markerID
-   * @returns {object} - A Google Maps PlaceResult object, with properties specified here: https://developers.google.com/maps/documentation/javascript/reference#PlaceResult
+   * @returns {object} - Place details from Google Places.
    */
   function getPlaceDetails(cb, markerID) {
     var result;
@@ -122,6 +122,7 @@
     // The marker ID is the place ID as long as the marker isn't custom.
     places.getDetails({placeId: markerID}, function(place, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
+        // TODO Format result.
         result = place;
       }
     });

@@ -723,15 +723,46 @@
 
       self.marker = ko.observable(getMarker(markerID));
 
+      // Used to restore the marker's state if editing is canceled.
       var preChangeMarkerData = ko.toJS(self.marker());
 
+      // Additional info functionality.
+      self.additionalInfo = {
+        // The HTML string representing additional information.
+        info: ko.observable(),
+
+        refresh: function() {
+          var lat = self.marker().position().lat,
+              lng = self.marker().position().lng;
+
+          switch (self.additionalInfo.source()) {
+            case 'google':
+              map.getPlaceDetails(infoReady, markerID);
+              break;
+            case 'flickr':
+              placeInfo.sources.flickr(infoReady, {lat: lat, lng: lng});
+              break;
+            case 'foursquare':
+              placeInfo.sources.foursquare(infoReady, {lat: lat, lng: lng});
+              break;
+            case 'wikipedia':
+              placeInfo.sources.flickr(wikipedia, {lat: lat, lng: lng});
+              break;
+          }
+
+          function infoReady(info) {
+            // TODO
+            // Create an HTML string from info.
+            // Set self.additionalInfo.info to the HTML string.
+            console.log(info);
+          }
+        },
+
+        // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
+        source: ko.observable('google')
+      };
+
       self.editing = ko.observable(false);
-
-      // The HTML string representing additional information on this marker from the source defined in `self.infoSource`.
-      self.info = ko.observable();
-
-      // The source from which to retrieve additional information. May be either 'google', 'flickr', 'foursquare', or 'wikipedia'.
-      self.infoSource = ko.observable('google');
 
       self.edit = function() {
         self.editing(true);
@@ -772,18 +803,25 @@
         recreateMarker(self.marker());
       };
 
-      // The second argument tells the method to remove existing event listeners.
-      map.onInfoWindowCloseClick(function() {
-        if (self.editing()) {
-          self.restore();
-        }
-      }, true);
+      init();
+
+      function init() {
+        // The second argument tells the method to remove existing event listeners.
+        map.onInfoWindowCloseClick(function() {
+          if (self.editing()) {
+            self.restore();
+          }
+        }, true);
+
+        self.additionalInfo.refresh();
+      }
+
     },
 
     template: '<div data-bind="visible: !editing()">' +
               '<p data-bind="text: marker().title"></p>' +
               '<p data-bind="text: marker().description"></p>' +
-              '<div data-bind="html: info"></div>' +
+              '<div data-bind="html: additionalInfo.info"></div>' +
               '<button data-bind="click: edit">Modify</button>' +
               '<button data-bind="click: remove">Remove</button>'+
               '</div>' +

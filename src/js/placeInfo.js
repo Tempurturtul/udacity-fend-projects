@@ -35,12 +35,12 @@
 
   /**
    * Invokes the callback with an array of photos for the given place.
-   * @param {flickrResults} cb
+   * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=10] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
-   * @returns {object[]} - Each element includes `src`, `url`, and `title` properties.
+   * @returns {object[]} - Array of objects representing photos.
    */
   sources.flickr = function(cb, place, limit) {
     var results = [];
@@ -103,12 +103,12 @@
 
   /**
    * Invokes the callback with an array of popular nearby venues.
-   * @param {foursquareResults} cb
+   * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=5] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
-   * @returns {object[]} - Each element includes "Compact Object" data documented here: https://developer.foursquare.com/docs/responses/venue
+   * @returns {object[]} - Array of objects representing venues.
    */
   sources.foursquare = function(cb, place, limit) {
     var results = [];
@@ -142,6 +142,7 @@
           group = data.response.groups[group];
 
           for (var i = 0; i < group.items.length; i++) {
+            // TODO Format result.
             results.push(group.items[i].venue);
           }
         }
@@ -154,12 +155,12 @@
 
   /**
    * Invokes the callback with an array of wikipedia results for nearby places.
-   * @param {wikipediaResults} cb
+   * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=5] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
-   * @returns {object[]} - Each element includes the page's url, title, coordinates, and a thumbnail image.
+   * @returns {object[]} - Array of objects representing wikipedia results.
    */
   sources.wikipedia = function(cb, place, limit) {
     // NOTE https://www.mediawiki.org/wiki/API:Showing_nearby_wiki_information
@@ -200,6 +201,7 @@
         for (var page in data.query.pages) {
           page = data.query.pages[page];
 
+          // TODO Format result.
           results.push({
             url: page.fullurl,
             title: page.title,
