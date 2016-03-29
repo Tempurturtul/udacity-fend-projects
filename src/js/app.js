@@ -759,7 +759,7 @@
         },
 
         // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
-        source: ko.observable('wikipedia')
+        source: ko.observable('google')
       };
 
       self.editing = ko.observable(false);

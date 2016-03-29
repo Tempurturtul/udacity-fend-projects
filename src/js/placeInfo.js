@@ -223,23 +223,107 @@
     })
     .done(function(data) {
       if (data.query.pages) {
-        // TODO Sort results by proximity to searched place.
-        results = data.query.pages.map(function(page) {
-          return {
-            url: page.fullurl,
-            coordinates: page.coordinates,  // Object array with properties: `globe`, `lat`, `lon`, and `primary`.
-            lang: page.pagelanguage,
-            thumbnail: page.thumbnail,  // Object with properties: `height`, `width`, `source`.
-            title: page.title,
-            description: page.terms ? page.terms.description : undefined
-          };
-        });
+        results = data.query.pages
+          // Format.
+          .map(function(page) {
+            return {
+              url: page.fullurl,
+              coordinates: page.coordinates,  // Object array with properties: `globe`, `lat`, `lon`, and `primary`.
+              lang: page.pagelanguage,
+              thumbnail: page.thumbnail,  // Object with properties: `height`, `width`, `source`.
+              title: page.title,
+              description: page.terms ? page.terms.description : undefined
+            };
+          })
+          // Sort by proximity.
+          .reduce(function(sortedPages, currentPage) {
+            var currentCoords = getBestCoords(currentPage.coordinates),
+                currentDistance = getDistance(place, currentCoords);
+
+            // For each sorted page...
+            for (var i = 0, len = sortedPages.length; i < len; i++) {
+              var otherCoords = getBestCoords(sortedPages[i].coordinates),
+                  otherDistance = getDistance(place, otherCoords);
+
+              // If the current page is closer...
+              if (currentDistance < otherDistance) {
+                // Insert the current page before the other page in the results.
+                var start = sortedPages.indexOf(sortedPages[i]);
+                sortedPages.splice(start, 0, currentPage);
+                break;
+              }
+            }
+
+            // If the current page wasn't added to the sorted pages...
+            if (sortedPages.indexOf(currentPage) === -1) {
+              // Push it to the end.
+              sortedPages.push(currentPage);
+            }
+
+            return sortedPages;
+          }, []);
       }
     })
     .always(function() {
       cb(results);
     });
+
+    function getBestCoords(coords) {
+      var i, len;
+
+      if (coords.length === 1) {
+        return {
+          lat: coords[0].lat,
+          lng: coords[0].lon
+        };
+      } else {
+        for (i = 0, len = coords.length; i < len; i++) {
+          if (coords[i].primary) {
+            return {
+              lat: coords[i].lat,
+              lng: coords[i].lon
+            };
+          } else if (i === len - 1) {
+            // None of the available coordinates are marked as primary.
+            return {
+              lat: coords[0].lat,
+              lng: coords[0].lon
+            };
+          }
+        }
+      }
+    }
   };
+
+  /**
+   * Returns the distance in kilometers between two points. (From this Stack Overflow answer: http://stackoverflow.com/a/365853)
+   * @param {object} posA
+   * @param {object} posB
+   * @param {number} posA.lat
+   * @param {number} posA.lng
+   * @param {number} posB.lat
+   * @param {number} posB.lng
+   * @returns {number} - Distance in kilometers.
+   */
+  function getDistance(posA, posB) {
+    var earthRadius = 6371,  // km
+        dLat = toRad(posB.lat - posA.lat),
+        dLng = toRad(posB.lng - posA.lng),
+        aLat = toRad(posA.lat),
+        bLat = toRad(posB.lat);
+
+    // Using the haversine formula.
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(aLat) * Math.cos(bLat);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = earthRadius * c;
+
+    return d;
+
+    function toRad(degrees) {
+      return degrees * (Math.PI / 180);
+    }
+  }
 
   global.placeInfo = {
     sources: sources
