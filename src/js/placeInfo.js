@@ -34,7 +34,7 @@
   }
 
   /**
-   * Invokes the callback with an array of photos for the given place.
+   * Invokes the callback with an array of photos taken near the given place.
    * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=10] - The maximum number of results to return.
@@ -67,6 +67,7 @@
         content_type: 1,  // Photos only.
         lat: place.lat,
         lon: place.lng,
+        radius: 10,  // 10km.
         per_page: limit,  // We're only checking the first page, so this serves to limit total photos returned.
         format: 'json',
         nojsoncallback: 1  // The flickr API returns JSON with a function wrapper by default.
@@ -113,7 +114,7 @@
    * @param {number} [limit=5] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
-   * @returns {object[]} - Array of objects representing venues.
+   * @returns {object[]} - Array of objects representing venues sorted by proximity. (Defined here: https://developer.foursquare.com/docs/responses/venue)
    */
   sources.foursquare = function(cb, place, limit) {
     var results = [];
@@ -152,7 +153,6 @@
           group = data.response.groups[group];
 
           for (var i = 0; i < group.items.length; i++) {
-            // TODO Format result.
             results.push(group.items[i].venue);
           }
         }
@@ -167,12 +167,14 @@
    * Invokes the callback with an array of wikipedia results for nearby places.
    * @param {infoReady} cb
    * @param {object} place - Data defining the place.
-   * @param {number} [limit=5] - The maximum number of results to return.
+   * @param {object} [opts] - Additional options.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
-   * @returns {object[]} - Array of objects representing wikipedia results.
+   * @param {number} [opts.limit=5] - The maximum number of results to return.
+   * @param {number} [opts.maxDimension=144] - The maximum dimension for thumbnail images.
+   * @returns {object[]} - Array of objects representing wikipedia pages sorted by proximity.
    */
-  sources.wikipedia = function(cb, place, limit) {
+  sources.wikipedia = function(cb, place, opts) {
     // NOTE https://www.mediawiki.org/wiki/API:Showing_nearby_wiki_information
 
     var results = [];
@@ -189,44 +191,49 @@
       return;
     }
 
-    limit = limit || 5;
+    opts = opts || {};
+    opts.limit = opts.limit || 5;
+    opts.maxDimension = opts.maxDimension || 144;
 
     $.ajax({
       type: 'GET',
       url: 'https://en.wikipedia.org/w/api.php',
       data: {
+        // Main data.
         action: 'query',
         format: 'json',
+        // Action data.
         prop: 'coordinates|pageimages|pageterms|info',  // Which properties to get for the queried pages.
         generator: 'geosearch',
-        colimit: limit,
+        // Format data.
+        formatversion: 2,  // Formats output in a more modern way.
+        // Prop data.
+        colimit: opts.limit,
         piprop: 'thumbnail',
-        pithumbsize: 144,  // Maximum thumbnail dimension
-        pilimit: limit,
+        pithumbsize: opts.maxDimension,  // Maximum thumbnail dimension
+        pilimit: opts.limit,
         wbptterms: 'description',
+        inprop: 'url',  // Basic info properties.
+        // Generator data.
         ggscoord: place.lat + '|' + place.lng,
         ggsradius: 10000,  // Search radius in meters.
-        ggslimit: limit,
-        inprop: 'url'  // Basic info properties.
+        ggslimit: opts.limit
       },
       dataType: 'jsonp'
     })
     .done(function(data) {
-      if (data.query && data.query.pages) {
-        for (var page in data.query.pages) {
-          page = data.query.pages[page];
-
-          // TODO Format result.
-          results.push({
+      if (data.query.pages) {
+        // TODO Sort results by proximity to searched place.
+        results = data.query.pages.map(function(page) {
+          return {
             url: page.fullurl,
+            coordinates: page.coordinates,  // Object array with properties: `globe`, `lat`, `lon`, and `primary`.
+            lang: page.pagelanguage,
+            thumbnail: page.thumbnail,  // Object with properties: `height`, `width`, `source`.
             title: page.title,
-            thumbnail: page.thumbnail,
-            coordinates: {
-              lat: page.coordinates[0].lat,
-              lng: page.coordinates[0].lon
-            }
-          });
-        }
+            description: page.terms ? page.terms.description : undefined
+          };
+        });
       }
     })
     .always(function() {

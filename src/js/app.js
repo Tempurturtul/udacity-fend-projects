@@ -746,7 +746,7 @@
               placeInfo.sources.foursquare(infoReady, {lat: lat, lng: lng});
               break;
             case 'wikipedia':
-              placeInfo.sources.flickr(wikipedia, {lat: lat, lng: lng});
+              placeInfo.sources.wikipedia(infoReady, {lat: lat, lng: lng});
               break;
           }
 
@@ -754,12 +754,12 @@
             // TODO
             // Create an HTML string from info.
             // Set self.additionalInfo.info to the HTML string.
-            
+            console.log(info);
           }
         },
 
         // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
-        source: ko.observable('google')
+        source: ko.observable('wikipedia')
       };
 
       self.editing = ko.observable(false);
