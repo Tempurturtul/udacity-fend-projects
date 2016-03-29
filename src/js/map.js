@@ -112,22 +112,125 @@
 
   /**
    * Invokes the callback with a Google Maps PlaceResult.
-   * @callback {infoReady} cb
+   * @param {infoReady} cb
    * @param {string} markerID
+   * @param {object} [maxPhotoDimensions={maxWidth: 300, maxHeight: 300}]
    * @returns {object} - Place details from Google Places.
    */
-  function getPlaceDetails(cb, markerID) {
+  function getPlaceDetails(cb, markerID, maxPhotoDimensions) {
     var result;
 
-    // The marker ID is the place ID as long as the marker isn't custom.
-    places.getDetails({placeId: markerID}, function(place, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        // TODO Format result.
-        result = place;
-      }
-    });
+    // Abort if required parameters weren't passed.
+    if (typeof cb !== 'function') {
+      console.warn('No callback passed to `map.getPlaceDetails`.');
+      return;
+    }
+    /*jshint eqnull:true */
+    if (markerID == null) {
+      console.warn('No marker ID passed to `map.getPlaceDetails`.');
+      cb(result);
+      return;
+    }
 
-    cb(result);
+    maxPhotoDimensions = maxPhotoDimensions || {maxWidth: 300, maxHeight: 300};
+
+    // The marker ID is the place ID as long as the marker isn't custom.
+    places.getDetails({placeId: markerID}, detailsCb);
+
+    function detailsCb(place, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        result = formatDetails(place);
+      }
+
+      cb(result);
+    }
+
+    function formatDetails(place) {
+      var details = {};
+
+      details.address = place.formatted_address;
+      details.ratings = formatAspects(place.aspects);
+      details.phone = place.formatted_phone_number;
+      details.internationalPhone = place.international_phone_number;
+      details.attributions = place.html_attributions;  // String array.
+      details.icon = place.icon;
+      details.name = place.name;  // NOTE Possibly raw text as typed by user.
+      details.permanentlyClosed = place.permanently_closed;
+      details.photos = formatPhotos(place.photos);
+      details.price = formatPriceLevel(place.price_level);
+      details.rating = place.rating;  // 1.0 to 5.0
+      details.reviews = formatReviews(place.reviews);
+      details.types = place.types;  // String array. Example: ['restaurant', 'establishment']
+      details.googlePage = place.url;  // Official Google-owned page for the place.
+      details.utcOffset = place.utc_offset;
+      details.website = place.website;  // The place's website. For example: a business' homepage.
+
+      return details;
+    }
+
+    function formatAspects(aspects) {
+      if (!Array.isArray(aspects)) {
+        return;
+      }
+
+      return aspects.map(function(aspect) {
+        return {
+          type: aspect.type,
+          rating: aspect.rating
+        };
+      });
+    }
+
+    function formatPhotos(photos) {
+      if (!Array.isArray(photos)) {
+        return;
+      }
+
+      return photos.map(function(photo) {
+        return {
+          src: photo.getUrl({  // Either maxHeight or maxWidth must be provided.
+            maxHeight: maxPhotoDimensions.maxHeight,
+            maxWidth: maxPhotoDimensions.maxWidth
+          }),
+          attributions: photo.html_attributions
+        };
+      });
+    }
+
+    function formatPriceLevel(priceLevel) {
+      switch (priceLevel) {
+        case 0:
+          return 'Free';
+        case 1:
+          return 'Inexpensive';
+        case 2:
+          return 'Moderate';
+        case 3:
+          return 'Expensive';
+        case 4:
+          return 'Very Expensive';
+        default:
+          return;
+      }
+    }
+
+    function formatReviews(reviews) {
+      if (!Array.isArray(reviews)) {
+        return;
+      }
+
+      return reviews.map(function(review) {
+        return {
+          ratings: formatAspects(review.aspects),
+          author: {
+            name: review.author_name,
+            profile: review.author_url
+          },
+          language: review.language,
+          text: review.text
+        };
+      });
+    }
   }
 
   /**

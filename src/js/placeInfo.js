@@ -46,8 +46,13 @@
     var results = [];
 
     // Abort if required parameters weren't passed.
+    if (typeof cb !== 'function') {
+      console.warn('No callback passed to `sources.flickr`.');
+      return;
+    }
     /*jshint eqnull:true */
     if (!place || (place.lat == null || place.lng == null)) {
+      console.warn('Insufficient place details passed to `sources.flickr`.');
       cb(results);
       return;
     }
@@ -114,8 +119,13 @@
     var results = [];
 
     // Abort if required parameters weren't passed.
+    if (typeof cb !== 'function') {
+      console.warn('No callback passed to `sources.foursquare`.');
+      return;
+    }
     /*jshint eqnull:true */
     if (!place || (place.lat == null || place.lng == null)) {
+      console.warn('Insufficient place details passed to `sources.foursquare`.');
       cb(results);
       return;
     }
@@ -168,8 +178,13 @@
     var results = [];
 
     // Abort if required parameters weren't passed.
+    if (typeof cb !== 'function') {
+      console.warn('No callback passed to `sources.wikipedia`.');
+      return;
+    }
     /*jshint eqnull:true */
     if (!place || (place.lat == null || place.lng == null)) {
+      console.warn('Insufficient place details passed to `sources.wikipedia`.');
       cb(results);
       return;
     }
