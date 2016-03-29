@@ -149,13 +149,11 @@
       var details = {};
 
       details.address = place.formatted_address;
-      details.ratings = formatAspects(place.aspects);
       details.phone = place.formatted_phone_number;
       details.internationalPhone = place.international_phone_number;
       details.attributions = place.html_attributions;  // String array.
       details.icon = place.icon;
       details.name = place.name;  // NOTE Possibly raw text as typed by user.
-      details.permanentlyClosed = place.permanently_closed;
       details.photos = formatPhotos(place.photos);
       details.price = formatPriceLevel(place.price_level);
       details.rating = place.rating;  // 1.0 to 5.0
@@ -221,7 +219,7 @@
 
       return reviews.map(function(review) {
         return {
-          ratings: formatAspects(review.aspects),
+          aspects: formatAspects(review.aspects),
           author: {
             name: review.author_name,
             profile: review.author_url

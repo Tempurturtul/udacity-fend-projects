@@ -754,7 +754,7 @@
             // TODO
             // Create an HTML string from info.
             // Set self.additionalInfo.info to the HTML string.
-            console.log(info);
+            
           }
         },
 
