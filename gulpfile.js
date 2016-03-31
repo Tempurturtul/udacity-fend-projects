@@ -242,6 +242,11 @@ gulp.task('minify:html', function() {
     .pipe(plumber())
     .pipe(htmlmin({
       removeComments: true,
+      ignoreCustomComments: [
+        // Ignore ko comments.
+        /^\s+ko/,
+        /\/ko\s+$/
+      ],
       collapseWhitespace: true,
       minifyJS: true,  // uglify
       minifyCSS: true  // clean-css
