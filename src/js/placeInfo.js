@@ -23,15 +23,9 @@
 
 (function(global) {
 
-  var $ = global.jQuery,
+  var $,  // jQuery
       sources = {};
 
-  // Abort if jquery isn't found.
-  if (!$) {
-    console.warn('jQuery not found.');
-    global.placeInfo = null;
-    return;
-  }
 
   /**
    * Invokes the callback with an array of photos taken near the given place.
@@ -295,6 +289,26 @@
     }
   };
 
+
+  global.placeInfo = {
+    init: init,
+    sources: sources
+  };
+
+
+  /**
+   * Initializes place info.
+   * (Currently, just sets the `$` variable and throws an error if it's undefined.)
+   */
+  function init() {
+    $ = global.jQuery;
+
+    // Throw an error if jquery isn't found.
+    if (!$) {
+      throw new Error('jQuery not found.');
+    }
+  }
+
   /**
    * Returns the distance in kilometers between two points. (From this Stack Overflow answer: http://stackoverflow.com/a/365853)
    * @param {object} posA
@@ -324,8 +338,4 @@
       return degrees * (Math.PI / 180);
     }
   }
-
-  global.placeInfo = {
-    sources: sources
-  };
 })(this);

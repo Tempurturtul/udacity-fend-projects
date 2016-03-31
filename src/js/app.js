@@ -11,8 +11,7 @@
 // - Styling.
 
 (function(global) {
-  var ko = global.ko,
-      uuid = global.UUID,
+  var window = global.window,
       document = global.document,
       localStorage = global.localStorage,
       storageKeys = {
@@ -62,9 +61,14 @@
           }
         ]
       },
-      map = global.map,
-      placeInfo = global.placeInfo,
-      appViewModel = new AppViewModel();
+      ko,
+      uuid,
+      map,
+      placeInfo,
+      appViewModel;
+
+  // Initialize the app once all resources are finished loading.
+  window.addEventListener('load', init);
 
   // Marker Model
   function Marker(data) {
@@ -97,16 +101,6 @@
   // App View Model
   function AppViewModel() {
     var self = this;
-
-    // Abort if map isn't found.
-    if (!map) {
-      // The app isn't functional without map; replace the document body with an error message.
-      document.body.innerHTML = '<div class="fullpage-error">' +
-                                '<h1>Error</h1>' +
-                                '<p>Google Maps API not found.</p>' +
-                                '</div>';
-      return;
-    }
 
     // Method for creating or recreating a marker. Returns the marker.
     self.createOrRecreateMarker = function(marker) {
@@ -712,127 +706,166 @@
     }
   }
 
-  // Info-Window Custom Component
-  ko.components.register('info-window', {
-    viewModel: function(params) {
-      var self = this,
-          getContainingArray = params.getContainingArray,
-          getMarker = params.getMarker,
-          markerID = params.markerID,
-          recreateMarker = params.recreateMarker;
+  function init() {
+    ko = global.ko;
+    uuid = global.UUID;
+    map = global.map;
+    placeInfo = global.placeInfo;
 
-      self.marker = ko.observable(getMarker(markerID));
+    // Try to initialize place info.
+    try {
+      placeInfo.init();
+    }
+    catch (e) {
+      console.warn(e.name, ':', e.message);
 
-      // Used to restore the marker's state if editing is canceled.
-      var preChangeMarkerData = ko.toJS(self.marker());
+      // Set the `placeInfo` variable to null if an error was thrown.
+      placeInfo = null;
+    }
 
-      // Additional info functionality.
-      self.additionalInfo = {
-        // The HTML string representing additional information.
-        info: ko.observable(),
+    // Try to initialize the map.
+    try {
+      map.init();
+    }
+    catch (e) {
+      console.error(e.name, ':', e.message);
 
-        refresh: function() {
-          var lat = self.marker().position().lat,
-              lng = self.marker().position().lng;
+      // The app isn't functional without the map; replace the document body with an error message.
+      document.body.innerHTML = '<div class="fullpage-error">' +
+                                '<h1>Error</h1>' +
+                                '<p>Google Maps API not found.</p>' +
+                                '</div>';
 
-          switch (self.additionalInfo.source()) {
-            case 'google':
-              map.getPlaceDetails(infoReady, markerID);
-              break;
-            case 'flickr':
-              placeInfo.sources.flickr(infoReady, {lat: lat, lng: lng});
-              break;
-            case 'foursquare':
-              placeInfo.sources.foursquare(infoReady, {lat: lat, lng: lng});
-              break;
-            case 'wikipedia':
-              placeInfo.sources.wikipedia(infoReady, {lat: lat, lng: lng});
-              break;
+      // Abort initialization.
+      return;
+    }
+
+    // The map was successfully initialized.
+
+    appViewModel = new AppViewModel();
+
+    // Info-Window Custom Component
+    ko.components.register('info-window', {
+      viewModel: function(params) {
+        var self = this,
+            getContainingArray = params.getContainingArray,
+            getMarker = params.getMarker,
+            markerID = params.markerID,
+            recreateMarker = params.recreateMarker;
+
+        self.marker = ko.observable(getMarker(markerID));
+
+        // Used to restore the marker's state if editing is canceled.
+        var preChangeMarkerData = ko.toJS(self.marker());
+
+        // Additional info functionality.
+        self.additionalInfo = {
+          // The HTML string representing additional information.
+          info: ko.observable(),
+
+          refresh: function() {
+            var lat = self.marker().position().lat,
+                lng = self.marker().position().lng;
+
+            switch (self.additionalInfo.source()) {
+              case 'google':
+                map.getPlaceDetails(infoReady, markerID);
+                break;
+              case 'flickr':
+                placeInfo.sources.flickr(infoReady, {lat: lat, lng: lng});
+                break;
+              case 'foursquare':
+                placeInfo.sources.foursquare(infoReady, {lat: lat, lng: lng});
+                break;
+              case 'wikipedia':
+                placeInfo.sources.wikipedia(infoReady, {lat: lat, lng: lng});
+                break;
+            }
+
+            function infoReady(info) {
+              // TODO
+              // Create an HTML string from info.
+              // Set self.additionalInfo.info to the HTML string.
+              console.log(info);
+            }
+          },
+
+          // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
+          source: ko.observable('google')
+        };
+
+        self.editing = ko.observable(false);
+
+        self.edit = function() {
+          self.editing(true);
+        };
+
+        self.remove = function() {
+          // Remove the marker from the array it's a part of.
+          var obsArr = getContainingArray(self.marker()),
+              arr = obsArr(),
+              index;
+
+          if (arr.length && arr[0].marker) {
+            // The pending array. Markers are contained within the marker property.
+            index = arr
+              .map(function(data) {
+                return data.marker;
+              })
+              .indexOf(self.marker());
+          } else {
+            index = arr.indexOf(self.marker());
           }
 
-          function infoReady(info) {
-            // TODO
-            // Create an HTML string from info.
-            // Set self.additionalInfo.info to the HTML string.
-            console.log(info);
-          }
-        },
+          arr.splice(index, 1);
+          obsArr(arr);
 
-        // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
-        source: ko.observable('google')
-      };
+          // Remove the marker from the map.
+          map.removeMarker(self.marker().id());
+        };
 
-      self.editing = ko.observable(false);
+        self.restore = function() {
+          self.marker().title(preChangeMarkerData.title);
+          self.marker().description(preChangeMarkerData.description);
+          self.editing(false);
+        };
 
-      self.edit = function() {
-        self.editing(true);
-      };
+        self.update = function() {
+          map.removeMarker(self.marker().id());
+          recreateMarker(self.marker());
+        };
 
-      self.remove = function() {
-        // Remove the marker from the array it's a part of.
-        var obsArr = getContainingArray(self.marker()),
-            arr = obsArr(),
-            index;
+        init();
 
-        if (arr.length && arr[0].marker) {
-          // The pending array. Markers are contained within the marker property.
-          index = arr
-            .map(function(data) {
-              return data.marker;
-            })
-            .indexOf(self.marker());
-        } else {
-          index = arr.indexOf(self.marker());
+        function init() {
+          // The second argument tells the method to remove existing event listeners.
+          map.onInfoWindowCloseClick(function() {
+            if (self.editing()) {
+              self.restore();
+            }
+          }, true);
+
+          self.additionalInfo.refresh();
         }
 
-        arr.splice(index, 1);
-        obsArr(arr);
+      },
 
-        // Remove the marker from the map.
-        map.removeMarker(self.marker().id());
-      };
+      template: '<div data-bind="visible: !editing()">' +
+                '<p data-bind="text: marker().title"></p>' +
+                '<p data-bind="text: marker().description"></p>' +
+                '<div data-bind="html: additionalInfo.info"></div>' +
+                '<button data-bind="click: edit">Modify</button>' +
+                '<button data-bind="click: remove">Remove</button>'+
+                '</div>' +
+                // The edit display.
+                '<div data-bind="visible: editing">' +
+                '<input data-bind="textInput: marker().title" placeholder="Title"></input>' +
+                '<input data-bind="textInput: marker().description" placeholder="Description"></input>' +
+                '<button data-bind="click: restore">Cancel</button>' +
+                '<button data-bind="click: update">Confirm</button>' +
+                '</div>'
+    });
 
-      self.restore = function() {
-        self.marker().title(preChangeMarkerData.title);
-        self.marker().description(preChangeMarkerData.description);
-        self.editing(false);
-      };
-
-      self.update = function() {
-        map.removeMarker(self.marker().id());
-        recreateMarker(self.marker());
-      };
-
-      init();
-
-      function init() {
-        // The second argument tells the method to remove existing event listeners.
-        map.onInfoWindowCloseClick(function() {
-          if (self.editing()) {
-            self.restore();
-          }
-        }, true);
-
-        self.additionalInfo.refresh();
-      }
-
-    },
-
-    template: '<div data-bind="visible: !editing()">' +
-              '<p data-bind="text: marker().title"></p>' +
-              '<p data-bind="text: marker().description"></p>' +
-              '<div data-bind="html: additionalInfo.info"></div>' +
-              '<button data-bind="click: edit">Modify</button>' +
-              '<button data-bind="click: remove">Remove</button>'+
-              '</div>' +
-              // The edit display.
-              '<div data-bind="visible: editing">' +
-              '<input data-bind="textInput: marker().title" placeholder="Title"></input>' +
-              '<input data-bind="textInput: marker().description" placeholder="Description"></input>' +
-              '<button data-bind="click: restore">Cancel</button>' +
-              '<button data-bind="click: update">Confirm</button>' +
-              '</div>'
-  });
-
-  ko.applyBindings(appViewModel);
+    ko.applyBindings(appViewModel);
+  }
 })(this);

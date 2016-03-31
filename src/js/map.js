@@ -3,41 +3,20 @@
 (function(global) {
   var document = global.document,
       localStorage = global.localStorage,
-      google = global.google,
-      storageKeys = {
-        MAPOPTIONS: 'mapOptions'
-      },
-      defaults = {
-        mapOptions: {
-          // TODO Additional properties to consider:
-          //  backgroundColor - The background color visible when panning.
-          //  mapTypeId - The map type. (HYBRID, ROADMAP, SATELLITE, TERRAIN)
-          center: {lat: 35.689, lng: 139.692},  // Tokyo, Japan.
-          zoom: 10,
-          disableDoubleClickZoom: true
-        }
-      },
+      google,         // The Google Maps API.
       map,            // The Google Map.
       markers = [],   // The Google Map Markers.
       places,         // The Google Places Service.
       searchBox,      // The Google Places SearchBox.
-      infoWindow,     // The Google Map InfoWindow.
-      searchBoxID = 'places-search';
+      infoWindow;     // The Google Map InfoWindow.
 
-  // Abort if google isn't found.
-  if (!google) {
-    console.warn('Google Maps API not found.');
-    global.map = null;  // Needs to be set explicitly since an element with id of "map" might be returned instead.
-    return;
-  }
-
-  init();
 
   global.map = {
     addMarker: addMarker,
     centerOn: centerOn,
     closeInfoWindow: closeInfoWindow,
     getPlaceDetails: getPlaceDetails,
+    init: init,
     modifyMarker: modifyMarker,
     onBoundsChange: onBoundsChange,
     onInfoWindowCloseClick: onInfoWindowCloseClick,
@@ -49,6 +28,7 @@
     setInfoWindowContent: setInfoWindowContent,
     visibleOnMap: visibleOnMap
   };
+
 
   /**
    * Creates a marker and adds it to the map.
@@ -235,28 +215,22 @@
    * Initializes the map and related services.
    */
   function init() {
-    var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)) || defaults.mapOptions,
-        inputElem = document.getElementById(searchBoxID);
+    google = global.google;
 
-    // Initialize the map.
-    map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    // Throw an error if google isn't found.
+    if (!google) {
+      throw new Error('Google Maps API not found.');
+    }
 
-    // Initialize the places service.
-    places = new google.maps.places.PlacesService(map);
+    // Throw an error if the google map wasn't initialized.
+    if (!global._map) {
+      throw new Error('Google Map not initialized.');
+    }
 
-    // Initialize the places search box.
-    searchBox = new google.maps.places.SearchBox(inputElem);
-
-    // Add the search box to the map controls.
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(inputElem);
-
-    // Bias the search box results towards the map's viewport.
-    map.addListener('bounds_changed', function() {
-      searchBox.setBounds(map.getBounds());
-    });
-
-    // Initialize the info window.
-    infoWindow = new google.maps.InfoWindow();
+    map = _map.map;
+    places = _map.places;
+    searchBox = _map.searchBox;
+    infoWindow = _map.infoWindow;
   }
 
   /**
