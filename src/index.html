@@ -68,6 +68,11 @@
     <!-- build:js scripts.js async -->
     <script async src="js/placeInfo.js"></script>
     <script async src="js/map.js"></script>
+    <script async src="js/models/folder.js"></script>
+    <script async src="js/models/marker.js"></script>
+    <script async src="js/viewmodels/sidebar.js"></script>
+    <script async src="js/viewmodels/markersForm.js"></script>
+    <script async src="js/viewmodels/main.js"></script>
     <script async src="js/app.js"></script>
     <!-- endbuild -->
 
@@ -93,7 +98,7 @@
       <ul class="marker-list" data-bind="template: { name: 'listTemplate', foreach: markers }">
       </ul>
       <form data-bind="submit: sidebar.addFolder">
-        <input id="new-folder-name" type="text" placeholder="New Folder">
+        <input data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">
       </form>
     </header>
 
