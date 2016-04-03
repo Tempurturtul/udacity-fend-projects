@@ -91,14 +91,16 @@
   }
 
   /**
-   * Invokes the callback with a Google Maps PlaceResult.
+   * Invokes the callback with an object including a Google Maps PlaceResult.
    * @param {infoReady} cb
    * @param {string} markerID
    * @param {object} [maxPhotoDimensions={maxWidth: 300, maxHeight: 300}]
-   * @returns {object} - Place details from Google Places.
    */
   function getPlaceDetails(cb, markerID, maxPhotoDimensions) {
-    var result;
+    var info = {
+      source: 'google',
+      results: []
+    };
 
     // Abort if required parameters weren't passed.
     if (typeof cb !== 'function') {
@@ -108,7 +110,7 @@
     /*jshint eqnull:true */
     if (markerID == null) {
       console.warn('No marker ID passed to `map.getPlaceDetails`.');
-      cb(result);
+      cb(info);
       return;
     }
 
@@ -119,10 +121,10 @@
 
     function detailsCb(place, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        result = formatDetails(place);
+        info.results.push(formatDetails(place));
       }
 
-      cb(result);
+      cb(info);
     }
 
     function formatDetails(place) {

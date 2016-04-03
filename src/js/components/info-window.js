@@ -11,46 +11,129 @@
           getContainingArray = params.getContainingArray,
           getMarker = params.getMarker,
           markerID = params.markerID,
-          recreateMarker = params.recreateMarker;
+          recreateMarker = params.recreateMarker,
+          infoCache = {},  // Cached information retrieved from third party APIs.
+          infoLifetime = 1200;  // Seconds to wait before updating cached info.
 
       self.marker = ko.observable(getMarker(markerID));
 
       // Used to restore the marker's state if editing is canceled.
       var preChangeMarkerData = ko.toJS(self.marker());
 
-      self.editing = ko.observable(false);
-
       self.edit = function() {
         self.editing(true);
       };
+
+      self.editing = ko.observable(false);
 
       // The HTML string representing additional information.
       self.info = ko.observable();
 
       self.refresh = function() {
-        var lat = self.marker().position().lat,
-            lng = self.marker().position().lng;
+        var place = {
+              lat: self.marker().position().lat,
+              lng: self.marker().position().lng
+            },
+            cached;
 
         switch (self.source()) {
           case 'google':
+            // Check for fresh cached info.
+            cached = checkCache('google', markerID);
+
+            // If fresh cached info is found, use it.
+            if (cached) {
+              infoReady(cached.info);
+              break;
+            }
+
+            // Either no cached info or stale cached info.
+
+            // Retrieve fresh info.
             map.getPlaceDetails(infoReady, markerID);
             break;
           case 'flickr':
-            placeInfo.sources.flickr(infoReady, {lat: lat, lng: lng});
+            // Check for fresh cached info.
+            cached = checkCache('flickr', JSON.stringify(place));
+
+            // If fresh cached info is found, use it.
+            if (cached) {
+              infoReady(cached.info);
+              break;
+            }
+
+            // Either no cached info or stale cached info.
+
+            // Retrieve fresh info.
+            placeInfo.sources.flickr(infoReady, place);
             break;
           case 'foursquare':
-            placeInfo.sources.foursquare(infoReady, {lat: lat, lng: lng});
+            // Check for fresh cached info.
+            cached = checkCache('foursquare', JSON.stringify(place));
+
+            // If fresh cached info is found, use it.
+            if (cached) {
+              infoReady(cached.info);
+              break;
+            }
+
+            // Either no cached info or stale cached info.
+
+            // Retrieve fresh info.
+            placeInfo.sources.foursquare(infoReady, place);
             break;
           case 'wikipedia':
-            placeInfo.sources.wikipedia(infoReady, {lat: lat, lng: lng});
+            // Check for fresh cached info.
+            cached = checkCache('wikipedia', JSON.stringify(place));
+
+            // If fresh cached info is found, use it.
+            if (cached) {
+              infoReady(cached.info);
+              break;
+            }
+
+            // Either no cached info or stale cached info.
+
+            // Retrieve fresh info.
+            placeInfo.sources.wikipedia(infoReady, place);
             break;
         }
 
+        /**
+         * Checks the info cache for fresh info. Returns the info if it exists and is fresh.
+         */
+        function checkCache(source, identifier) {
+          if (infoCache[source] && infoCache[source][identifier]) {
+            var cachedInfo = infoCache[source][identifier],
+                age = (Date.now() - cachedInfo.timestamp) / 1000;  // In seconds.
+
+            // Check if the info is fresh.
+            if (age < infoLifetime) {
+              return cachedInfo;
+            }
+          }
+
+          // Either no cached info or stale cached info.
+          return false;
+        }
+
         function infoReady(info) {
-          // TODO
-          // Create an HTML string from info.
-          // Set self.info to the HTML string.
-          console.log(info);
+          // Cache the info.
+          cacheInfo(info);
+
+          // Abort if the user has changed the source since the info was requested.
+          if (info.source !== self.source()) {
+            console.log('Source changed, aborting infoReady...');
+            return;
+          }
+
+          var htmlStr = '';
+
+          // TODO Build the html string.
+          console.log('Build html string from:', info);
+
+          // Set info to the html string.
+          self.info(htmlStr);
         }
       };
 
@@ -93,6 +176,20 @@
       };
 
       init();
+
+      function cacheInfo(info) {
+        // Use an identifier created from the place property. (Small object or marker id.)
+        var cacheIdentifier = typeof info.place === 'object' ? JSON.stringify(info.place) : info.place;
+
+        // Ensure a cache exists for the source.
+        infoCache[info.source] = infoCache[info.source] || {};
+
+        // Add the info to the cache along with a timestamp.
+        infoCache[info.source][cacheIdentifier] = {
+          info: info,
+          timestamp: Date.now()
+        };
+      }
 
       function init() {
         // The second argument tells the method to remove existing event listeners.

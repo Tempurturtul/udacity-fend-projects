@@ -28,16 +28,18 @@
 
 
   /**
-   * Invokes the callback with an array of photos taken near the given place.
+   * Invokes the callback with an object including an array of photos taken near the given place.
    * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=10] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
-   * @returns {object[]} - Array of objects representing photos.
    */
   sources.flickr = function(cb, place, limit) {
-    var results = [];
+    var info = {
+      source: 'flickr',
+      results: []
+    };
 
     // Abort if required parameters weren't passed.
     if (typeof cb !== 'function') {
@@ -47,7 +49,7 @@
     /*jshint eqnull:true */
     if (!place || (place.lat == null || place.lng == null)) {
       console.warn('Insufficient place details passed to `sources.flickr`.');
-      cb(results);
+      cb(info);
       return;
     }
 
@@ -92,26 +94,30 @@
                                  .replace('{photo-id}', photo.id);
 
           // Add the result to the returned results array.
-          results.push(result);
+          info.results.push(result);
         });
       }
     })
     .always(function() {
-      cb(results);
+      cb(info);
     });
   };
 
   /**
-   * Invokes the callback with an array of popular nearby venues.
+   * Invokes the callback with an object including an array of popular nearby venues.
    * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=5] - The maximum number of results to return.
    * @param {number|string} place.lat
    * @param {number|string} place.lng
-   * @returns {object[]} - Array of objects representing venues sorted by proximity. (Defined here: https://developer.foursquare.com/docs/responses/venue)
    */
   sources.foursquare = function(cb, place, limit) {
-    var results = [];
+    // Results defined here: https://developer.foursquare.com/docs/responses/venue
+
+    var info = {
+      source: 'foursquare',
+      results: []
+    };
 
     // Abort if required parameters weren't passed.
     if (typeof cb !== 'function') {
@@ -121,7 +127,7 @@
     /*jshint eqnull:true */
     if (!place || (place.lat == null || place.lng == null)) {
       console.warn('Insufficient place details passed to `sources.foursquare`.');
-      cb(results);
+      cb(info);
       return;
     }
 
@@ -147,18 +153,18 @@
           group = data.response.groups[group];
 
           for (var i = 0; i < group.items.length; i++) {
-            results.push(group.items[i].venue);
+            info.results.push(group.items[i].venue);
           }
         }
       }
     })
     .always(function() {
-      cb(results);
+      cb(info);
     });
   };
 
   /**
-   * Invokes the callback with an array of wikipedia results for nearby places.
+   * Invokes the callback with an object including an array of wikipedia results for nearby places (sorted by proximity).
    * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {object} [opts] - Additional options.
@@ -166,12 +172,14 @@
    * @param {number|string} place.lng
    * @param {number} [opts.limit=5] - The maximum number of results to return.
    * @param {number} [opts.maxDimension=144] - The maximum dimension for thumbnail images.
-   * @returns {object[]} - Array of objects representing wikipedia pages sorted by proximity.
    */
   sources.wikipedia = function(cb, place, opts) {
     // NOTE https://www.mediawiki.org/wiki/API:Showing_nearby_wiki_information
 
-    var results = [];
+    var info = {
+      source: 'wikipedia',
+      results: []
+    };
 
     // Abort if required parameters weren't passed.
     if (typeof cb !== 'function') {
@@ -181,7 +189,7 @@
     /*jshint eqnull:true */
     if (!place || (place.lat == null || place.lng == null)) {
       console.warn('Insufficient place details passed to `sources.wikipedia`.');
-      cb(results);
+      cb(info);
       return;
     }
 
@@ -217,7 +225,7 @@
     })
     .done(function(data) {
       if (data.query.pages) {
-        results = data.query.pages
+        info.results = data.query.pages
           // Format.
           .map(function(page) {
             return {
@@ -259,7 +267,7 @@
       }
     })
     .always(function() {
-      cb(results);
+      cb(info);
     });
 
     function getBestCoords(coords) {
