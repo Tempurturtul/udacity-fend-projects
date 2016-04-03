@@ -5,9 +5,7 @@
 
   global.components = global.components || {};
 
-  global.components.infoWindow = infoWindow;
-
-  var infoWindow = {
+  global.components.infoWindow = {
     viewModel: function(params) {
       var self = this,
           getContainingArray = params.getContainingArray,
@@ -87,7 +85,7 @@
       };
 
       // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
-      self.source: ko.observable('google');
+      self.source = ko.observable('google');
 
       self.update = function() {
         map.removeMarker(self.marker().id());

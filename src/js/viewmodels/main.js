@@ -60,20 +60,15 @@
         map = global.map,
         ko = global.ko,
         models = global.models,
-        viewmodels = global.viewmodels,
-        markersForm,  // The markers form view model.
-        sidebar;      // The sidebar view model.
+        viewmodels = global.viewmodels;
 
     // Method for creating or recreating a marker. Returns the marker.
     self.createOrRecreateMarker = function(marker) {
-      var data;
-
-      if (marker instanceof models.Marker) {
-        data = ko.toJS(marker);
-      } else {
-        data = marker;
+      if (!(marker instanceof models.Marker)) {
         marker = new models.Marker(marker);
       }
+
+      var data = ko.toJS(marker);
 
       map.addMarker(data);
 
@@ -86,7 +81,7 @@
 
     // Method for retrieving a marker's or folder's most immediate containing array.
     self.getContainingArray = function(markerOrFolder) {
-      return search([self.markers, markersForm.pending]);
+      return search([self.markers, self.markersForm.pending]);
 
       function search(obsArrs) {
         var deeper = [],
@@ -141,7 +136,7 @@
       // Normalize id as a string.
       id = id.toString();
 
-      return search(self.markers()) || search(markersForm.pending());
+      return search(self.markers()) || search(self.markersForm.pending());
 
       function search(arr) {
         var deeper = [];
@@ -179,6 +174,8 @@
     // A collection of map markers and folders.
     self.markers = ko.observableArray([]);
 
+    self.markersForm = null;  // The markers form view model.
+
     // Opens the info window on a marker.
     self.openInfoWindow = function(marker) {
       // Create new content for the info window related to this marker.
@@ -213,7 +210,9 @@
 
         return content;
       }
-    }
+    };
+
+    self.sidebar = null;  // The sidebar view model.
 
     // Initialize the App View Model.
     init();
@@ -232,13 +231,13 @@
       });
 
       // Push the created marker to the pending markers array.
-      markersForm.pending.push({
+      self.markersForm.pending.push({
         marker: marker,
         confirmed: ko.observable(true)
       });
 
       // Open the confirm markers form.
-      markersForm.open();
+      self.markersForm.open();
     }
 
     /**
@@ -274,8 +273,8 @@
     function init() {
       var arr = JSON.parse(localStorage.getItem(storageKeys.MARKERS)) || defaults.markers;
 
-      markersForm = new viewmodels.MarkersForm(self);
-      sidebar = new viewmodels.Sidebar(self);
+      self.markersForm = new viewmodels.MarkersForm(self);
+      self.sidebar = new viewmodels.Sidebar(self);
 
       arr.forEach(function(data) {
         if (data.contents) {
@@ -322,14 +321,14 @@
           }
         });
 
-        markersForm.pending.push({
+        self.markersForm.pending.push({
           marker: marker,
           confirmed: ko.observable(true)
         });
       });
 
       // Open the confirm markers form.
-      markersForm.open();
+      self.markersForm.open();
     }
   }
 

@@ -13,7 +13,7 @@
         models = global.models;
 
     self.addFolder = function(formElem) {
-      mainViewModel.markers.push(new models.Folder({name: self.newFolderName}));
+      mainViewModel.markers.push(new models.Folder({name: self.newFolderName()}));
 
       // Reset new folder name.
       self.newFolderName('');

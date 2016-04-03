@@ -29,7 +29,7 @@
     //  data.icon - Icon for the marker.
     //  data.label - First letter of this string is displayed on marker.
 
-    this.id = ko.observable(data.id.toString() || uuid.generate().toString());
+    this.id = ko.observable(data.id || uuid.generate());
     this.description = ko.observable(data.description || '');
     this.position = ko.observable(data.position || {lat: 0, lng: 0});
     this.title = ko.observable(data.title || 'New Marker');

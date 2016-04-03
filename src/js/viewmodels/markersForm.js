@@ -19,6 +19,12 @@
       clearPending();
     };
 
+    self.open = function() {
+      if (!self.visible()) {
+        self.visible(true);
+      }
+    };
+
     self.pending = ko.observableArray([]);
 
     self.submit = function() {
@@ -51,7 +57,7 @@
         map.removeMarker(pending.marker.id());
       });
 
-      self.markersForm.pending([]);
+      self.pending([]);
     }
 
     function close() {
@@ -61,12 +67,6 @@
     }
 
     function init() {}
-
-    function open() {
-      if (!self.visible()) {
-        self.visible(true);
-      }
-    }
   }
 
 })(this);
