@@ -14,46 +14,58 @@
           MARKERS: 'markers'
         },
         defaults = {
+          // Five locations in New York, US. Credit to my beautiful native New Yorker wife: Ezzie.
           markers: [
+            // Times Square.
             {
-              id: 0,
-              position: {lat: 35.67, lng: 139.6},
-              title: 'Default Marker 1'
+              title: 'Times Square',
+              id: 'ChIJmQJIxlVYwokRLgeuocVOGVU',  // A Google Places ID.
+              position: {
+                lat: 40.758895,
+                lng: -73.98513100000002
+              }
             },
+            // NY Public Library.
             {
-              id: 1,
-              position: {lat: 35.67, lng: 139.7},
-              title: 'Default Marker 2'
+              title: 'New York Public Library - Stephen A. Schwarzman Building',
+              id: 'ChIJqaiomQBZwokRTHOaUG7fUTs',  // A Google Places ID.
+              position: {
+                lat: 40.75318230000001,
+                lng: -73.98225339999999
+              }
             },
+            // Museums folder.
             {
-              name: 'Default Folder 1',
+              name: 'Museums',
               contents: [
+                // The Met.
                 {
-                  id: 2,
-                  position: {lat: 35.66, lng: 139.7},
-                  title: 'Default Marker 1.1'
+                  title: 'The Metropolitan Museum of Art',
+                  id: 'ChIJb8Jg9pZYwokR-qHGtvSkLzs',  // A Google Places ID.
+                  position: {
+                    lat: 40.7794366,
+                    lng: -73.96324400000003
+                  }
                 },
+                // MoMA
                 {
-                  name: 'Default Folder 1.1',
-                  contents: [
-                    {
-                      id: 3,
-                      position: {lat: 35.65, lng: 139.7},
-                      title: 'Default Marker 1.1.1'
-                    },
-                    {
-                      id: 4,
-                      position: {lat: 35.64, lng: 139.7},
-                      title: 'Default Marker 1.1.2'
-                    }
-                  ]
+                  title: 'The Museum of Modern Art',
+                  id: 'ChIJKxDbe_lYwokRVf__s8CPn-o',  // A Google Places ID.
+                  position: {
+                    lat: 40.7614327,
+                    lng: -73.97762160000002
+                  }
+                },
+                // Museum of Natural History
+                {
+                  title: 'American Museum of Natural History',
+                  id: 'ChIJCXoPsPRYwokRsV1MYnKBfaI',  // A Google Places ID.
+                  position: {
+                    lat: 40.78132409999999,
+                    lng: -73.97398820000001
+                  }
                 }
               ]
-            },
-            {
-              id: 5,
-              position: {lat: 35.67, lng: 139.8},
-              title: 'Default Marker 3'
             }
           ]
         },

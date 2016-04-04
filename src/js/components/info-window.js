@@ -143,7 +143,10 @@
         }
 
         function formatInfo(info) {
-          var str;
+          var str = '<h2>%description%</h2>' +
+                    '<div>%results%</div>' +
+                    '<footer><small>%credit%</small></footer>',
+              resultsHTML = '';
 
           switch (info.source) {
             case 'google':
@@ -161,29 +164,51 @@
               // googlePage = place.url;  // Official Google-owned page for the place.
               // utcOffset = place.utc_offset;
               // website = place.website;  // The place's website. For example: a business' homepage.
-              break;
-            case 'flickr':
-              var resultsHTML = '';
 
               // Build the HTML for each result.
               info.results.forEach(function(result) {
+                var h3Inner = result.name.replace(/</g, '&lt;');
+
+                // If there's a site, provide a link to it in the h3.
+                if (result.website) {
+                  h3Inner = '<a href="' + result.website + '" target="_blank">' + h3Inner + '</a>';
+                }
+
                 resultsHTML += '<div>' +
-                               '<h3>' + result.title + '</h3>' +
+                               '<h3>' + h3Inner + '</h3>' +
+                               '</div>';
+              });
+
+              return str.replace('%description%', 'Details From Google')
+                        .replace('%results%', resultsHTML)
+                        .replace('%credit%', '');
+            case 'flickr':
+              // Build the HTML for each result.
+              info.results.forEach(function(result) {
+                resultsHTML += '<div>' +
+                               '<h3>' + result.title.replace(/</g, '&lt;') + '</h3>' +
                                '<a href="' + result.url + '" target="_blank">' +
                                '<img src="' + result.src + '"></img>' +
                                '</a>' +
                                '</div>';
               });
 
-              str = '<h2>Images From Nearby</h2>' +
-                    '<div>%results%</div>' +
-                    '<footer><small><q cite="https://www.flickr.com/services/api/tos/">This product uses the Flickr API but is not endorsed or certified by Flickr.</q></small></footer>';
-
-              str = str.replace('%results%', resultsHTML);
-              break;
+              return str.replace('%description%', 'Images From Flickr')
+                        .replace('%results%', resultsHTML)
+                        .replace('%credit%', '<q cite="https://www.flickr.com/services/api/tos/">This product uses the Flickr API but is not endorsed or certified by Flickr.</q>');
             case 'foursquare':
               // https://developer.foursquare.com/docs/responses/venue
-              break;
+
+              // Build the HTML for each result.
+              info.results.forEach(function(result) {
+                resultsHTML += '<div>' +
+                               '<h3></h3>' +
+                               '</div>';
+              });
+
+              return str.replace('%description%', '')
+                        .replace('%results%', resultsHTML)
+                        .replace('%credit%', '');
             case 'wikipedia':
               // url: page.fullurl,
               // coordinates: page.coordinates,  // Object array with properties: `globe`, `lat`, `lon`, and `primary`.
@@ -191,10 +216,21 @@
               // thumbnail: page.thumbnail,  // Object with properties: `height`, `width`, `source`.
               // title: page.title,
               // description: page.terms ? page.terms.description : undefined
-              break;
-          }
 
-          return str;
+              // Build the HTML for each result.
+              info.results.forEach(function(result) {
+                resultsHTML += '<div>' +
+                               '<h3></h3>' +
+                               '</div>';
+              });
+
+              return str.replace('%description%', '')
+                        .replace('%results%', resultsHTML)
+                        .replace('%credit%', '');
+            default:
+              // The source wasn't identified, return nothing.
+              return;
+          }
         }
 
         function infoReady(info) {
@@ -215,7 +251,7 @@
         }
       };
 
-      self.remove = function() {
+       self.remove = function() {
         // Remove the marker from the array it's a part of.
         var obsArr = getContainingArray(self.marker()),
             arr = obsArr(),
