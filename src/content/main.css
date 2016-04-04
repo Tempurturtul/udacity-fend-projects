@@ -379,6 +379,19 @@ form button:disabled {
     font-size: 0.9em;
   }
 
+  article {
+    width: 50%;
+    box-sizing: border-box;
+  }
+
+  .container {
+    width: 90%;
+  }
+
+  .stick-top {
+    width: 90%;
+  }
+
   /* Used by elements the nav links to. */
   .nav-target {
     /* Offset anchor by nav height. */
@@ -398,19 +411,6 @@ form button:disabled {
 
   nav {
     height: 45px;
-  }
-
-  article {
-    width: 50%;
-    box-sizing: border-box;
-  }
-
-  .container {
-    width: 90%;
-  }
-
-  .stick-top {
-    width: 90%;
   }
 
   /* Used by elements the nav links to. */
