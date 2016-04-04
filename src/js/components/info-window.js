@@ -47,10 +47,7 @@
       self.info = ko.observable();
 
       self.refresh = function() {
-        var place = {
-              lat: self.marker().position().lat,
-              lng: self.marker().position().lng
-            },
+        var place = self.marker().position(),
             cached;
 
         switch (source) {
@@ -123,7 +120,7 @@
           // Ensure a cache exists for the source.
           infoCache[info.source] = infoCache[info.source] || {};
 
-          // Add the info to the cache along with a timestamp.
+          // Add or replace the info in the cache.
           infoCache[info.source][cacheIdentifier] = {
             info: info,
             timestamp: Date.now()
@@ -149,17 +146,16 @@
           // Cache the info.
           cacheInfo(info);
 
-          // Abort if the user has changed the source since the info was requested.
-          if (info.source !== source) {
+          // Abort if the user has changed the source or place since the info was requested.
+          if ((info.source !== source) ||
+              (info.place !== self.marker().id() && info.place !== self.marker().position())) {
             return;
           }
 
+          // Create an HTML string from the info.
           var htmlStr = '';
 
-          // TODO Build the html string.
-          console.log('Build html string from:', info);
-
-          // Set info to the html string.
+          // Set info to the HTML string.
           self.info(htmlStr);
         }
       };
