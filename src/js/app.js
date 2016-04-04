@@ -1,7 +1,6 @@
 // Core functionality.
 
 // WORK ON THIS NEXT:
-// - How do I hook up the knockout bindings to the separated view models?
 // - Information for the info window (including error handling).
 
 // WORK ON THIS LATER:
