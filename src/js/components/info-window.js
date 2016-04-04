@@ -143,7 +143,7 @@
         }
 
         function formatInfo(info) {
-          var str = '';
+          var str;
 
           switch (info.source) {
             case 'google':
@@ -163,9 +163,23 @@
               // website = place.website;  // The place's website. For example: a business' homepage.
               break;
             case 'flickr':
-              // src
-              // url
-              // title
+              var resultsHTML = '';
+
+              // Build the HTML for each result.
+              info.results.forEach(function(result) {
+                resultsHTML += '<div>' +
+                               '<h3>' + result.title + '</h3>' +
+                               '<a href="' + result.url + '" target="_blank">' +
+                               '<img src="' + result.src + '"></img>' +
+                               '</a>' +
+                               '</div>';
+              });
+
+              str = '<h2>Images From Nearby</h2>' +
+                    '<div>%results%</div>' +
+                    '<footer><small><q cite="https://www.flickr.com/services/api/tos/">This product uses the Flickr API but is not endorsed or certified by Flickr.</q></small></footer>';
+
+              str = str.replace('%results%', resultsHTML);
               break;
             case 'foursquare':
               // https://developer.foursquare.com/docs/responses/venue
@@ -257,21 +271,21 @@
       }
     },
 
-    template: '<div data-bind="visible: !editing()">' +
-              '<p data-bind="text: marker().title"></p>' +
+    template: '<article data-bind="visible: !editing()">' +
+              '<h1 data-bind="text: marker().title"></h1>' +
               '<p data-bind="text: marker().description"></p>' +
               '<button data-bind="click: changeSourceToGoogle">google</button><button data-bind="click: changeSourceToFlickr">flickr</button><button data-bind="click: changeSourceToFoursquare">foursquare</button><button data-bind="click: changeSourceToWikipedia">wikipedia</button>' +
-              '<div data-bind="html: info"></div>' +
+              '<section data-bind="html: info"></section>' +
               '<button data-bind="click: edit">Modify</button>' +
               '<button data-bind="click: remove">Remove</button>'+
-              '</div>' +
+              '</article>' +
               // The edit display.
-              '<div data-bind="visible: editing">' +
+              '<form data-bind="visible: editing, submit: update">' +
               '<input data-bind="textInput: marker().title" placeholder="Title"></input>' +
               '<input data-bind="textInput: marker().description" placeholder="Description"></input>' +
-              '<button data-bind="click: restore">Cancel</button>' +
-              '<button data-bind="click: update">Confirm</button>' +
-              '</div>'
+              '<button data-bind="click: restore" type="button">Cancel</button>' +
+              '<button type="submit">Confirm</button>' +
+              '</form>'
   };
 
 })(this);
