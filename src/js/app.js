@@ -5,9 +5,8 @@
 
 // WORK ON THIS LATER:
 // - Allow the user to edit/set more things when creating/modifying markers.
-// - Useful defaults.
 // - Saving markers, folders, and map options.
-// - ...?
+// - Double check that project requirements are met.
 // - Styling.
 
 (function(global) {

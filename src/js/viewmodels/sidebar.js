@@ -62,7 +62,6 @@
     self.newFolderName = ko.observable('');
 
     self.removeFolder = function(folder) {
-      // TODO Did the `getContainingArray` function move outside of mainViewModel?
       var obsArr = mainViewModel.getContainingArray(folder),
           arr = obsArr(),
           index = arr.indexOf(folder),
