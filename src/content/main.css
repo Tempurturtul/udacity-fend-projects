@@ -154,6 +154,9 @@ h2 {
 article {
   text-align: center;
   padding: 20px;
+  margin: 10px;
+  box-shadow: 1px 1px 2px 1px #ddd;
+  background: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -251,19 +254,6 @@ form button:disabled {
 }
 
 .article-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-content: center;
-}
-
-.col {
-}
-
-.row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .popup-source {
@@ -380,8 +370,11 @@ form button:disabled {
   }
 
   article {
-    width: 50%;
-    box-sizing: border-box;
+    flex: 1 1;
+  }
+
+  .article-container {
+    display: flex;
   }
 
   .container {
