@@ -180,6 +180,18 @@ section a:hover {
   min-height: 100%;
 }
 
+#contact-form h2 {
+  margin-bottom: 20px;
+}
+
+/* The contact form description. */
+#contact-form p:first-of-type {
+  text-indent: 2em;
+  width: 600px;
+  max-width: 90%;
+  margin-bottom: 10px;
+}
+
 form {
   text-align: center;
   position: relative;
@@ -190,11 +202,6 @@ form {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-/* The section title. */
-form h2 {
-  margin-bottom: 20px;
 }
 
 /* The name and email form items. */
@@ -213,7 +220,7 @@ form label span {
 }
 
 form label input {
-  min-width: 150px;
+  min-width: 100px;
   flex: 1 1 auto;
 }
 
