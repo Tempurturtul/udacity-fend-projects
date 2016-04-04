@@ -142,6 +142,47 @@
           return false;
         }
 
+        function formatInfo(info) {
+          var str = '';
+
+          switch (info.source) {
+            case 'google':
+              // address = place.formatted_address;
+              // phone = place.formatted_phone_number;
+              // internationalPhone = place.international_phone_number;
+              // attributions = place.html_attributions;  // String array.
+              // icon = place.icon;
+              // name = place.name;  // NOTE Possibly raw text as typed by user.
+              // photos = formatPhotos(place.photos);
+              // price = formatPriceLevel(place.price_level);
+              // rating = place.rating;  // 1.0 to 5.0
+              // reviews = formatReviews(place.reviews);
+              // types = place.types;  // String array. Example: ['restaurant', 'establishment']
+              // googlePage = place.url;  // Official Google-owned page for the place.
+              // utcOffset = place.utc_offset;
+              // website = place.website;  // The place's website. For example: a business' homepage.
+              break;
+            case 'flickr':
+              // src
+              // url
+              // title
+              break;
+            case 'foursquare':
+              // https://developer.foursquare.com/docs/responses/venue
+              break;
+            case 'wikipedia':
+              // url: page.fullurl,
+              // coordinates: page.coordinates,  // Object array with properties: `globe`, `lat`, `lon`, and `primary`.
+              // lang: page.pagelanguage,
+              // thumbnail: page.thumbnail,  // Object with properties: `height`, `width`, `source`.
+              // title: page.title,
+              // description: page.terms ? page.terms.description : undefined
+              break;
+          }
+
+          return str;
+        }
+
         function infoReady(info) {
           // Cache the info.
           cacheInfo(info);
@@ -153,7 +194,7 @@
           }
 
           // Create an HTML string from the info.
-          var htmlStr = '';
+          var htmlStr = formatInfo(info);
 
           // Set info to the HTML string.
           self.info(htmlStr);
