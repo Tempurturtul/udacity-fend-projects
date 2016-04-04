@@ -98,6 +98,7 @@
    */
   function getPlaceDetails(cb, markerID, maxPhotoDimensions) {
     var info = {
+      place: markerID,
       source: 'google',
       results: []
     };

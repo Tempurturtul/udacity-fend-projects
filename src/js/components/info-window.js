@@ -12,6 +12,7 @@
           getMarker = params.getMarker,
           markerID = params.markerID,
           recreateMarker = params.recreateMarker,
+          source = 'google',  // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
           infoCache = {},  // Cached information retrieved from third party APIs.
           infoLifetime = 1200;  // Seconds to wait before updating cached info.
 
@@ -19,6 +20,22 @@
 
       // Used to restore the marker's state if editing is canceled.
       var preChangeMarkerData = ko.toJS(self.marker());
+
+      self.changeSourceToFlickr = function() {
+        changeSource('flickr');
+      };
+
+      self.changeSourceToFoursquare = function() {
+        changeSource('foursquare');
+      };
+
+      self.changeSourceToGoogle = function() {
+        changeSource('google');
+      };
+
+      self.changeSourceToWikipedia = function() {
+        changeSource('wikipedia');
+      };
 
       self.edit = function() {
         self.editing(true);
@@ -36,7 +53,7 @@
             },
             cached;
 
-        switch (self.source()) {
+        switch (source) {
           case 'google':
             // Check for fresh cached info.
             cached = checkCache('google', markerID);
@@ -99,9 +116,20 @@
             break;
         }
 
-        /**
-         * Checks the info cache for fresh info. Returns the info if it exists and is fresh.
-         */
+        function cacheInfo(info) {
+          // Use an identifier created from the place property. (Small object or marker id.)
+          var cacheIdentifier = typeof info.place === 'object' ? JSON.stringify(info.place) : info.place;
+
+          // Ensure a cache exists for the source.
+          infoCache[info.source] = infoCache[info.source] || {};
+
+          // Add the info to the cache along with a timestamp.
+          infoCache[info.source][cacheIdentifier] = {
+            info: info,
+            timestamp: Date.now()
+          };
+        }
+
         function checkCache(source, identifier) {
           if (infoCache[source] && infoCache[source][identifier]) {
             var cachedInfo = infoCache[source][identifier],
@@ -122,8 +150,7 @@
           cacheInfo(info);
 
           // Abort if the user has changed the source since the info was requested.
-          if (info.source !== self.source()) {
-            console.log('Source changed, aborting infoReady...');
+          if (info.source !== source) {
             return;
           }
 
@@ -167,9 +194,6 @@
         self.editing(false);
       };
 
-      // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
-      self.source = ko.observable('google');
-
       self.update = function() {
         map.removeMarker(self.marker().id());
         recreateMarker(self.marker());
@@ -177,18 +201,11 @@
 
       init();
 
-      function cacheInfo(info) {
-        // Use an identifier created from the place property. (Small object or marker id.)
-        var cacheIdentifier = typeof info.place === 'object' ? JSON.stringify(info.place) : info.place;
-
-        // Ensure a cache exists for the source.
-        infoCache[info.source] = infoCache[info.source] || {};
-
-        // Add the info to the cache along with a timestamp.
-        infoCache[info.source][cacheIdentifier] = {
-          info: info,
-          timestamp: Date.now()
-        };
+      function changeSource(newSource) {
+        if (source !== newSource) {
+          source = newSource;
+          self.refresh();
+        }
       }
 
       function init() {
@@ -206,6 +223,7 @@
     template: '<div data-bind="visible: !editing()">' +
               '<p data-bind="text: marker().title"></p>' +
               '<p data-bind="text: marker().description"></p>' +
+              '<button data-bind="click: changeSourceToGoogle">google</button><button data-bind="click: changeSourceToFlickr">flickr</button><button data-bind="click: changeSourceToFoursquare">foursquare</button><button data-bind="click: changeSourceToWikipedia">wikipedia</button>' +
               '<div data-bind="html: info"></div>' +
               '<button data-bind="click: edit">Modify</button>' +
               '<button data-bind="click: remove">Remove</button>'+

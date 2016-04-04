@@ -37,6 +37,7 @@
    */
   sources.flickr = function(cb, place, limit) {
     var info = {
+      place: place,
       source: 'flickr',
       results: []
     };
@@ -115,6 +116,7 @@
     // Results defined here: https://developer.foursquare.com/docs/responses/venue
 
     var info = {
+      place: place,
       source: 'foursquare',
       results: []
     };
@@ -177,6 +179,7 @@
     // NOTE https://www.mediawiki.org/wiki/API:Showing_nearby_wiki_information
 
     var info = {
+      place: place,
       source: 'wikipedia',
       results: []
     };
