@@ -59,7 +59,7 @@ header input[type='checkbox'] {
 }
 
 /* The top-most list of markers and folders. */
-header div > ul {
+header > div > ul {
   overflow-x: scroll;
   padding-left: 0;
   white-space: nowrap;
@@ -124,6 +124,11 @@ header ul {
 }
 
 .fullpage-error {}
+
+.folder-entry,
+.marker-entry {
+  display: inline;
+}
 
 .pending-marker {}
 

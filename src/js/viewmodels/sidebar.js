@@ -80,15 +80,12 @@
     self.reorder = function(event, dragData, zoneData) {
       // If the item isn't being dragged over itself...
       if (dragData.item !== zoneData.item) {
-        // If the other item is a folder and the dragged item exists in the same set of items as the folder...
-        if (zoneData.item instanceof models.Folder && zoneData.items.indexOf(dragData.item) !== -1) {
-          // If the folder is empty...
-          if (!zoneData.item.contents().length) {
-            // Place the dragged item in the folder and update its items set.
-            dragData.items.remove(dragData.item);
-            zoneData.item.contents.push(dragData.item);
-            dragData.items = zoneData.item.contents;
-          }
+        // If the other item is an empty folder...
+        if (zoneData.item instanceof models.Folder && !zoneData.item.contents().length) {
+          // Place the dragged item in the folder and update its items set.
+          dragData.items.remove(dragData.item);
+          zoneData.item.contents.push(dragData.item);
+          dragData.items = zoneData.item.contents;
         }
         // Else if the other item is a marker...
         else if (zoneData.item instanceof models.Marker) {

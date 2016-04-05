@@ -89,7 +89,7 @@
     </script> -->
   </head>
   <body>
-    <header class="sidebar" data-bind="css: {expanded: sidebar.expanded}">
+    <header class="sidebar" data-bind="css: {expanded: !sidebar.expanded()}">
       <div class="sidebar-content">
         <fieldset>
           <input type="text" placeholder="Search Existing" data-bind="textInput: sidebar.search">
@@ -138,18 +138,18 @@
                                          data: { items: $parent.contents || $parent.markers, item: $data }
                                        }">
         <span class="drag-handle"></span>
-        <!-- ko if: $data.contents -->
-        <button data-bind="click: $root.sidebar.toggleFolder">v</button>
-        <input data-bind="visible: editing, value: name, hasFocus: editing">
-        <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
-        <button data-bind="click: $root.sidebar.removeFolder">x</button>
-        <button data-bind="click: $root.sidebar.centerOnContents">o</button>
-        <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
-        </ul>
-        <!-- /ko -->
-        <!-- ko ifnot: $data.contents -->
-        <span data-bind="text:title, click: $root.sidebar.markerClicked"></span>
-        <!-- /ko -->
+        <div class="folder-entry" data-bind="if: $data.contents">
+          <button data-bind="click: $root.sidebar.toggleFolder">v</button>
+          <input data-bind="visible: editing, value: name, hasFocus: editing">
+          <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
+          <button data-bind="click: $root.sidebar.removeFolder">x</button>
+          <button data-bind="click: $root.sidebar.centerOnContents">o</button>
+          <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
+          </ul>
+        </div>
+        <div class="marker-entry" data-bind="ifnot: $data.contents">
+          <span data-bind="text:title, click: $root.sidebar.markerClicked"></span>
+        </div>
       </li>
     </script>
 
