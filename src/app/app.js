@@ -178,8 +178,8 @@ $(document).ready(function() {
   }
 
   function sendEmail() {
-    var name = $('#name').val().toString() || 'Anonymous Contact';
-    var email = $('#email').val().toString() || 'placeholder@notreal.net';
+    var name = $('#name').val().toString() || '';
+    var email = $('#email').val().toString() || '';
     var message = $('#message').val().toString();
 
     // Return formspree API call.
