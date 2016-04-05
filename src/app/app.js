@@ -142,6 +142,9 @@ $(document).ready(function() {
     $('#contact-form').find('input').prop('disabled', true);
     $('#contact-form').find('textarea').prop('disabled', true);
 
+    // Activate sending overlay.
+    displayNotification($contactNotification, 'Sending...', true);
+
     // Attempt to send email.
     sendEmail()
       // Handle success.
@@ -209,6 +212,8 @@ $(document).ready(function() {
     // If not hideable...
     if (persistent) {
       $element.removeClass('click-to-hide');
+    } else {
+      $element.addClass('click-to-hide');
     }
 
     // Unhide the notification.

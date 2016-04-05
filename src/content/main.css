@@ -188,7 +188,7 @@ section a:hover {
 }
 
 /* The contact form description. */
-#contact-form p:first-of-type {
+#contact-form > p {
   text-indent: 2em;
   width: 600px;
   max-width: 90%;
@@ -306,13 +306,12 @@ form button:disabled {
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(255,255,255,0.8);
+  background: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-shadow: 0 0 1px black;
-  color: black;
   border: solid 1px #ccc;
   border-radius: 5px;
   font-size: 1.2em;
