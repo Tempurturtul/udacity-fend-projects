@@ -89,18 +89,20 @@
     </script> -->
   </head>
   <body>
-    <header id="sidebar" data-bind="css: {expanded: sidebar.expanded}">
-      <button class="sidebar-toggle" data-bind="click: sidebar.toggle">Toggle Sidebar</button>
-      <fieldset>
-        <legend>Map Marker Filters</legend>
-        <input type="text" placeholder="Search Markers" data-bind="textInput: sidebar.search">
-        <label><input type="checkbox" data-bind="checked: sidebar.visibleOnly">Visible Only</label>
-      </fieldset>
-      <ul class="marker-list" data-bind="template: { name: 'listTemplate', foreach: markers }">
-      </ul>
-      <form data-bind="submit: sidebar.addFolder">
-        <input data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">
-      </form>
+    <header class="sidebar" data-bind="css: {expanded: sidebar.expanded}">
+      <button class="sidebar-toggle" data-bind="click: sidebar.toggle"></button>
+      <div class="sidebar-content">
+        <fieldset>
+          <legend>Map Marker Filters</legend>
+          <input type="text" placeholder="Search Markers" data-bind="textInput: sidebar.search">
+          <label><input type="checkbox" data-bind="checked: sidebar.visibleOnly">Visible Only</label>
+        </fieldset>
+        <ul class="marker-list" data-bind="template: { name: 'listTemplate', foreach: markers }">
+        </ul>
+        <form data-bind="submit: sidebar.addFolder">
+          <input data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">
+        </form>
+      </div>
     </header>
 
     <main>
