@@ -28,6 +28,52 @@ main {
 
 
 /***********************************
+* Specific Styles
+***********************************/
+
+/* The 'search markers' and 'visible only' inputs. */
+header fieldset {
+  border: none;
+  margin: none;
+  min-height: 36px;     /* The toggle button's height. */
+  padding: 0 43px 0 0;  /* The toggle button's width plus its right offset (36 + 7). */
+}
+
+/* The 'search markers' and 'new folder' inputs. */
+header input[type='text'] {
+  display: block;
+  width: 100%;
+}
+
+/* The 'visible only' input's label. */
+header label {
+  align-items: center;
+  display: flex;
+  font-size: 0.8em;
+  margin-top: 5px;
+}
+
+/* The 'visible only' input. */
+header input[type='checkbox'] {
+  margin-left: 4px;
+}
+
+/* The top-most list of markers and folders. */
+header div > ul {
+  overflow-x: scroll;
+  padding-left: 0;
+  white-space: nowrap;
+}
+
+/* The list and sublists of markers and folders. */
+header ul {
+  list-style: none;
+  padding-left: 1em;
+}
+
+
+
+/***********************************
 * IDs
 ***********************************/
 
@@ -61,25 +107,29 @@ main {
 
 .drag-handle {}
 
+.drag-handle::after {
+  content: '‒';
+}
+
 .expanded {
   transition: width 0.25s ease-in;
   width: 100% !important;
 }
 
 .expanded .sidebar-content {
+  font-size: 1em;
   opacity: 1;
-  transition: opacity 0.25s 0.25s;
+  transition: font-size 0s 0.25s, opacity 0.25s 0.25s, visibility 0s 0.25s;
+  visibility: visible;
 }
 
 .fullpage-error {}
-
-.marker-list {}
 
 .pending-marker {}
 
 .sidebar {
   background: white;
-  height: 100%;
+  min-height: 100%;
   right: 0;
   overflow: hidden;
   position: absolute;
@@ -111,7 +161,12 @@ main {
 }
 
 .sidebar-content {
+  font-size: 0;  /* Prevent scroll bar popping when expanding/collapsing. */
+  max-width: 100%;
   opacity: 0;
+  padding: 7px;
+  visibility: hidden;
+  width: 500px;
 }
 
 

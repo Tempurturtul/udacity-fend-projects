@@ -92,11 +92,10 @@
     <header class="sidebar" data-bind="css: {expanded: sidebar.expanded}">
       <div class="sidebar-content">
         <fieldset>
-          <legend>Map Marker Filters</legend>
-          <input type="text" placeholder="Search Markers" data-bind="textInput: sidebar.search">
-          <label><input type="checkbox" data-bind="checked: sidebar.visibleOnly">Visible Only</label>
+          <input type="text" placeholder="Search Existing" data-bind="textInput: sidebar.search">
+          <label>Currently Visible<input type="checkbox" data-bind="checked: sidebar.visibleOnly"></label>
         </fieldset>
-        <ul class="marker-list" data-bind="template: { name: 'listTemplate', foreach: markers }">
+        <ul data-bind="template: { name: 'listTemplate', foreach: markers }">
         </ul>
         <form data-bind="submit: sidebar.addFolder">
           <input data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">
@@ -138,7 +137,7 @@
                                          dragOver: $root.sidebar.reorder,
                                          data: { items: $parent.contents || $parent.markers, item: $data }
                                        }">
-        <span class="drag-handle">=</span>
+        <span class="drag-handle"></span>
         <!-- ko if: $data.contents -->
         <button data-bind="click: $root.sidebar.toggleFolder">v</button>
         <input data-bind="visible: editing, value: name, hasFocus: editing">
