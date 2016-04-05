@@ -36,7 +36,7 @@ a {
 
 
 /******************************
- The header and it's contents.
+ The header and its contents.
 ******************************/
 header {
   display: flex;
@@ -72,7 +72,7 @@ header p {
 
 
 /******************************
- The nav and it's contents.
+ The nav and its contents.
 ******************************/
 #sticky-nav-container {
   height: 45px;
@@ -154,12 +154,16 @@ h2 {
 article {
   text-align: center;
   padding: 20px;
-  margin: 10px;
   box-shadow: 1px 1px 2px 1px #ddd;
   background: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* The second work entry in each container. */
+article:last-of-type {
+  margin-top: 10px;
 }
 
 article time {
@@ -184,7 +188,6 @@ section a:hover {
 }
 
 #contact-form h2 {
-  margin-bottom: 20px;
 }
 
 /* The contact form description. */
@@ -192,7 +195,7 @@ section a:hover {
   text-indent: 2em;
   width: 600px;
   max-width: 90%;
-  margin-bottom: 10px;
+  padding: 10px 0;
 }
 
 form {
@@ -254,6 +257,7 @@ form button:disabled {
 }
 
 .article-container {
+  padding: 10px 10px 0 10px;
 }
 
 .popup-source {
@@ -370,6 +374,12 @@ form button:disabled {
 
   article {
     flex: 1 1;
+  }
+
+  /* The second work entry in each container. */
+  article:last-of-type {
+    margin-top: 0;
+    margin-left: 10px;
   }
 
   .article-container {
