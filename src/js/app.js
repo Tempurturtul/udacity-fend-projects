@@ -1,13 +1,15 @@
 // Core functionality.
 
 // WORK ON THIS NEXT:
-// - Information for the info window (including error handling).
+// - Drag-drop issues.
+// - Styling.
 
 // WORK ON THIS LATER:
+// - Information for the info window (including error handling).
 // - Allow the user to edit/set more things when creating/modifying markers.
 // - Saving markers, folders, and map options.
 // - Double check that project requirements are met.
-// - Styling.
+// - More styling.
 
 (function(global) {
 
