@@ -163,7 +163,7 @@ article {
 
 /* The second work entry in each container. */
 article:last-of-type {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 article time {
@@ -256,7 +256,7 @@ form button:disabled {
 }
 
 .article-container {
-  padding: 10px 10px 0 10px;
+  padding: 20px 10px 0 10px;
 }
 
 .popup-source {
