@@ -80,21 +80,33 @@
     self.reorder = function(event, dragData, zoneData) {
       // If the item isn't being dragged over itself...
       if (dragData.item !== zoneData.item) {
-        // If the other item is an empty folder...
-        if (zoneData.item instanceof models.Folder && !zoneData.item.contents().length) {
-          // Place the dragged item in the folder and update its items set.
-          dragData.items.remove(dragData.item);
-          zoneData.item.contents.push(dragData.item);
-          dragData.items = zoneData.item.contents;
+        // If the other item is an expanded empty folder...
+        if (zoneData.item instanceof models.Folder && !zoneData.item.contents().length && !zoneData.item.collapsed()) {
+          // Place the dragged item inside it.
+          place();
+        } else {
+          // Move the dragged item to its position.
+          move();
         }
-        // Else if the other item is a marker...
-        else if (zoneData.item instanceof models.Marker) {
-          // Place the dragged item in the new position and update its items set.
-          var index = zoneData.items.indexOf(zoneData.item);
-          dragData.items.remove(dragData.item);
-          zoneData.items.splice(index, 0, dragData.item);
-          dragData.items = zoneData.items;
-        }
+      }
+
+      /**
+       * Moves the dragged item to the new position.
+       */
+      function move() {
+        var index = zoneData.items.indexOf(zoneData.item);
+        dragData.items.remove(dragData.item);
+        zoneData.items.splice(index, 0, dragData.item);
+        dragData.items = zoneData.items;
+      }
+
+      /**
+       * Places the dragged item inside a folder.
+       */
+      function place() {
+        dragData.items.remove(dragData.item);
+        zoneData.item.contents.push(dragData.item);
+        dragData.items = zoneData.item.contents;
       }
     };
 

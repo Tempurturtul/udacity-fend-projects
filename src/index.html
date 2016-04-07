@@ -126,29 +126,48 @@
 
     <!-- List template. -->
     <script type="text/html" id="listTemplate">
-      <li data-bind="visible: visible, dragZone: {
-                                         name: 'sortable',
-                                         dragStart: $root.sidebar.dragStart,
-                                         dragEnd: $root.sidebar.dragEnd,
-                                         data: { items: $parent.contents || $parent.markers, item: $data }
-                                       },
-                                       dragEvents: {
-                                         accepts: 'sortable',
-                                         dragOver: $root.sidebar.reorder,
-                                         data: { items: $parent.contents || $parent.markers, item: $data }
-                                       }">
-        <span class="drag-handle"></span>
-        <div class="folder-entry" data-bind="if: $data.contents">
-          <button data-bind="click: $root.sidebar.toggleFolder">v</button>
-          <input data-bind="visible: editing, value: name, hasFocus: editing">
-          <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
-          <button data-bind="click: $root.sidebar.removeFolder">x</button>
-          <button data-bind="click: $root.sidebar.centerOnContents">o</button>
-          <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
-          </ul>
+      <li data-bind="visible: visible">
+        <!-- A marker. -->
+        <div data-bind="ifnot: $data.contents">
+          <div class="marker-entry" data-bind="dragZone: {
+                                                name: 'sortable',
+                                                dragStart: $root.sidebar.dragStart,
+                                                dragEnd: $root.sidebar.dragEnd,
+                                                data: { items: $parent.contents || $parent.markers, item: $data }
+                                              },
+                                              dragEvents: {
+                                                accepts: 'sortable',
+                                                dragOver: $root.sidebar.reorder,
+                                                data: { items: $parent.contents || $parent.markers, item: $data }
+                                              }">
+            <span class="drag-handle"></span>
+            <span data-bind="text:title, click: $root.sidebar.markerClicked"></span>
+          </div>
         </div>
-        <div class="marker-entry" data-bind="ifnot: $data.contents">
-          <span data-bind="text:title, click: $root.sidebar.markerClicked"></span>
+        <!-- A folder. -->
+        <div data-bind="if: $data.contents">
+          <div class="folder-entry" data-bind="dragZone: {
+                                                name: 'sortable',
+                                                dragStart: $root.sidebar.dragStart,
+                                                dragEnd: $root.sidebar.dragEnd,
+                                                data: { items: $parent.contents || $parent.markers, item: $data }
+                                              },
+                                              dragEvents: {
+                                                accepts: 'sortable',
+                                                dragOver: $root.sidebar.reorder,
+                                                data: { items: $parent.contents || $parent.markers, item: $data }
+                                              }">
+            <span class="drag-handle"></span>
+            <button data-bind="click: $root.sidebar.toggleFolder">v</button>
+            <input data-bind="visible: editing, value: name, hasFocus: editing">
+            <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
+            <button data-bind="click: $root.sidebar.removeFolder">x</button>
+            <button data-bind="click: $root.sidebar.centerOnContents">o</button>
+          </div>
+          <div class="folder-contents">
+            <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
+            </ul>
+          </div>
         </div>
       </li>
     </script>
