@@ -128,7 +128,7 @@
     <script type="text/html" id="listTemplate">
       <li data-bind="visible: visible">
         <!-- A marker. -->
-        <div data-bind="ifnot: $data.contents">
+        <!-- ko ifnot: $data.contents -->
           <div class="marker-entry" data-bind="dragZone: {
                                                 name: 'sortable',
                                                 dragStart: $root.sidebar.dragStart,
@@ -143,9 +143,10 @@
             <span class="drag-handle"></span>
             <span data-bind="text:title, click: $root.sidebar.markerClicked"></span>
           </div>
-        </div>
+        <!-- /ko -->
+        
         <!-- A folder. -->
-        <div data-bind="if: $data.contents">
+        <!-- ko if: $data.contents -->
           <div class="folder-entry" data-bind="dragZone: {
                                                 name: 'sortable',
                                                 dragStart: $root.sidebar.dragStart,
@@ -168,7 +169,7 @@
             <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
             </ul>
           </div>
-        </div>
+        <!-- /ko -->
       </li>
     </script>
 

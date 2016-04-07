@@ -43,8 +43,6 @@
       }
     };
 
-    self.dragEnd = function (item) {};
-
     self.expanded = ko.observable(false);
 
     self.markerClicked = function(marker) {
