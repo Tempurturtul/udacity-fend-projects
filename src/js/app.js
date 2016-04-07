@@ -1,7 +1,7 @@
 // Core functionality.
 
 // WORK ON THIS NEXT:
-// - Drag-drop issues.
+// - Drag-drop issues. (Why is the drag preview disappearing?)
 // - Styling.
 
 // WORK ON THIS LATER:
