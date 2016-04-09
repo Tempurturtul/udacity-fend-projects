@@ -1,8 +1,8 @@
 // Core functionality.
 
 // WORK ON THIS NEXT:
-// - Drag-drop issues. (Why is the drag preview disappearing?)
 // - Styling.
+// - Drag-drop issues. (Why is the drag preview disappearing?)
 
 // WORK ON THIS LATER:
 // - Information for the info window (including error handling).

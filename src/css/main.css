@@ -105,7 +105,13 @@ header ul {
 
 .add-marker {}
 
-.drag-handle {}
+.drag-handle {
+  cursor: move;
+  flex: 0 0 20px;
+  height: 20px;
+  text-align: center;
+  width: 20px;
+}
 
 .drag-handle::after {
   content: '‒';
@@ -123,13 +129,40 @@ header ul {
   visibility: visible;
 }
 
-.fullpage-error {}
+/* Applied to all types of folder buttons. */
+.folder-button {
+  background: none;
+  border: solid 1px grey;
+  border-radius: 2px;
+  height: 20px;
+  vertical-align: middle;
+  width: 20px;
+}
+
+.folder-button-center {}
+
+.folder-button-collapse {}
+
+.folder-button-open {}
+
+.folder-button-remove {}
 
 .folder-contents {}
 
 .folder-entry,
 .marker-entry {
-  display: inline;
+  align-items: center;
+  display: flex;
+}
+
+.folder-entry > *,
+.marker-entry > * {
+}
+
+.fullpage-error {}
+
+.marker-entry {
+
 }
 
 .pending-marker {}
@@ -174,6 +207,12 @@ header ul {
   padding: 7px;
   visibility: hidden;
   width: 500px;
+}
+
+.toggle-folder {
+  height: 20px;
+  padding: 5px;
+  width: 20px;
 }
 
 

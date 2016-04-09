@@ -144,7 +144,7 @@
             <span data-bind="text:title, click: $root.sidebar.markerClicked"></span>
           </div>
         <!-- /ko -->
-        
+
         <!-- A folder. -->
         <!-- ko if: $data.contents -->
           <div class="folder-entry" data-bind="dragZone: {
@@ -159,11 +159,12 @@
                                                 data: { items: $parent.contents || $parent.markers, item: $data }
                                               }">
             <span class="drag-handle"></span>
-            <button data-bind="click: $root.sidebar.toggleFolder">v</button>
+            <button class="folder-button" data-bind="click: $root.sidebar.toggleFolder,
+                                                     css: { 'folder-button-open': collapsed, 'folder-button-collapse': !collapsed() }"></button>
             <input data-bind="visible: editing, value: name, hasFocus: editing">
             <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
-            <button data-bind="click: $root.sidebar.removeFolder">x</button>
-            <button data-bind="click: $root.sidebar.centerOnContents">o</button>
+            <button class="folder-button folder-button-remove" data-bind="click: $root.sidebar.removeFolder"></button>
+            <button class="folder-button folder-button-center" data-bind="click: $root.sidebar.centerOnContents"></button>
           </div>
           <div class="folder-contents">
             <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
