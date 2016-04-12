@@ -95,7 +95,7 @@
           <input type="text" placeholder="Search Existing" data-bind="textInput: sidebar.search">
           <label>Currently Visible<input type="checkbox" data-bind="checked: sidebar.visibleOnly"></label>
         </fieldset>
-        <ul data-bind="template: { name: 'listTemplate', foreach: markers }">
+        <ul data-bind="template: { name: 'list-template', foreach: markers }">
         </ul>
         <form data-bind="submit: sidebar.addFolder">
           <input data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">
@@ -125,7 +125,7 @@
     <!-- Templates. -->
 
     <!-- List template. -->
-    <script type="text/html" id="listTemplate">
+    <script type="text/html" id="list-template">
       <li data-bind="visible: visible">
         <!-- A marker. -->
         <!-- ko ifnot: $data.contents -->
@@ -133,7 +133,8 @@
                                                 name: 'sortable',
                                                 dragStart: $root.sidebar.dragStart,
                                                 dragEnd: $root.sidebar.dragEnd,
-                                                data: { items: $parent.contents || $parent.markers, item: $data }
+                                                data: { items: $parent.contents || $parent.markers, item: $data },
+                                                element: 'marker-drag-preview'
                                               },
                                               dragEvents: {
                                                 accepts: 'sortable',
@@ -141,7 +142,7 @@
                                                 data: { items: $parent.contents || $parent.markers, item: $data }
                                               }">
             <span class="drag-handle"></span>
-            <span data-bind="text:title, click: $root.sidebar.markerClicked"></span>
+            <span data-bind="text: title, click: $root.sidebar.markerClicked"></span>
           </div>
         <!-- /ko -->
 
@@ -151,7 +152,8 @@
                                                 name: 'sortable',
                                                 dragStart: $root.sidebar.dragStart,
                                                 dragEnd: $root.sidebar.dragEnd,
-                                                data: { items: $parent.contents || $parent.markers, item: $data }
+                                                data: { items: $parent.contents || $parent.markers, item: $data },
+                                                element: 'folder-drag-preview'
                                               },
                                               dragEvents: {
                                                 accepts: 'sortable',
@@ -167,11 +169,30 @@
             <button class="folder-button folder-button-center" data-bind="click: $root.sidebar.centerOnContents"></button>
           </div>
           <div class="folder-contents">
-            <ul data-bind="template: { name: 'listTemplate', foreach: contents }">
+            <ul data-bind="template: { name: 'list-template', foreach: contents }">
             </ul>
           </div>
         <!-- /ko -->
       </li>
+    </script>
+
+    <!-- Custom drag element for markers. -->
+    <script type="text/html" id="marker-drag-preview">
+      <div class="marker-entry">
+        <span class="drag-handle"></span>
+        <span data-bind="text: item.title"></span>
+      </div>
+    </script>
+
+    <!-- Custom drag element for folders. -->
+    <script type="text/html" id="folder-drag-preview">
+      <div class="folder-entry">
+        <span class="drag-handle"></span>
+        <button class="folder-button folder-button-open"></button>
+        <span data-bind="text: item.name"></span>
+        <button class="folder-button folder-button-remove"></button>
+        <button class="folder-button folder-button-center"></button>
+      </div>
     </script>
 
 

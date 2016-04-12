@@ -2,7 +2,6 @@
 
 // WORK ON THIS NEXT:
 // - Styling.
-// - Drag-drop issues. (Why is the drag preview disappearing?)
 
 // WORK ON THIS LATER:
 // - Information for the info window (including error handling).
