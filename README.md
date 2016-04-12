@@ -2,6 +2,8 @@
 
 This is the **5th** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program.
 
+**[View work-in-progress preview here.](http://tempurturtul.github.io/fend-neighborhood-map/)**
+
 ## Quickstart
 
 - Install [Node](https://nodejs.org/en/), [Gulp](http://gulpjs.com/), and [Bower](http://bower.io/).
