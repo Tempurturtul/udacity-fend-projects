@@ -8,6 +8,7 @@
 
   function Sidebar(mainViewModel) {
     var self = this,
+        document = global.document,
         map = global.map,
         ko = global.ko,
         models = global.models;
@@ -26,6 +27,35 @@
                         });
 
       map.centerOn(markerIDs);
+    };
+
+    self.confirmFolderRemoval = function(folder) {
+      var confirmElem = document.createElement('div');
+      confirmElem.id = 'confirm-elem';
+
+      confirmElem.innerHTML = '<form>'+
+                              '<p>Are you sure you want to remove the <i>' + folder.name().replace(/</g, '&lt;') + '</i> folder?</p>' +
+                              '<label><input id="confirm-contents" type="checkbox"> Also remove the folder\'s contents.</label>' +
+                              '<button id="confirm-yes" type="button">Yes</button>' +
+                              '<button id="confirm-no" type="button">No</button>' +
+                              '</form>';
+
+      document.body.appendChild(confirmElem);
+
+      document.getElementById('confirm-yes').onclick = submit;
+      document.getElementById('confirm-no').onclick = dismiss;
+
+      function dismiss() {
+        document.body.removeChild(confirmElem);
+        confirmElem = null;
+      }
+
+      function submit() {
+        var removeContents = document.getElementById('confirm-contents').checked;
+
+        removeFolder(folder, removeContents);
+        dismiss();
+      }
     };
 
     self.dragStart = function(dragData, event) {
@@ -53,27 +83,7 @@
       mainViewModel.openInfoWindow(marker);
     };
 
-    self.modifyFolder = function(folder) {
-      folder.editing(true);
-    };
-
     self.newFolderName = ko.observable('');
-
-    self.removeFolder = function(folder) {
-      var obsArr = mainViewModel.getContainingArray(folder),
-          arr = obsArr(),
-          index = arr.indexOf(folder),
-          toRemove = getAllMarkers(folder.contents());
-
-      // First remove all the markers contained within this folder and its subfolders from the map.
-      toRemove.forEach(function(marker) {
-        map.removeMarker(marker.id());
-      });
-
-      // Then remove this folder (and it's contents) from its containing array.
-      arr.splice(index, 1);
-      obsArr(arr);
-    };
 
     self.reorder = function(event, dragData, zoneData) {
       // If the item isn't being dragged over itself...
@@ -125,6 +135,10 @@
       } else {
         updateVisibility(folder.contents());
       }
+    };
+
+    self.toggleFolderEditing = function(folderOrFormElem) {
+      this.editing(!this.editing());
     };
 
     // Only display markers that are within the map's current bounds.
@@ -213,6 +227,34 @@
       var docEl = global.document.documentElement;
       var match = docEl.matches || docEl.matchesSelector || docEl.webkitMatchesSelector || docEl.mozMatchesSelector || docEl.msMatchesSelector || docEl.oMatchesSelector;
       return match.call(element, selector);
+    }
+
+    /**
+     * Removes the indicated folder and either removes its contents or
+     * moves its contents to its containing array.
+     */
+    function removeFolder(folder, removeContents) {
+      var obsArr = mainViewModel.getContainingArray(folder),
+          arr = obsArr(),
+          index = arr.indexOf(folder);
+
+      // Remove this folder and its contents from its containing array.
+      arr.splice(index, 1);
+
+      if (removeContents) {
+        var toRemove = getAllMarkers(folder.contents());
+
+        // Remove all the markers contained within this folder and its subfolders from the map.
+        toRemove.forEach(function(marker) {
+          map.removeMarker(marker.id());
+        });
+      } else {
+        // Move this folder's contents to its previous position in its containing array.
+        var arrHead = arr.splice(0, index - 1);
+        arr = arrHead.concat(folder.contents(), arr);
+      }
+
+      obsArr(arr);
     }
 
     /**

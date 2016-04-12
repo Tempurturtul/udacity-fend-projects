@@ -1,7 +1,3 @@
-/***********************************
-* Global Styles
-***********************************/
-
 * {
   box-sizing: border-box;
 }
@@ -15,21 +11,6 @@ main {
 main {
   position: relative;
 }
-
-/* Temporary style. */
-.marker-list li button {
-  height: 15px;
-  line-height: 0;
-  margin: 0;
-  padding: 0;
-  vertical-align: middle;
-}
-
-
-
-/***********************************
-* Specific Styles
-***********************************/
 
 /* The 'search markers' and 'visible only' inputs. */
 header fieldset {
@@ -45,7 +26,7 @@ header input[type='text'] {
   width: 100%;
 }
 
-/* The 'visible only' input's label. */
+/* The 'Only Show Markers Inside Map Bounds' input's label. */
 header label {
   align-items: center;
   display: flex;
@@ -53,9 +34,9 @@ header label {
   margin-top: 5px;
 }
 
-/* The 'visible only' input. */
+/* The 'Only Show Markers Inside Map Bounds' input. */
 header input[type='checkbox'] {
-  margin-left: 4px;
+  margin-right: 4px;
 }
 
 /* The top-most list of markers and folders. */
@@ -74,8 +55,46 @@ header ul {
 
 
 /***********************************
-* IDs
+* IDs And ID Specific Styles
 ***********************************/
+
+/* The remove contents checkbox input in the confirm element. */
+#confirm-contents {}
+
+#confirm-elem {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 9;  /* Above all. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#confirm-elem button {
+  margin: 0 2px;
+}
+
+#confirm-elem form {
+  background: white;
+  border: solid 1px black;
+  padding: 15px;
+}
+
+#confirm-elem label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* The no button in the confirm element. */
+#confirm-no {}
+
+/* The yes button in the confirm element. */
+#confirm-yes {}
 
 #map {
   height: 100%;
@@ -100,7 +119,7 @@ header ul {
 
 
 /***********************************
-* Classes
+* Classes And Class Specific Styles
 ***********************************/
 
 .add-marker {}
@@ -129,34 +148,99 @@ header ul {
   visibility: visible;
 }
 
-/* Applied to all types of folder buttons. */
+/* Applied to folder buttons. */
 .folder-button {
-  background: none;
+  align-items: center;
+  background: white;
   border: solid 1px grey;
   border-radius: 2px;
+  display: flex;
+  font-weight: bold;
   height: 20px;
-  vertical-align: middle;
+  justify-content: center;
+  margin-left: 5px;
+  padding: 0;
   width: 20px;
+}
+
+.folder-button:hover {
+  background: #eee;
+  border-color: #444;
+}
+
+.folder-button:first-of-type {
+  margin: 0 5px 0 0;
 }
 
 .folder-button-center {}
 
+.folder-button-center::after {
+  content: '¤';
+}
+
 .folder-button-collapse {}
+
+.folder-button-collapse::after {
+  content: '›';
+  transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+}
+
+.folder-button-confirm {
+  color: #0e0;
+  height: 100%;
+  right: 0;
+  margin: 0;
+  position: absolute;
+  text-shadow: 0 0 1px #050;
+  top: 0;
+}
+
+.folder-button-confirm::after {
+  content: '→';
+}
 
 .folder-button-open {}
 
-.folder-button-remove {}
+.folder-button-open::after {
+  content: '›';
+}
+
+/* Only visible when editing a folder. */
+.folder-button-remove {
+  color: #e00;
+  height: 100%;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  text-shadow: 0 0 1px #500;
+  top: 0;
+}
+
+.folder-button-remove::after {
+  content: '×';
+}
 
 .folder-contents {}
+
+/* Only visible when editing a folder. */
+.folder-edit-form {
+  position: relative;
+}
+
+/* Only visible when editing a folder. */
+.folder-edit-input {
+  background: none;
+  border: solid 1px grey;
+  margin: 0;
+  padding: 0 23px;
+  width: 150px;
+}
 
 .folder-entry,
 .marker-entry {
   align-items: center;
   display: flex;
-}
-
-.folder-entry > *,
-.marker-entry > * {
 }
 
 .fullpage-error {}
@@ -191,7 +275,7 @@ header ul {
   right: 7px;
   top: 7px;
   width: 36px;
-  z-index: 1;  /* Above map. */
+  z-index: 2;  /* Above map and sidebar. */
 }
 
 .sidebar-toggle:active,

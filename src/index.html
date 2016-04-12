@@ -93,7 +93,8 @@
       <div class="sidebar-content">
         <fieldset>
           <input type="text" placeholder="Search Existing" data-bind="textInput: sidebar.search">
-          <label>Currently Visible<input type="checkbox" data-bind="checked: sidebar.visibleOnly"></label>
+          <label><input type="checkbox" data-bind="checked: sidebar.visibleOnly"> Only Show Markers Inside Map Bounds</label>
+          <!-- <label>Show Collapsed Markers On Map<input type="checkbox" data-bind="checked: sidebar.visibleOnly"></label> -->
         </fieldset>
         <ul data-bind="template: { name: 'list-template', foreach: markers }">
         </ul>
@@ -163,9 +164,19 @@
             <span class="drag-handle"></span>
             <button class="folder-button" data-bind="click: $root.sidebar.toggleFolder,
                                                      css: { 'folder-button-open': collapsed, 'folder-button-collapse': !collapsed() }"></button>
-            <input data-bind="visible: editing, value: name, hasFocus: editing">
-            <span data-bind="text: name, click: $root.sidebar.modifyFolder, visible:!editing()"></span>
-            <button class="folder-button folder-button-remove" data-bind="click: $root.sidebar.removeFolder"></button>
+
+            <!-- If editing. -->
+            <form class="folder-edit-form"
+                  data-bind="visible: editing, submit: $root.sidebar.toggleFolderEditing">
+              <input class="folder-edit-input" data-bind="value: name">
+              <button class="folder-button folder-button-remove" type="button"
+                      data-bind="click: $root.sidebar.confirmFolderRemoval"></button>
+              <button class="folder-button folder-button-confirm" type="submit"></button>
+            </form>
+
+            <!-- If not editing. -->
+            <span data-bind="visible: !editing(), text: name, click: $root.sidebar.toggleFolderEditing"></span>
+
             <button class="folder-button folder-button-center" data-bind="click: $root.sidebar.centerOnContents"></button>
           </div>
           <div class="folder-contents">
@@ -190,7 +201,6 @@
         <span class="drag-handle"></span>
         <button class="folder-button folder-button-open"></button>
         <span data-bind="text: item.name"></span>
-        <button class="folder-button folder-button-remove"></button>
         <button class="folder-button folder-button-center"></button>
       </div>
     </script>
