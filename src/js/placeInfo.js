@@ -251,7 +251,9 @@
                   otherDistance = getDistance(place, otherCoords);
 
               // If the current page is closer...
-              if (currentDistance < otherDistance) {
+              /*jshint eqnull:true */
+              if (currentDistance < otherDistance ||
+                  (otherDistance == null && currentDistance != null)) {
                 // Insert the current page before the other page in the results.
                 var start = sortedPages.indexOf(sortedPages[i]);
                 sortedPages.splice(start, 0, currentPage);
@@ -276,25 +278,34 @@
     function getBestCoords(coords) {
       var i, len;
 
+      // Return null if coords is undefined.
+      if (!coords) {
+        return null;
+      }
+
+      // If there's only one set of coords, format and return it.
       if (coords.length === 1) {
         return {
           lat: coords[0].lat,
           lng: coords[0].lon
         };
-      } else {
-        for (i = 0, len = coords.length; i < len; i++) {
-          if (coords[i].primary) {
-            return {
-              lat: coords[i].lat,
-              lng: coords[i].lon
-            };
-          } else if (i === len - 1) {
-            // None of the available coordinates are marked as primary.
-            return {
-              lat: coords[0].lat,
-              lng: coords[0].lon
-            };
-          }
+      }
+
+      // If there are multiple sets of coords, search for the primary set and
+      // format and return it. If no primary set exists, format and return the
+      // first set.
+      for (i = 0, len = coords.length; i < len; i++) {
+        if (coords[i].primary) {
+          return {
+            lat: coords[i].lat,
+            lng: coords[i].lon
+          };
+        } else if (i === len - 1) {
+          // None of the available coordinates are marked as primary.
+          return {
+            lat: coords[0].lat,
+            lng: coords[0].lon
+          };
         }
       }
     }
@@ -331,6 +342,11 @@
    * @returns {number} - Distance in kilometers.
    */
   function getDistance(posA, posB) {
+    // Early abort if posA or posB is undefined.
+    if (!posA || !posB) {
+      return null;
+    }
+
     var earthRadius = 6371,  // km
         dLat = toRad(posB.lat - posA.lat),
         dLng = toRad(posB.lng - posA.lng),

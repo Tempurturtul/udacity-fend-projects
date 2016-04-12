@@ -91,7 +91,7 @@ var browsers = ['google-chrome', 'firefox'];
 // Path to root url for gh-pages (/project-name).
 var ghRoot = '/fend-neighborhood-map';
 // CSS selectors ignored by uncss.
-var uncssIgnoredSelectors = [];
+var uncssIgnoredSelectors = [/.+/];
 // Path to page tested by psi.
 var psiPath = '/';
 // Cache-control values for local server.
