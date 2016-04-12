@@ -241,6 +241,7 @@ header ul {
 .marker-entry {
   align-items: center;
   display: flex;
+  white-space: nowrap;
 }
 
 .fullpage-error {}
