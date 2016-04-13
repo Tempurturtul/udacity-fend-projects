@@ -150,14 +150,11 @@ header ul {
 
 /* Applied to folder buttons. */
 .folder-button {
-  align-items: center;
   background: white;
   border: solid 1px grey;
   border-radius: 2px;
-  display: flex;
   font-weight: bold;
   height: 20px;
-  justify-content: center;
   margin-left: 5px;
   padding: 0;
   width: 20px;
@@ -174,51 +171,30 @@ header ul {
 
 .folder-button-center {}
 
-.folder-button-center::after {
-  content: '¤';
-}
-
 .folder-button-collapse {}
 
-.folder-button-collapse::after {
-  content: '›';
-  transform: rotate(90deg);
-  -webkit-transform: rotate(90deg);
-}
-
 .folder-button-confirm {
-  color: #0e0;
   height: 100%;
   right: 0;
   margin: 0;
   position: absolute;
-  text-shadow: 0 0 1px #050;
   top: 0;
-}
-
-.folder-button-confirm::after {
-  content: '→';
 }
 
 .folder-button-open {}
 
-.folder-button-open::after {
-  content: '›';
+.folder-button-open img {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
 }
 
 /* Only visible when editing a folder. */
 .folder-button-remove {
-  color: #e00;
   height: 100%;
   left: 0;
   margin: 0;
   position: absolute;
-  text-shadow: 0 0 1px #500;
   top: 0;
-}
-
-.folder-button-remove::after {
-  content: '×';
 }
 
 .folder-contents {}

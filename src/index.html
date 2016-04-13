@@ -124,7 +124,7 @@
     </header>
 
     <main>
-      <button class="sidebar-toggle" data-bind="click: sidebar.toggle"><img src="image/sidebar-button.svg" height="20" width="20" alt="Toggle"></button>
+      <button class="sidebar-toggle" data-bind="click: sidebar.toggle"><img src="image/sidebar-button.svg" height="20" width="20"></button>
       <input id="places-search" type="text" placeholder="Search">
       <div id="map"></div>
       <form data-bind="visible: markersForm.visible">
@@ -182,21 +182,21 @@
                                               }">
             <span class="drag-handle"></span>
             <button class="folder-button" data-bind="click: $root.sidebar.toggleFolder,
-                                                     css: { 'folder-button-open': collapsed, 'folder-button-collapse': !collapsed() }"></button>
+                                                     css: { 'folder-button-open': collapsed, 'folder-button-collapse': !collapsed() }"><img src="image/fold-arrow.svg" height="10" width="10"></button>
 
             <!-- If editing. -->
             <form class="folder-edit-form"
                   data-bind="visible: editing, submit: $root.sidebar.toggleFolderEditing">
               <input class="folder-edit-input" data-bind="value: name">
               <button class="folder-button folder-button-remove" type="button"
-                      data-bind="click: $root.sidebar.confirmFolderRemoval"></button>
-              <button class="folder-button folder-button-confirm" type="submit"></button>
+                      data-bind="click: $root.sidebar.confirmFolderRemoval"><img src="image/x-red.svg" height="10" width="10"></button>
+              <button class="folder-button folder-button-confirm" type="submit"><img src="image/checkmark-green.svg" height="10" width="10"></button>
             </form>
 
             <!-- If not editing. -->
             <span data-bind="visible: !editing(), text: name, click: $root.sidebar.toggleFolderEditing"></span>
 
-            <button class="folder-button folder-button-center" data-bind="click: $root.sidebar.centerOnContents"></button>
+            <button class="folder-button folder-button-center" data-bind="click: $root.sidebar.centerOnContents"><img src="image/center.svg" height="10" width="10"></button>
           </div>
           <div class="folder-contents">
             <ul data-bind="template: { name: 'list-template', foreach: contents }">
