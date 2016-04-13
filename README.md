@@ -6,8 +6,7 @@ This is the **3rd** project in Udacity's [Front-End Web Developer Nanodegree](ht
 
 ## Controls
 
-- Use the **arrow keys** or the **WASD keys** to move.
-- If on a touch-enabled device (mobile for example) you may also use **touches** to move.
+- Use the **arrow keys**, the **WASD keys**, or **touches** to move.
 
 ## Quickstart For Local Development
 
