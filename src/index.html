@@ -127,13 +127,12 @@
       <button class="sidebar-toggle" data-bind="click: sidebar.toggle"><img src="image/sidebar-button.svg" height="20" width="20"></button>
       <input id="places-search" type="text" placeholder="Search">
       <div id="map"></div>
-      <form data-bind="visible: markersForm.visible">
+      <form class="markers-form" data-bind="visible: markersForm.visible">
         <fieldset>
           <legend>Pending Map Markers</legend>
           <!-- ko foreach: markersForm.pending -->
           <div class="pending-marker">
-            <input class="add-marker" type="checkbox" data-bind="checked: confirmed">
-            <span data-bind="text: marker.title"></span>
+            <label><input class="add-marker" type="checkbox" data-bind="checked: confirmed"> <span data-bind="text: marker.title"></span></label>
           </div>
           <!-- /ko -->
         </fieldset>

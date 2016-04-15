@@ -226,6 +226,21 @@ header ul {
 
 }
 
+.markers-form {
+  align-items: center;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  justify-content: center;
+  left: 0;
+  padding: 25px;
+  position: absolute;
+  top: 80%;
+  width: 100%;
+  z-index: 1;  /* Above map. */
+}
+
 .pending-marker {}
 
 .sidebar {
@@ -237,7 +252,7 @@ header ul {
   top: 0;
   transition: width 0.25s;
   width: 0px;
-  z-index: 1;  /* Above map. */
+  z-index: 2;  /* Above map and markers form. */
 }
 
 .sidebar-toggle {
@@ -252,7 +267,7 @@ header ul {
   right: 7px;
   top: 7px;
   width: 36px;
-  z-index: 2;  /* Above map and sidebar. */
+  z-index: 3;  /* Above map, markers form, and sidebar. */
 }
 
 .sidebar-toggle:active,
