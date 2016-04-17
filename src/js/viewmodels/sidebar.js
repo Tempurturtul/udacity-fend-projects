@@ -60,14 +60,6 @@
 
     self.expanded = ko.observable(false);
 
-    self.markerClicked = function(marker) {
-      // Center the map on the marker.
-      map.centerOn(marker.id());
-
-      // Open the marker's info window.
-      mainViewModel.openInfoWindow(marker);
-    };
-
     self.newFolderName = ko.observable('');
 
     self.reorder = function(event, dragData, zoneData) {

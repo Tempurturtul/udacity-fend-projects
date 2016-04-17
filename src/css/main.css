@@ -13,6 +13,10 @@ main {
   height: 100%;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 main {
   position: relative;
 }
@@ -20,8 +24,8 @@ main {
 /* The 'search markers' and 'visible only' inputs. */
 header fieldset {
   border: none;
+  flex: 0 0 36px;  /* Basis equal to toggle-button's height. */
   margin: none;
-  min-height: 36px;     /* The toggle button's height. */
   padding: 0 43px 0 0;  /* The toggle button's width plus its right offset (36 + 7). */
 }
 
@@ -44,17 +48,24 @@ header input[type='checkbox'] {
   margin-right: 4px;
 }
 
-/* The top-most list of markers and folders. */
-header > div > ul {
-  overflow-x: scroll;
-  padding-left: 0;
-  white-space: nowrap;
-}
-
 /* The list and sublists of markers and folders. */
 header ul {
   list-style: none;
   padding-left: 1em;
+}
+
+/* The top-most list of markers and folders. */
+header > ul {
+  border: solid grey 1px;
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* The add folder form. */
+header > form {
+  flex: 1 1 auto;
 }
 
 
@@ -75,10 +86,7 @@ header ul {
   content: '‒';
 }
 
-.expanded {
-  transition: width 0.25s ease-in;
-  width: 100% !important;
-}
+.expanded {}
 
 /* Applied to folder buttons. */
 .folder-button {
@@ -182,16 +190,12 @@ header ul {
 }
 
 #markers-form {
-  align-items: center;
   background: white;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  justify-content: center;
   left: 0;
+  min-height: 30%;
   padding: 25px;
   position: absolute;
-  top: 80%;
+  top: 70%;
   width: 100%;
   z-index: 1;  /* Above map. */
 }
@@ -212,30 +216,23 @@ header ul {
 
 #sidebar {
   background: white;
-  min-height: 100%;
-  right: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   overflow: hidden;
+  padding: 7px;
   position: absolute;
+  right: -100%;
   top: 0;
-  transition: width 0.25s;
-  width: 0px;
+  transform: translate(0);
+  transition: transform 0.25s ease-in;
+  width: 100%;
   z-index: 2;  /* Above map and markers form. */
 }
 
-#sidebar > div {
-  font-size: 0;  /* Prevent scroll bar popping when expanding/collapsing. */
-  max-width: 100%;
-  opacity: 0;
-  padding: 7px;
-  visibility: hidden;
-  width: 500px;
-}
-
-#sidebar.expanded > div {
-  font-size: 1em;
-  opacity: 1;
-  transition: font-size 0s 0.25s, opacity 0.25s 0.25s, visibility 0s 0.25s;
-  visibility: visible;
+#sidebar.expanded {
+  transform: translate(-100%);
+  transition: transform 0.25s ease-in;
 }
 
 #sidebar-toggle {
@@ -265,8 +262,19 @@ header ul {
 * Media Queries
 ***********************************/
 
+@media (min-width: 400px) {
+  #places-search {
+    width: 200px;
+  }
+}
+
 @media (min-width: 500px) {
-  .expanded {
-    width: 500px !important;
+  #sidebar {
+    right: -500px;
+    width: 500px;
+  }
+
+  #sidebar.expanded {
+    transform: translate(-500px);
   }
 }

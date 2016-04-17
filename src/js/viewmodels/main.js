@@ -183,6 +183,14 @@
       }
     };
 
+    self.markerClicked = function(marker) {
+      // Center the map on the marker.
+      map.centerOn(marker.id());
+
+      // Open the marker's info window.
+      self.openInfoWindow(marker);
+    };
+
     // A collection of map markers and folders.
     self.markers = ko.observableArray([]);
 
@@ -333,10 +341,7 @@
           }
         });
 
-        self.markersForm.pending.push({
-          marker: marker,
-          confirmed: ko.observable(true)
-        });
+        self.markersForm.pending.push(marker);
       });
 
       // Open the confirm markers form.

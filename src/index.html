@@ -110,18 +110,16 @@
     </script>
 
     <header id="sidebar" data-bind="css: {expanded: sidebar.expanded}">
-      <div>
-        <fieldset>
-          <input type="text" placeholder="Search Existing" data-bind="textInput: sidebar.search">
-          <label><input type="checkbox" data-bind="checked: sidebar.visibleOnly"> Only Show Markers Inside Map Bounds</label>
-          <!-- <label>Show Collapsed Markers On Map<input type="checkbox" data-bind="checked: sidebar.visibleOnly"></label> -->
-        </fieldset>
-        <ul data-bind="template: { name: 'list-template', foreach: markers }">
-        </ul>
-        <form data-bind="submit: sidebar.addFolder">
-          <input data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">
-        </form>
-      </div>
+      <fieldset>
+        <input type="text" placeholder="Search Existing" data-bind="textInput: sidebar.search">
+        <label><input type="checkbox" data-bind="checked: sidebar.visibleOnly"> Only Show Markers Inside Map Bounds</label>
+        <!-- <label>Show Collapsed Markers On Map<input type="checkbox" data-bind="checked: sidebar.visibleOnly"></label> -->
+      </fieldset>
+      <ul data-bind="template: { name: 'list-template', foreach: markers }">
+      </ul>
+      <form data-bind="submit: sidebar.addFolder">
+        <input data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">
+      </form>
     </header>
 
     <main>
@@ -133,7 +131,8 @@
           <legend>Pending Map Markers</legend>
           <!-- ko foreach: markersForm.pending -->
           <div class="pending-marker">
-            <label><input type="checkbox" data-bind="checked: confirmed"> <span data-bind="text: marker.title"></span></label>
+            <input type="checkbox" data-bind="checked: visible">
+            <span data-bind="text: title, click: $root.markerClicked"></span>
           </div>
           <!-- /ko -->
         </fieldset>
@@ -162,7 +161,7 @@
                                                 data: { items: $parent.contents || $parent.markers, item: $data }
                                               }">
             <span class="drag-handle"></span>
-            <span data-bind="text: title, click: $root.sidebar.markerClicked"></span>
+            <span data-bind="text: title, click: $root.markerClicked"></span>
           </div>
         <!-- /ko -->
 
