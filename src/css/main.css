@@ -60,96 +60,6 @@ header ul {
 
 
 /***********************************
-* IDs And ID Specific Styles
-***********************************/
-
-#map {
-  height: 100%;
-  width: 100%;
-}
-
-#markers-form {
-  align-items: center;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  justify-content: center;
-  left: 0;
-  padding: 25px;
-  position: absolute;
-  top: 80%;
-  width: 100%;
-  z-index: 1;  /* Above map. */
-}
-
-#places-search {
-  box-shadow: rgba(0, 0, 0, 0.298039) 0 1px 4px -1px;
-  background: white;
-  border: none;
-  border-radius: 2px;
-  color: rgb(86, 86, 86);
-  font-family: Roboto, Arial, sans-serif;
-  font-size: 14px;
-  height: 30px;
-  margin-top: 10px;
-  max-width: 100%;
-  padding: 0 3px 0 5px;
-  width: 200px;
-}
-
-#sidebar {
-  background: white;
-  min-height: 100%;
-  right: 0;
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  transition: width 0.25s;
-  width: 0px;
-  z-index: 2;  /* Above map and markers form. */
-}
-
-#sidebar > div {
-  font-size: 0;  /* Prevent scroll bar popping when expanding/collapsing. */
-  max-width: 100%;
-  opacity: 0;
-  padding: 7px;
-  visibility: hidden;
-  width: 500px;
-}
-
-#sidebar.expanded > div {
-  font-size: 1em;
-  opacity: 1;
-  transition: font-size 0s 0.25s, opacity 0.25s 0.25s, visibility 0s 0.25s;
-  visibility: visible;
-}
-
-#sidebar-toggle {
-  background: white;
-  border: solid grey 1px;
-  border-radius: 2px;
-  box-shadow: rgba(0, 0, 0, 0.298039) 0 1px 4px -1px;
-  height: 36px;
-  line-height: 0;
-  padding: 0;
-  position: absolute;
-  right: 7px;
-  top: 7px;
-  width: 36px;
-  z-index: 3;  /* Above map, markers form, and sidebar. */
-}
-
-#sidebar-toggle:active,
-#sidebar-toggle:focus {
-  box-shadow: none;
-  outline: none;
-}
-
-
-
-/***********************************
 * Classes And Class Specific Styles
 ***********************************/
 
@@ -256,43 +166,97 @@ header ul {
   width: 20px;
 }
 
-.util-fullpage-form {
-  /*
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+.util-fullpage-form {}
+
+.util-fullpage-form-overlay {}
+
+
+
+/***********************************
+* IDs And ID Specific Styles
+***********************************/
+
+#map {
   height: 100%;
-  text-align: center;
-  background: rgba(0,0,0,0.5);
-  z-index: 9;
-  */  /* Above all. */
-  /*
-  display: flex;
+  width: 100%;
+}
+
+#markers-form {
   align-items: center;
-  justify-content: center;
-  */
-}
-
-.util-fullpage-form button {
-  /*
-  margin: 0 2px;
-  */
-}
-
-.util-fullpage-form form {
-  /*
   background: white;
-  border: solid 1px black;
-  padding: 15px;
-  */
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  justify-content: center;
+  left: 0;
+  padding: 25px;
+  position: absolute;
+  top: 80%;
+  width: 100%;
+  z-index: 1;  /* Above map. */
 }
 
-.util-fullpage-form label {
-  /*
-  display: block;
-  margin-bottom: 10px;
-  */
+#places-search {
+  box-shadow: rgba(0, 0, 0, 0.298039) 0 1px 4px -1px;
+  background: white;
+  border: none;
+  border-radius: 2px;
+  color: rgb(86, 86, 86);
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  height: 30px;
+  margin-top: 10px;
+  padding: 0 3px 0 5px;
+  width: 150px;
+}
+
+#sidebar {
+  background: white;
+  min-height: 100%;
+  right: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  transition: width 0.25s;
+  width: 0px;
+  z-index: 2;  /* Above map and markers form. */
+}
+
+#sidebar > div {
+  font-size: 0;  /* Prevent scroll bar popping when expanding/collapsing. */
+  max-width: 100%;
+  opacity: 0;
+  padding: 7px;
+  visibility: hidden;
+  width: 500px;
+}
+
+#sidebar.expanded > div {
+  font-size: 1em;
+  opacity: 1;
+  transition: font-size 0s 0.25s, opacity 0.25s 0.25s, visibility 0s 0.25s;
+  visibility: visible;
+}
+
+#sidebar-toggle {
+  background: white;
+  border: solid grey 1px;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.298039) 0 1px 4px -1px;
+  height: 36px;
+  line-height: 0;
+  padding: 0;
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  width: 36px;
+  z-index: 3;  /* Above map, markers form, and sidebar. */
+}
+
+#sidebar-toggle:active,
+#sidebar-toggle:focus {
+  box-shadow: none;
+  outline: none;
 }
 
 
