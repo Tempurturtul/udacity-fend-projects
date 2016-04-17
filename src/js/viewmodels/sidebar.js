@@ -9,6 +9,7 @@
   function Sidebar(mainViewModel) {
     var self = this,
         document = global.document,
+        util = global.util,
         map = global.map,
         ko = global.ko,
         models = global.models;
@@ -30,31 +31,15 @@
     };
 
     self.confirmFolderRemoval = function(folder) {
-      var confirmElem = document.createElement('div');
-      confirmElem.id = 'confirm-elem';
+      var msg = '<p>Are you sure you want to remove the <i>' + folder.name().replace(/</g, '&lt;') + '</i> folder?</p>',
+          inputs = '<label><input type="checkbox" value="removeContents"> Also remove the folder\'s contents.</label>';
 
-      confirmElem.innerHTML = '<form>'+
-                              '<p>Are you sure you want to remove the <i>' + folder.name().replace(/</g, '&lt;') + '</i> folder?</p>' +
-                              '<label><input id="confirm-contents" type="checkbox"> Also remove the folder\'s contents.</label>' +
-                              '<button id="confirm-yes" type="button">Yes</button>' +
-                              '<button id="confirm-no" type="button">No</button>' +
-                              '</form>';
+      util.fullpageForm(msg, inputs, confirm);
 
-      document.body.appendChild(confirmElem);
-
-      document.getElementById('confirm-yes').onclick = submit;
-      document.getElementById('confirm-no').onclick = dismiss;
-
-      function dismiss() {
-        document.body.removeChild(confirmElem);
-        confirmElem = null;
-      }
-
-      function submit() {
-        var removeContents = document.getElementById('confirm-contents').checked;
+      function confirm(inputData) {
+        var removeContents = inputData[0].checked;
 
         removeFolder(folder, removeContents);
-        dismiss();
       }
     };
 

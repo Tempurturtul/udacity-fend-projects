@@ -1,3 +1,8 @@
+/*
+  WORK ON THIS NEXT
+   - .util-fullpage-form (Make sure default styling is as desired first.)
+*/
+
 * {
   box-sizing: border-box;
 }
@@ -58,47 +63,24 @@ header ul {
 * IDs And ID Specific Styles
 ***********************************/
 
-/* The remove contents checkbox input in the confirm element. */
-#confirm-contents {}
-
-#confirm-elem {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  background: rgba(0,0,0,0.5);
-  z-index: 9;  /* Above all. */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#confirm-elem button {
-  margin: 0 2px;
-}
-
-#confirm-elem form {
-  background: white;
-  border: solid 1px black;
-  padding: 15px;
-}
-
-#confirm-elem label {
-  display: block;
-  margin-bottom: 10px;
-}
-
-/* The no button in the confirm element. */
-#confirm-no {}
-
-/* The yes button in the confirm element. */
-#confirm-yes {}
-
 #map {
   height: 100%;
   width: 100%;
+}
+
+#markers-form {
+  align-items: center;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  justify-content: center;
+  left: 0;
+  padding: 25px;
+  position: absolute;
+  top: 80%;
+  width: 100%;
+  z-index: 1;  /* Above map. */
 }
 
 #places-search {
@@ -116,13 +98,60 @@ header ul {
   width: 200px;
 }
 
+#sidebar {
+  background: white;
+  min-height: 100%;
+  right: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  transition: width 0.25s;
+  width: 0px;
+  z-index: 2;  /* Above map and markers form. */
+}
+
+#sidebar > div {
+  font-size: 0;  /* Prevent scroll bar popping when expanding/collapsing. */
+  max-width: 100%;
+  opacity: 0;
+  padding: 7px;
+  visibility: hidden;
+  width: 500px;
+}
+
+#sidebar.expanded > div {
+  font-size: 1em;
+  opacity: 1;
+  transition: font-size 0s 0.25s, opacity 0.25s 0.25s, visibility 0s 0.25s;
+  visibility: visible;
+}
+
+#sidebar-toggle {
+  background: white;
+  border: solid grey 1px;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.298039) 0 1px 4px -1px;
+  height: 36px;
+  line-height: 0;
+  padding: 0;
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  width: 36px;
+  z-index: 3;  /* Above map, markers form, and sidebar. */
+}
+
+#sidebar-toggle:active,
+#sidebar-toggle:focus {
+  box-shadow: none;
+  outline: none;
+}
+
 
 
 /***********************************
 * Classes And Class Specific Styles
 ***********************************/
-
-.add-marker {}
 
 .drag-handle {
   cursor: move;
@@ -139,13 +168,6 @@ header ul {
 .expanded {
   transition: width 0.25s ease-in;
   width: 100% !important;
-}
-
-.expanded .sidebar-content {
-  font-size: 1em;
-  opacity: 1;
-  transition: font-size 0s 0.25s, opacity 0.25s 0.25s, visibility 0s 0.25s;
-  visibility: visible;
 }
 
 /* Applied to folder buttons. */
@@ -226,69 +248,51 @@ header ul {
 
 }
 
-.markers-form {
-  align-items: center;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  justify-content: center;
-  left: 0;
-  padding: 25px;
-  position: absolute;
-  top: 80%;
-  width: 100%;
-  z-index: 1;  /* Above map. */
-}
-
 .pending-marker {}
-
-.sidebar {
-  background: white;
-  min-height: 100%;
-  right: 0;
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  transition: width 0.25s;
-  width: 0px;
-  z-index: 2;  /* Above map and markers form. */
-}
-
-.sidebar-toggle {
-  background: white;
-  border: solid grey 1px;
-  border-radius: 2px;
-  box-shadow: rgba(0, 0, 0, 0.298039) 0 1px 4px -1px;
-  height: 36px;
-  line-height: 0;
-  padding: 0;
-  position: absolute;
-  right: 7px;
-  top: 7px;
-  width: 36px;
-  z-index: 3;  /* Above map, markers form, and sidebar. */
-}
-
-.sidebar-toggle:active,
-.sidebar-toggle:focus {
-  box-shadow: none;
-  outline: none;
-}
-
-.sidebar-content {
-  font-size: 0;  /* Prevent scroll bar popping when expanding/collapsing. */
-  max-width: 100%;
-  opacity: 0;
-  padding: 7px;
-  visibility: hidden;
-  width: 500px;
-}
 
 .toggle-folder {
   height: 20px;
   padding: 5px;
   width: 20px;
+}
+
+.util-fullpage-form {
+  /*
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 9;
+  */  /* Above all. */
+  /*
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  */
+}
+
+.util-fullpage-form button {
+  /*
+  margin: 0 2px;
+  */
+}
+
+.util-fullpage-form form {
+  /*
+  background: white;
+  border: solid 1px black;
+  padding: 15px;
+  */
+}
+
+.util-fullpage-form label {
+  /*
+  display: block;
+  margin-bottom: 10px;
+  */
 }
 
 
