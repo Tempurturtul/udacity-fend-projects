@@ -162,45 +162,59 @@ header > form {
 
 .fullpage-error {}
 
-/* The information source buttons in the info window. */
-.info-source-buttons {
-  /*align-items: center;*/
-  /*display: flex;*/
-  /*flex-wrap: wrap;*/
-  font-size: 0.8em;
-  /*justify-content: center;*/
-  text-align: center;
-}
-
-.info-source-buttons button {
-  /*flex: 1 0 10px;*/
-  margin: 2px;
-  width: 70px;
-}
-
 .info-window {
+  height: 150px;
+  overflow: hidden;
+  text-align: center;
   width: 180px;
 }
 
-.info-window > article {}
+.info-window > article,
+.info-window > form {
+  height: 100%;
+  overflow: auto;
+}
 
 .info-window > article > h1 {
   font-size: 1.2em;
-  text-align: center;
 }
 
-.info-window > article > p {
-  text-align: center;
-}
+.info-window > article > p {}
 
 .info-window > article > h2 {
   font-size: 1em;
   font-weight: normal;
   margin-bottom: 3px;
-  text-align: center;
 }
 
-.info-window > form {}
+.info-window-edit-buttons,
+.info-window-form-buttons,
+.info-window-source-buttons {
+  font-size: 0.8em;
+}
+
+.info-window-edit-buttons button,
+.info-window-form-buttons button {
+  margin: 6px 5px 0 5px;
+  width: 70px;
+}
+
+.info-window-form-buttons {}
+
+.info-window-info {
+  border: solid grey 1px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
+  margin: 8px;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.info-window-source-buttons {}
+
+.info-window-source-buttons button {
+  margin: 2px;
+  width: 70px;
+}
 
 .marker-entry {}
 

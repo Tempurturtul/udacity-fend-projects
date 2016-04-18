@@ -313,19 +313,23 @@
               '<h1 data-bind="text: marker().title"></h1>' +
               '<p data-bind="text: marker().description"></p>' +
               '<h2>Information Sources</h2>' +
-              '<div class="info-source-buttons">' +
+              '<div class="info-window-source-buttons">' +
               '<button data-bind="click: changeSourceToGoogle">google</button><button data-bind="click: changeSourceToFlickr">flickr</button><button data-bind="click: changeSourceToFoursquare">foursquare</button><button data-bind="click: changeSourceToWikipedia">wikipedia</button>' +
               '</div>' +
-              '<section data-bind="html: info"></section>' +
+              '<section class="info-window-info" data-bind="html: info"></section>' +
+              '<div class="info-window-edit-buttons">' +
               '<button data-bind="click: edit">Modify</button>' +
               '<button data-bind="click: remove">Remove</button>'+
+              '</div>' +
               '</article>' +
               // The edit display.
               '<form data-bind="visible: editing, submit: update">' +
-              '<input data-bind="textInput: marker().title" placeholder="Title"></input>' +
-              '<input data-bind="textInput: marker().description" placeholder="Description"></input>' +
+              '<label>Title<input data-bind="textInput: marker().title"></input></label>' +
+              '<label>Description<input data-bind="textInput: marker().description"></input></label>' +
+              '<div class="info-window-form-buttons">' +
               '<button data-bind="click: restore" type="button">Cancel</button>' +
               '<button type="submit">Confirm</button>' +
+              '</div>' +
               '</form>'
   };
 
