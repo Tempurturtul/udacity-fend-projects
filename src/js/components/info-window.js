@@ -12,6 +12,7 @@
           getMarker = params.getMarker,
           markerID = params.markerID,
           recreateMarker = params.recreateMarker,
+          openInfoWindow = params.openInfoWindow,
           source = 'google',  // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
           infoCache = {},  // Cached information retrieved from third party APIs.
           infoLifetime = 1200;  // Seconds to wait before updating cached info.
@@ -283,7 +284,8 @@
 
       self.update = function() {
         map.removeMarker(self.marker().id());
-        recreateMarker(self.marker());
+        var updatedMarker = recreateMarker(self.marker());
+        openInfoWindow(updatedMarker);
       };
 
       init();
@@ -310,7 +312,10 @@
     template: '<article data-bind="visible: !editing()">' +
               '<h1 data-bind="text: marker().title"></h1>' +
               '<p data-bind="text: marker().description"></p>' +
+              '<h2>Information Sources</h2>' +
+              '<div class="info-source-buttons">' +
               '<button data-bind="click: changeSourceToGoogle">google</button><button data-bind="click: changeSourceToFlickr">flickr</button><button data-bind="click: changeSourceToFoursquare">foursquare</button><button data-bind="click: changeSourceToWikipedia">wikipedia</button>' +
+              '</div>' +
               '<section data-bind="html: info"></section>' +
               '<button data-bind="click: edit">Modify</button>' +
               '<button data-bind="click: remove">Remove</button>'+

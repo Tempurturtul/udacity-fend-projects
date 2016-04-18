@@ -217,6 +217,7 @@
        */
       function createInfoWindowContent(marker) {
         var content = document.createElement('div');
+        content.classList.add('info-window');
 
         content.dataset.bind = 'component: { ' +
                                  'name: \'info-window\', ' +
@@ -224,7 +225,8 @@
                                    'markerID: \'' + marker.id() + '\', ' +
                                    'getMarker: $root.getMarker, ' +
                                    'getContainingArray: $root.getContainingArray, ' +
-                                   'recreateMarker: $root.createOrRecreateMarker' +
+                                   'recreateMarker: $root.createOrRecreateMarker, ' +
+                                   'openInfoWindow: $root.openInfoWindow' +
                                  '} ' +
                                '}';
 
