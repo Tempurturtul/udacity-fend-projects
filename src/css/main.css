@@ -163,16 +163,9 @@ header > form {
 .fullpage-error {}
 
 .info-window {
-  height: 150px;
   overflow: hidden;
   text-align: center;
   width: 180px;
-}
-
-.info-window > article,
-.info-window > form {
-  height: 100%;
-  overflow: auto;
 }
 
 .info-window > article > h1 {

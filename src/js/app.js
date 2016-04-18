@@ -44,11 +44,11 @@
       global.document.body.innerHTML = '<div class="fullpage-error">' +
                                        '<h1>Error</h1>' +
                                        '<p>Google Maps API not found.</p>' +
-                                       '<ul>' +
+                                       '<ol>' +
                                        '<li>Are you connected to the internet?</li>' +
                                        '<li>Are you able to reach <a href="https://www.google.com">www.google.com</a>?</li>' +
                                        '<li>Is it possible that something on your end is blocking requests to maps.googleapis.com?</li>' +
-                                       '</ul>' +
+                                       '</ol>' +
                                        '</div>';
 
       // Abort initialization.
