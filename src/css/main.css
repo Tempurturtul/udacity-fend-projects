@@ -216,6 +216,10 @@ header > form {
 
 #sidebar {
   background: white;
+  border: solid grey 1px;
+  border-right: none;
+  border-top: none;
+  box-shadow: rgba(0, 0, 0, 0.298039) -1px 1px 4px -1px;
   display: flex;
   flex-direction: column;
   height: 100%;
