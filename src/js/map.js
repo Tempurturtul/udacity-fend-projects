@@ -121,6 +121,7 @@
     places.getDetails({placeId: markerID}, detailsCb);
 
     function detailsCb(place, status) {
+
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         info.results.push(formatDetails(place));
       }

@@ -151,38 +151,42 @@
 
           switch (info.source) {
             case 'google':
-              // address = place.formatted_address;
+              // + address = place.formatted_address;
               // phone = place.formatted_phone_number;
-              // internationalPhone = place.international_phone_number;
-              // attributions = place.html_attributions;  // String array.
+              // + internationalPhone = place.international_phone_number;
+              // + attributions = place.html_attributions;  // String array. (Must be dispayed.)
               // icon = place.icon;
-              // name = place.name;  // NOTE Possibly raw text as typed by user.
-              // photos = formatPhotos(place.photos);
-              // price = formatPriceLevel(place.price_level);
-              // rating = place.rating;  // 1.0 to 5.0
-              // reviews = formatReviews(place.reviews);
-              // types = place.types;  // String array. Example: ['restaurant', 'establishment']
-              // googlePage = place.url;  // Official Google-owned page for the place.
-              // utcOffset = place.utc_offset;
-              // website = place.website;  // The place's website. For example: a business' homepage.
+              // + name = place.name;  // NOTE Possibly raw text as typed by user.
+              // + photos = formatPhotos(place.photos);
+              // + price = formatPriceLevel(place.price_level);
+              // + rating = place.rating;  // 1.0 to 5.0
+              // + reviews = formatReviews(place.reviews);
+              // + types = place.types;  // String array. Example: ['restaurant', 'establishment']
+              // + googlePage = place.url;  // Official Google-owned page for the place.
+              // + utcOffset = place.utc_offset;
+              // + website = place.website;  // The place's website. For example: a business' homepage.
 
               // Build the HTML for each result.
               info.results.forEach(function(result) {
-                var h3Inner = result.name.replace(/</g, '&lt;');
+                var title = googleResultTitle(result),
+                    details = googleResultDetails(result),
+                    photos = googleResultPhotos(result),
+                    reviews = googleResultReviews(result);
 
-                // If there's a site, provide a link to it in the h3.
-                if (result.website) {
-                  h3Inner = '<a href="' + result.website + '" target="_blank">' + h3Inner + '</a>';
-                }
 
                 resultsHTML += '<div>' +
-                               '<h3>' + h3Inner + '</h3>' +
+                                title +
+                                details +
+                                photos +
+                                reviews +
                                '</div>';
               });
 
               return str.replace('%description%', 'Details From Google')
                         .replace('%results%', resultsHTML)
-                        .replace('%credit%', '');
+                        .replace('%credit%', info.results
+                                                    .map(function(result) { return result.attributions; })
+                                                    .join(' '));
             case 'flickr':
               // Build the HTML for each result.
               info.results.forEach(function(result) {
@@ -231,6 +235,80 @@
             default:
               // The source wasn't identified, return nothing.
               return;
+          }
+
+          function googleResultDetails(result) {
+            var details = '';
+
+            if (result.address) {
+              details += '<li>Address: ' + result.address + '</li>';
+            }
+            if (result.internationalPhone) {
+              details += '<li>Phone: ' + result.internationalPhone + '</li>';
+            }
+            if (result.types) {
+              details += '<li>Type: ' + result.types.join(', ') + '</li>';
+            }
+            if (result.price) {
+              details += '<li>Price: ' + result.price + '</li>';
+            }
+            if (result.rating) {
+              details += '<li>Rating: ' + result.rating + ' / 5</li>';
+            }
+            if (result.googlePage) {
+              details += '<li><a href="' + result.googlePage + '" target="_blank">Google Page</a></li>';
+            }
+            if (result.utcOffset) {
+              details += '<li>UTC Offset: ' + result.utcOffset + '</li>';
+            }
+
+            return '<ul>' + details + '</ul>';
+          }
+
+          function googleResultPhotos(result) {
+            var photos = '';
+
+            result.photos.forEach(function(photo) {
+              photos += '<li>' +
+                        '<img src="' + photo.src + '">' +
+                        '<small>' + photo.attributions.join(' ') + '</small>' +
+                        '</li>';
+            });
+
+            return '<ul>' + photos + '</ul>';
+          }
+
+          function googleResultReviews(result) {
+            var reviews = '';
+
+            result.reviews.forEach(function(review) {
+              reviews += '<li>' +
+                         (review.author.profile ?
+                          '<a href="' + review.author.profile + '">' + review.author.name.replace(/</g, '&lt;') + '</a>' :
+                          review.author.name.replace(/</g, '&lt;')) +
+                         '<ul>' +
+                         review.aspects
+                            .map(function(aspect) {
+                              return '<li>' + aspect.type + ': ' + aspect.rating + '/3</li>';
+                            })
+                            .join('') +
+                         '</ul>' +
+                         '<p>' + review.text + '</p>' +
+                         '</li>';
+            });
+
+            return '<ul>' + reviews + '</ul>';
+          }
+
+          function googleResultTitle(result) {
+            var name = result.name.replace(/</g, '&lt;');
+
+            // If there's a site, link the name to it.
+            if (result.website) {
+              name = '<a href="' + result.website + '" target="_blank">' + name + '</a>';
+            }
+
+            return '<h3>' + name + '</h3>';
           }
         }
 
