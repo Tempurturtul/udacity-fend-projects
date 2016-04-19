@@ -8,6 +8,7 @@
     viewModel: function(mainViewModel) {
       var self = this,
           elemID = 'info-window',
+          elemHolderID = 'info-window-holder',
           placeholderMarker = new models.Marker(),
           source = 'google',    // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
           infoCache = {},       // Cached information retrieved from third party APIs.
@@ -380,8 +381,6 @@
 
       // Invoked when the map closes the info window.
       function closing() {
-        console.log('closing...');
-
         // Undo in-progress edits.
         if (self.editing()) {
           self.restore();
@@ -390,8 +389,8 @@
         // Clear the assigned marker.
         self.marker(placeholderMarker);
 
-        // TODO Preserve the content in the DOM.
-        console.log(document.getElementById(elemID));
+        // Preserve the content in the DOM.
+        document.getElementById(elemHolderID).appendChild(map.getInfoWindowContent());
       }
 
       function init() {

@@ -19,6 +19,7 @@
     addMarker: addMarker,
     centerOn: centerOn,
     closeInfoWindow: closeInfoWindow,
+    getInfoWindowContent: getInfoWindowContent,
     getPlaceDetails: getPlaceDetails,
     init: init,
     modifyMarker: modifyMarker,
@@ -76,6 +77,13 @@
   function closeInfoWindow() {
     google.maps.event.trigger(infoWindow, 'closeclick');
     infoWindow.close();
+  }
+
+  /**
+   * Returns the info window's content.
+   */
+  function getInfoWindowContent() {
+    return infoWindow.getContent();
   }
 
   /**
@@ -329,7 +337,7 @@
 
       function unsuspend() {
         map.setOptions({scrollwheel: true});
-        infoWindow.removeListener(unsuspendScrollZoomListener);
+        unsuspendScrollZoomListener.remove();
         unsuspendScrollZoomListener = null;
       }
     }
