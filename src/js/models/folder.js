@@ -21,6 +21,8 @@
       init();
     }
 
+    data = data || {};
+
     // The name of the folder.
     this.name = ko.observable(data.name || 'New Folder');
     // The folder contents (marker and/or marker folder array).

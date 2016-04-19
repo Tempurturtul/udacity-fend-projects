@@ -223,7 +223,8 @@
 
         // Remove all the markers contained within this folder and its subfolders from the map.
         toRemove.forEach(function(marker) {
-          map.removeMarker(marker.id());
+          // The second argument indicates that the markers only need to be removed from the map.
+          mainViewModel.removeMarker(marker, true);
         });
       } else {
         // Move this folder's contents to its previous position in its containing array.

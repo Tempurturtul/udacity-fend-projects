@@ -1,41 +1,30 @@
 // The info-window custom component.
-//   Dependencies: ko, map, placeInfo.
 
 (function(global) {
 
   global.components = global.components || {};
 
   global.components.infoWindow = {
-    viewModel: function(params) {
+    viewModel: function(mainViewModel) {
       var self = this,
-          getContainingArray = params.getContainingArray,
-          getMarker = params.getMarker,
-          markerID = params.markerID,
-          recreateMarker = params.recreateMarker,
-          openInfoWindow = params.openInfoWindow,
-          source = 'google',  // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
-          infoCache = {},  // Cached information retrieved from third party APIs.
-          infoLifetime = 1200;  // Seconds to wait before updating cached info.
+          elemID = 'info-window',
+          placeholderMarker = new models.Marker(),
+          source = 'google',    // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
+          infoCache = {},       // Cached information retrieved from third party APIs.
+          infoLifetime = 1200,  // Seconds to wait before updating cached info.
+          preChangeMarkerData;  // Used to restore the marker's state if editing is canceled.
 
-      self.marker = ko.observable(getMarker(markerID));
-
-      // Used to restore the marker's state if editing is canceled.
-      var preChangeMarkerData = ko.toJS(self.marker());
-
-      self.changeSourceToFlickr = function() {
-        changeSource('flickr');
+      // Change the information source.
+      self.changeSourceTo = {
+        flickr: function() { changeSource('flickr'); },
+        foursquare: function() { changeSource('foursquare'); },
+        google: function() { changeSource('google'); },
+        wikipedia: function() { changeSource('wikipedia'); }
       };
 
-      self.changeSourceToFoursquare = function() {
-        changeSource('foursquare');
-      };
-
-      self.changeSourceToGoogle = function() {
-        changeSource('google');
-      };
-
-      self.changeSourceToWikipedia = function() {
-        changeSource('wikipedia');
+      // Close the info window.
+      self.close = function() {
+        map.closeInfoWindow();  // Triggers an event that invokes closing().
       };
 
       self.edit = function() {
@@ -47,8 +36,25 @@
       // The HTML string representing additional information.
       self.info = ko.observable();
 
+      // The marker the info-window is currently tied to.
+      self.marker = ko.observable(placeholderMarker);
+
+      // Open the info window.
+      self.open = function(marker) {
+        if (self.marker().id() !== placeholderMarker.id()) {
+          // The info window is already open, close it first.
+          self.close();
+        }
+
+        self.marker(marker);
+        map.setInfoWindowContent(document.getElementById(elemID));
+        map.openInfoWindow(marker.id());
+      };
+
+      // Refresh the additional information for the marker.
       self.refresh = function() {
-        var place = self.marker().position(),
+        var markerID = self.marker().id(),
+            place = self.marker().position(),
             cached;
 
         switch (source) {
@@ -330,45 +336,40 @@
         }
       };
 
+      // Remove the marker.
       self.remove = function() {
-        map.closeInfoWindow();
-
-        // Remove the marker from the array it's a part of.
-        var obsArr = getContainingArray(self.marker()),
-            arr = obsArr(),
-            index;
-
-        if (arr.length && arr[0].marker) {
-          // The pending array. Markers are contained within the marker property.
-          index = arr
-            .map(function(data) {
-              return data.marker;
-            })
-            .indexOf(self.marker());
-        } else {
-          index = arr.indexOf(self.marker());
-        }
-
-        arr.splice(index, 1);
-        obsArr(arr);
-
-        // Remove the marker from the map.
-        map.removeMarker(self.marker().id());
+        var marker = self.marker();
+        self.close();
+        mainViewModel.removeMarker(marker);
       };
 
+      // Restores the marker's data.
       self.restore = function() {
         self.marker().title(preChangeMarkerData.title);
         self.marker().description(preChangeMarkerData.description);
         self.editing(false);
       };
 
+      // Removes and recreates the marker, then reopens the info window.
       self.update = function() {
-        map.removeMarker(self.marker().id());
-        var updatedMarker = recreateMarker(self.marker());
-        openInfoWindow(updatedMarker);
+        var marker = self.marker();
+
+        self.close();
+        // Remove the marker by ID because it's been edited. Also, only remove it from the map.
+        mainViewModel.removeMarker(marker.id(), true);
+        mainViewModel.createOrRecreateMarker(marker);
+        self.open(marker);
       };
 
       init();
+
+      function cacheMarkerData(editing) {
+        if (editing) {
+          preChangeMarkerData = ko.toJS(self.marker());
+        } else {
+          preChangeMarkerData = null;
+        }
+      }
 
       function changeSource(newSource) {
         if (source !== newSource) {
@@ -377,14 +378,26 @@
         }
       }
 
-      function init() {
-        map.onInfoWindowCloseClick(function() {
-          if (self.editing()) {
-            self.restore();
-          }
-        });
+      // Invoked when the map closes the info window.
+      function closing() {
+        console.log('closing...');
 
-        self.refresh();
+        // Undo in-progress edits.
+        if (self.editing()) {
+          self.restore();
+        }
+
+        // Clear the assigned marker.
+        self.marker(placeholderMarker);
+
+        // TODO Preserve the content in the DOM.
+        console.log(document.getElementById(elemID));
+      }
+
+      function init() {
+        map.onInfoWindowClose(closing);
+        self.editing.subscribe(cacheMarkerData);
+        mainViewModel.infoWindow = self;
       }
     },
 
@@ -393,7 +406,7 @@
               '<p data-bind="text: marker().description"></p>' +
               '<h2>Information Sources</h2>' +
               '<div class="info-window-source-buttons">' +
-              '<button data-bind="click: changeSourceToGoogle">google</button><button data-bind="click: changeSourceToFlickr">flickr</button><button data-bind="click: changeSourceToFoursquare">foursquare</button><button data-bind="click: changeSourceToWikipedia">wikipedia</button>' +
+              '<button data-bind="click: changeSourceTo.google">google</button><button data-bind="click: changeSourceTo.flickr">flickr</button><button data-bind="click: changeSourceTo.foursquare">foursquare</button><button data-bind="click: changeSourceTo.wikipedia">wikipedia</button>' +
               '</div>' +
               '<section class="info-window-info" data-bind="html: info"></section>' +
               '<div class="info-window-edit-buttons">' +

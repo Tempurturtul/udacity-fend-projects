@@ -149,7 +149,16 @@
         <button type="button" data-bind="click: markersForm.cancel">Cancel</button>
         <button type="button" data-bind="click: markersForm.submit">Confirm</button>
       </form>
+      <!-- Holds the Google Maps infowindow's content when it is closed. -->
+      <div id="info-window-holder" style="display: none">
+        <div id="info-window" data-bind="component: {
+            name: 'info-window',
+            params: $root
+          }">
+        </div>
+      </div>
     </main>
+
 
     <!-- Templates. -->
 

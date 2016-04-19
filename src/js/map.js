@@ -11,7 +11,8 @@
       markers = [],   // The Google Map Markers.
       places,         // The Google Places Service.
       searchBox,      // The Google Places SearchBox.
-      infoWindow;     // The Google Map InfoWindow.
+      infoWindow,     // The Google Map InfoWindow.
+      unsuspendScrollZoomListener;  // The infowindow 'closeclick' listener to unsuspend scroll zooming.
 
 
   global.map = {
@@ -22,7 +23,7 @@
     init: init,
     modifyMarker: modifyMarker,
     onBoundsChange: onBoundsChange,
-    onInfoWindowCloseClick: onInfoWindowCloseClick,
+    onInfoWindowClose: onInfoWindowClose,
     onMapDblClick: onMapDblClick,
     onMarkerClick: onMarkerClick,
     onPlacesChanged: onPlacesChanged,
@@ -70,13 +71,11 @@
   }
 
   /**
-   * Closes the infowindow after triggering its `closeclick` event, then
-   * clears it of all event listeners.
+   * Closes the infowindow after triggering its `closeclick` event.
    */
   function closeInfoWindow() {
     google.maps.event.trigger(infoWindow, 'closeclick');
     infoWindow.close();
-    google.maps.event.clearInstanceListeners(infoWindow);
   }
 
   /**
@@ -270,9 +269,10 @@
 
   /**
    * Adds a `closeclick` event listener to the info window and calls the function `fn`
-   * when the event fires.
+   * when the event fires. The `closeclick` event is also triggered when the
+   * `closeInfoWindow` function is invoked.
    */
-  function onInfoWindowCloseClick(fn) {
+  function onInfoWindowClose(fn) {
     return infoWindow.addListener('closeclick', fn);
   }
 
@@ -306,30 +306,32 @@
    * Opens the info window on the identified marker and suspends scroll zooming.
    */
   function openInfoWindow(markerID) {
-    var marker = getMarker(markerID);
+    var marker = getMarker(markerID),
+        mapOpts = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)),
+        canScroll = mapOpts.hasOwnProperty('scrollwheel') ? mapOpts.scrollwheel : true;
 
-    suspendScrollZoom();
+    // If scroll zooming isn't disabled in the saved map options...
+    if (canScroll) {
+      suspendScrollZoom();
+    }
 
     infoWindow.open(map, marker);
 
     /**
-     * Suspends scroll zooming on the map while the info window is open.
+     * Suspends scroll zooming while the info window is open.
      */
     function suspendScrollZoom() {
-      var mapOpts = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)),
-          canScroll = mapOpts.hasOwnProperty('scrollwheel') ? mapOpts.scrollwheel : true;
-
-      if (canScroll) {
-        infoWindow.addListener('closeclick', unsuspendScrollZoom);
+      // If scrolling isn't already suspended...
+      if (!unsuspendScrollZoomListener) {
+        unsuspendScrollZoomListener = infoWindow.addListener('closeclick', unsuspend);
         map.setOptions({scrollwheel: false});
       }
-    }
 
-    /**
-     * Unsuspends scroll zooming on the map.
-     */
-    function unsuspendScrollZoom() {
-      map.setOptions({scrollwheel: true});
+      function unsuspend() {
+        map.setOptions({scrollwheel: true});
+        infoWindow.removeListener(unsuspendScrollZoomListener);
+        unsuspendScrollZoomListener = null;
+      }
     }
   }
 

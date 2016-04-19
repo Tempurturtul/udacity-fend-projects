@@ -72,7 +72,8 @@
         map = global.map,
         ko = global.ko,
         models = global.models,
-        viewmodels = global.viewmodels;
+        viewmodels = global.viewmodels,
+        components = global.components;
 
     // Method for creating or recreating a marker. Returns the marker.
     self.createOrRecreateMarker = function(marker) {
@@ -85,7 +86,7 @@
       map.addMarker(data);
 
       map.onMarkerClick(data.id, function() {
-        self.openInfoWindow(marker);
+        self.infoWindow.open(marker);
       });
 
       return marker;
@@ -183,12 +184,13 @@
       }
     };
 
+    self.infoWindow = null;  // The info-window component's view model.
+
     self.markerClicked = function(marker) {
       // Center the map on the marker.
       map.centerOn(marker.id());
 
-      // Open the marker's info window.
-      self.openInfoWindow(marker);
+      self.infoWindow.open(marker);
     };
 
     // A collection of map markers and folders.
@@ -196,42 +198,41 @@
 
     self.markersForm = null;  // The markers form view model.
 
-    // Opens the info window on a marker.
-    self.openInfoWindow = function(marker) {
-      // Create new content for the info window related to this marker.
-      var content = createInfoWindowContent(marker);
-
-      // Close the info window if it's open.
-      map.closeInfoWindow();
-      // Change the info window's content.
-      map.setInfoWindowContent(content);
-      // Open the info window on this marker.
-      map.openInfoWindow(marker.id());
-
-      // Apply knockout bindings to the newly created content.
-      ko.applyBindings(self, content);
-
-      /**
-       * Returns an element intended for use as an info window's content. It
-       * utilizes the custom component 'info-window'.
-       */
-      function createInfoWindowContent(marker) {
-        var content = document.createElement('div');
-        content.classList.add('info-window');
-
-        content.dataset.bind = 'component: { ' +
-                                 'name: \'info-window\', ' +
-                                 'params: { ' +
-                                   'markerID: \'' + marker.id() + '\', ' +
-                                   'getMarker: $root.getMarker, ' +
-                                   'getContainingArray: $root.getContainingArray, ' +
-                                   'recreateMarker: $root.createOrRecreateMarker, ' +
-                                   'openInfoWindow: $root.openInfoWindow' +
-                                 '} ' +
-                               '}';
-
-        return content;
+    // Removes the marker, optionally from the map only.
+    self.removeMarker = function(marker, fromMapOnly) {
+      // If a marker ID was passed, get the corresponding marker.
+      if (!(marker instanceof models.Marker)) {
+        marker = self.getMarker(marker);
       }
+
+      // If the info window is set to this marker, close it.
+      if (infoWindow.marker() && infoWindow.marker().id() === marker.id()) {
+        infoWindow.close();
+      }
+
+      if (!fromMapOnly) {
+        // Remove the marker from the array it's a part of.
+        var obsArr = self.getContainingArray(marker),
+            arr = obsArr(),
+            index;
+
+        if (arr.length && arr[0].marker) {
+          // The pending array. Markers are contained within the marker property.
+          index = arr
+            .map(function(data) {
+              return data.marker;
+            })
+            .indexOf(marker);
+        } else {
+          index = arr.indexOf(marker);
+        }
+
+        arr.splice(index, 1);
+        obsArr(arr);
+      }
+
+      // Remove the marker from the map.
+      map.removeMarker(marker.id());
     };
 
     self.sidebar = null;  // The sidebar view model.
@@ -298,6 +299,7 @@
       self.markersForm = new viewmodels.MarkersForm(self);
       self.sidebar = new viewmodels.Sidebar(self);
 
+      // Populate the markers observable array.
       arr.forEach(function(data) {
         if (data.contents) {
           var folder = createFolder(data);
