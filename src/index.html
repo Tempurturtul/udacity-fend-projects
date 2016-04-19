@@ -33,10 +33,15 @@
                 disableDoubleClickZoom: true
               }
             },
-            searchBoxID = 'places-search';
-
-        var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)) || defaults.mapOptions,
+            searchBoxID = 'places-search',
+            mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)),
             inputElem = document.getElementById(searchBoxID);
+
+        // If no map options were saved, save the defaults.
+        if (!mapOptions) {
+          mapOptions = defaults.mapOptions;
+          localStorage.setItem(storageKeys.MAPOPTIONS, JSON.stringify(mapOptions));
+        }
 
         _map = {};
 

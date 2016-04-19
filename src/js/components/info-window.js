@@ -330,7 +330,9 @@
         }
       };
 
-       self.remove = function() {
+      self.remove = function() {
+        map.closeInfoWindow();
+
         // Remove the marker from the array it's a part of.
         var obsArr = getContainingArray(self.marker()),
             arr = obsArr(),
@@ -376,12 +378,11 @@
       }
 
       function init() {
-        // The second argument tells the method to remove existing event listeners.
         map.onInfoWindowCloseClick(function() {
           if (self.editing()) {
             self.restore();
           }
-        }, true);
+        });
 
         self.refresh();
       }

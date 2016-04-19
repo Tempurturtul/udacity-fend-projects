@@ -3,6 +3,9 @@
 (function(global) {
   var document = global.document,
       localStorage = global.localStorage,
+      storageKeys = {
+        MAPOPTIONS: 'mapOptions'
+      },
       google,         // The Google Maps API.
       map,            // The Google Map.
       markers = [],   // The Google Map Markers.
@@ -67,10 +70,13 @@
   }
 
   /**
-   * Closes the infowindow.
+   * Closes the infowindow after triggering its `closeclick` event, then
+   * clears it of all event listeners.
    */
   function closeInfoWindow() {
+    google.maps.event.trigger(infoWindow, 'closeclick');
     infoWindow.close();
+    google.maps.event.clearInstanceListeners(infoWindow);
   }
 
   /**
@@ -264,14 +270,9 @@
 
   /**
    * Adds a `closeclick` event listener to the info window and calls the function `fn`
-   * when the event fires. If removeExisting is true, removes existing `closeclick`
-   * event listeners.
+   * when the event fires.
    */
-  function onInfoWindowCloseClick(fn, removeExisting) {
-    if (removeExisting) {
-      google.maps.event.clearListeners(infoWindow, 'closeclick');
-    }
-
+  function onInfoWindowCloseClick(fn) {
     return infoWindow.addListener('closeclick', fn);
   }
 
@@ -302,12 +303,34 @@
   }
 
   /**
-   * Opens the info window on the identified marker.
+   * Opens the info window on the identified marker and suspends scroll zooming.
    */
   function openInfoWindow(markerID) {
     var marker = getMarker(markerID);
 
+    suspendScrollZoom();
+
     infoWindow.open(map, marker);
+
+    /**
+     * Suspends scroll zooming on the map while the info window is open.
+     */
+    function suspendScrollZoom() {
+      var mapOpts = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS)),
+          canScroll = mapOpts.hasOwnProperty('scrollwheel') ? mapOpts.scrollwheel : true;
+
+      if (canScroll) {
+        infoWindow.addListener('closeclick', unsuspendScrollZoom);
+        map.setOptions({scrollwheel: false});
+      }
+    }
+
+    /**
+     * Unsuspends scroll zooming on the map.
+     */
+    function unsuspendScrollZoom() {
+      map.setOptions({scrollwheel: true});
+    }
   }
 
   /**
