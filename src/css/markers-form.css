@@ -1,0 +1,16 @@
+/***********************************
+* Styling for the markers form.
+***********************************/
+
+#markers-form {
+  background: white;
+  left: 0;
+  min-height: 30%;
+  padding: 25px;
+  position: absolute;
+  top: 70%;
+  width: 100%;
+  z-index: 1;  /* Above map. */
+}
+
+.pending-marker {}

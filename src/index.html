@@ -9,6 +9,11 @@
     <!-- build:css styles.css -->
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/map.css">
+    <link rel="stylesheet" href="css/info-window.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/markers-list.css">
+    <link rel="stylesheet" href="css/markers-form.css">
     <!-- endbuild -->
 
     <!-- Google Maps initialization callback. -->
@@ -115,7 +120,7 @@
         <label><input type="checkbox" data-bind="checked: sidebar.visibleOnly"> Only Show Markers Inside Map Bounds</label>
         <!-- <label>Show Collapsed Markers On Map<input type="checkbox" data-bind="checked: sidebar.visibleOnly"></label> -->
       </fieldset>
-      <ul data-bind="template: { name: 'list-template', foreach: markers }">
+      <ul id="markers-list" data-bind="template: { name: 'list-template', foreach: markers }">
       </ul>
       <form data-bind="submit: sidebar.addFolder">
         <input data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">

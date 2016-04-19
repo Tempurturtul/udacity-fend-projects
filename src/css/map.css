@@ -1,0 +1,34 @@
+/***********************************
+* Styling for the map and places search bar.
+***********************************/
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+#places-search {
+  box-shadow: rgba(0, 0, 0, 0.298039) 0 1px 4px -1px;
+  background: white;
+  border: none;
+  border-radius: 2px;
+  color: rgb(86, 86, 86);
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  height: 30px;
+  margin-top: 10px;
+  padding: 0 3px 0 5px;
+  width: 150px;
+}
+
+
+
+/***********************************
+* Media Queries
+***********************************/
+
+@media (min-width: 400px) {
+  #places-search {
+    width: 200px;
+  }
+}

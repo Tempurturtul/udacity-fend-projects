@@ -1,0 +1,50 @@
+/***********************************
+* Styling for the info window(s).
+***********************************/
+
+.info-window {
+  overflow: hidden;
+  text-align: center;
+  width: 180px;
+}
+
+.info-window > article > h1 {
+  font-size: 1.2em;
+}
+
+.info-window > article > p {}
+
+.info-window > article > h2 {
+  font-size: 1em;
+  font-weight: normal;
+  margin-bottom: 3px;
+}
+
+.info-window-edit-buttons,
+.info-window-form-buttons,
+.info-window-source-buttons {
+  font-size: 0.8em;
+}
+
+.info-window-edit-buttons button,
+.info-window-form-buttons button {
+  margin: 6px 5px 0 5px;
+  width: 70px;
+}
+
+.info-window-form-buttons {}
+
+.info-window-info {
+  border: solid grey 1px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
+  margin: 8px;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.info-window-source-buttons {}
+
+.info-window-source-buttons button {
+  margin: 2px;
+  width: 70px;
+}
