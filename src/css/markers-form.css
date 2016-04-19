@@ -4,13 +4,32 @@
 
 #markers-form {
   background: white;
+  border-top: solid grey 1px;
   left: 0;
   min-height: 30%;
   padding: 25px;
   position: absolute;
+  text-align: center;
   top: 70%;
   width: 100%;
   z-index: 1;  /* Above map. */
 }
 
-.pending-marker {}
+#markers-form button {
+  margin: 10px 5px;
+}
+
+.pending-marker {
+  align-items: center;
+  border-bottom: solid 1px #ccc;
+  display: flex;
+  padding: 5px;
+}
+
+.pending-marker:last-of-type {
+  border-bottom: none;
+}
+
+.pending-marker span {
+  flex: 1 1 auto;
+}
