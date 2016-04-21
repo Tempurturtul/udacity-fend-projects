@@ -72,12 +72,14 @@
         map = global.map,
         ko = global.ko,
         models = global.models,
-        viewmodels = global.viewmodels,
-        components = global.components;
+        viewmodels = global.viewmodels;
 
     // Method for creating or recreating a marker. Returns the marker.
     self.createOrRecreateMarker = function(marker) {
-      if (!(marker instanceof models.Marker)) {
+      if (marker instanceof models.Marker) {
+        // The marker is being recreated, remove it from the map first (by ID because it's probably been edited).
+        self.removeMarker(marker.id(), true);
+      } else {
         marker = new models.Marker(marker);
       }
 
@@ -184,7 +186,7 @@
       }
     };
 
-    self.infoWindow = null;  // The info-window component's view model.
+    self.infoWindow = null;  // The info-window view model.
 
     self.markerClicked = function(marker) {
       // Center the map on the marker.
@@ -206,8 +208,8 @@
       }
 
       // If the info window is set to this marker, close it.
-      if (infoWindow.marker() && infoWindow.marker().id() === marker.id()) {
-        infoWindow.close();
+      if (self.infoWindow.marker() && self.infoWindow.marker().id() === marker.id()) {
+        self.infoWindow.close();
       }
 
       if (!fromMapOnly) {
@@ -216,16 +218,7 @@
             arr = obsArr(),
             index;
 
-        if (arr.length && arr[0].marker) {
-          // The pending array. Markers are contained within the marker property.
-          index = arr
-            .map(function(data) {
-              return data.marker;
-            })
-            .indexOf(marker);
-        } else {
-          index = arr.indexOf(marker);
-        }
+        index = arr.indexOf(marker);
 
         arr.splice(index, 1);
         obsArr(arr);
@@ -254,10 +247,7 @@
       });
 
       // Push the created marker to the pending markers array.
-      self.markersForm.pending.push({
-        marker: marker,
-        confirmed: ko.observable(true)
-      });
+      self.markersForm.pending.push(marker);
 
       // Open the confirm markers form.
       self.markersForm.open();
@@ -298,6 +288,7 @@
 
       self.markersForm = new viewmodels.MarkersForm(self);
       self.sidebar = new viewmodels.Sidebar(self);
+      self.infoWindow = new viewmodels.InfoWindow(self);
 
       // Populate the markers observable array.
       arr.forEach(function(data) {

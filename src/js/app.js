@@ -57,9 +57,6 @@
 
     // The map was successfully initialized.
 
-    // Register the info-window custom component.
-    ko.components.register('info-window', components.infoWindow);
-
     // Apply the Knockout bindings.
     ko.applyBindings(new viewmodels.Main());
   }

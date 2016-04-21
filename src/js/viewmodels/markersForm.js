@@ -12,6 +12,7 @@
         ko = global.ko,
         tracked = [];  // Array of objects containing marker ID and KO subscription.
 
+    // Cancels the form.
     self.cancel = function() {
       // Close the markers form.
       close();
@@ -21,14 +22,17 @@
       clearTracked();
     };
 
+    // Opens the form.
     self.open = function() {
       if (!self.visible()) {
         self.visible(true);
       }
     };
 
+    // The pending markers.
     self.pending = ko.observableArray([]);
 
+    // Submits the form.
     self.submit = function() {
       // Close the markers form.
       close();
@@ -51,10 +55,14 @@
       clearTracked();
     };
 
+    // Whether or not the form is visible (open).
     self.visible = ko.observable(false);
 
     init();
 
+    /**
+     * Clears the pending markers.
+     */
     function clearPending() {
       self.pending().forEach(function(pending) {
         map.removeMarker(pending.id());
@@ -63,6 +71,9 @@
       self.pending([]);
     }
 
+    /**
+     * Clears the tracked markers.
+     */
     function clearTracked() {
       tracked.forEach(function(obj) {
         obj.subscription.dispose();
@@ -71,32 +82,55 @@
       tracked = [];
     }
 
+    /**
+     * Closes the form.
+     */
     function close() {
       if (self.visible()) {
         self.visible(false);
       }
     }
 
+    /**
+     * Initializes the markers form.
+     */
     function init() {
       self.pending.subscribe(trackPending);
     }
 
-    function trackPending(markers) {
+    /**
+     * Tracks the pending markers.
+     * @param {object[]} pendingMarkers
+     */
+    function trackPending(pendingMarkers) {
+      console.log(pendingMarkers);
+      // If there are no pending markers, close the form.
+      if (!pendingMarkers.length) {
+        clearTracked();
+        close();
+        return;
+      }
+
       var trackedIDs = tracked.map(function(obj) {
         return obj.id;
       });
 
-      markers.forEach(function(marker) {
+      pendingMarkers.forEach(function(pending) {
         // If the marker isn't being tracked...
-        if (trackedIDs.indexOf(marker.id()) === -1) {
+        if (trackedIDs.indexOf(pending.id()) === -1) {
           tracked.push({
-            id: marker.id(),
-            subscription: marker.visible.subscribe(function(newValue) { updateVisibility(marker.id(), newValue); })
+            id: pending.id(),
+            subscription: pending.visible.subscribe(function(newValue) { updateVisibility(pending.id(), newValue); })
           });
         }
       });
     }
 
+    /**
+     * Updates the visibility of the marker.
+     * @param {string} id - The marker's ID.
+     * @param {boolean} newValue - The new visibility value.
+     */
     function updateVisibility(id, newValue) {
       map.modifyMarker(id, {visible: newValue});
     }

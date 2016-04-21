@@ -79,9 +79,9 @@
     <script async src="js/util.js"></script>
     <script async src="js/placeInfo.js"></script>
     <script async src="js/map.js"></script>
-    <script async src="js/components/info-window.js"></script>
     <script async src="js/models/folder.js"></script>
     <script async src="js/models/marker.js"></script>
+    <script async src="js/viewmodels/info-window.js"></script>
     <script async src="js/viewmodels/sidebar.js"></script>
     <script async src="js/viewmodels/markersForm.js"></script>
     <script async src="js/viewmodels/main.js"></script>
@@ -149,14 +149,6 @@
         <button type="button" data-bind="click: markersForm.cancel">Cancel</button>
         <button type="button" data-bind="click: markersForm.submit">Confirm</button>
       </form>
-      <!-- Holds the Google Maps infowindow's content when it is closed. -->
-      <div id="info-window-holder" style="display: none">
-        <div id="info-window" data-bind="component: {
-            name: 'info-window',
-            params: $root
-          }">
-        </div>
-      </div>
     </main>
 
 
