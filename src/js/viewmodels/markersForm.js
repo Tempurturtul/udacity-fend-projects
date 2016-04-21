@@ -64,8 +64,10 @@
      * Clears the pending markers.
      */
     function clearPending() {
-      self.pending().forEach(function(pending) {
-        mainViewModel.removeMarker(pending);
+      var pendingCopy = self.pending().slice();
+
+      pendingCopy.forEach(function(marker) {
+        mainViewModel.removeMarker(marker);  // Removes from containing array as well (self.pending).
       });
     }
 

@@ -107,32 +107,20 @@
         for (i = 0; i < obsArrs.length; i++) {
           obsArr = obsArrs[i];
 
-          if (obsArr().length && obsArr()[0].marker) {
-            // The pending array. The actual marker is stored in the marker
-            // property and there are no folders to worry about.
-            for (j = 0, len = obsArr().length; j < len; j++) {
-              if (obsArr()[j].marker === markerOrFolder) {
-                // The observable array we're looking for.
+          // For each item in the observable array...
+          for (j = 0, len = obsArr().length; j < len; j++) {
+            if (obsArr()[j].contents) {
+              // Folder
+              if (obsArr()[j] === markerOrFolder) {
+                // The folder we're searching for.
                 return obsArr;
+              } else {
+                // Push the contents to the deeper search array.
+                deeper.push(obsArr()[j].contents);
               }
-            }
-          } else {
-            // The markers array or a contents array. There may be a mix of
-            // markers and folders.
-            for (j = 0, len = obsArr().length; j < len; j++) {
-              if (obsArr()[j].contents) {
-                // Folder
-                if (obsArr()[j] === markerOrFolder) {
-                  // The folder we're searching for.
-                  return obsArr;
-                } else {
-                  // Push the contents to the deeper search array.
-                  deeper.push(obsArr()[j].contents);
-                }
-              } else if (obsArr()[j] === markerOrFolder) {
-                // The marker we're looking for.
-                return obsArr;
-              }
+            } else if (obsArr()[j] === markerOrFolder) {
+              // The marker we're looking for.
+              return obsArr;
             }
           }
         }
