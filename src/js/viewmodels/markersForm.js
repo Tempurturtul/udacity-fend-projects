@@ -65,10 +65,8 @@
      */
     function clearPending() {
       self.pending().forEach(function(pending) {
-        map.removeMarker(pending.id());
+        mainViewModel.removeMarker(pending);
       });
-
-      self.pending([]);
     }
 
     /**
@@ -103,7 +101,6 @@
      * @param {object[]} pendingMarkers
      */
     function trackPending(pendingMarkers) {
-      console.log(pendingMarkers);
       // If there are no pending markers, close the form.
       if (!pendingMarkers.length) {
         clearTracked();
