@@ -23,6 +23,8 @@
       init();
     }
 
+    data = data || {};
+
     // NOTE Add new properties for use with map to the map.modifyMarker method.
 
     // TODO Additional (google.maps) properties to consider:

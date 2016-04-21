@@ -76,7 +76,10 @@
 
     // Method for creating or recreating a marker. Returns the marker.
     self.createOrRecreateMarker = function(marker) {
-      if (!(marker instanceof models.Marker)) {
+      if (marker instanceof models.Marker) {
+        // The marker is being recreated, remove it from the map first (by ID because it's probably been edited).
+        self.removeMarker(marker.id(), true);
+      } else {
         marker = new models.Marker(marker);
       }
 
@@ -85,7 +88,7 @@
       map.addMarker(data);
 
       map.onMarkerClick(data.id, function() {
-        self.openInfoWindow(marker);
+        self.infoWindow.open(marker);
       });
 
       return marker;
@@ -183,12 +186,13 @@
       }
     };
 
+    self.infoWindow = null;  // The info-window view model.
+
     self.markerClicked = function(marker) {
       // Center the map on the marker.
       map.centerOn(marker.id());
 
-      // Open the marker's info window.
-      self.openInfoWindow(marker);
+      self.infoWindow.open(marker);
     };
 
     // A collection of map markers and folders.
@@ -196,42 +200,32 @@
 
     self.markersForm = null;  // The markers form view model.
 
-    // Opens the info window on a marker.
-    self.openInfoWindow = function(marker) {
-      // Create new content for the info window related to this marker.
-      var content = createInfoWindowContent(marker);
-
-      // Close the info window if it's open.
-      map.closeInfoWindow();
-      // Change the info window's content.
-      map.setInfoWindowContent(content);
-      // Open the info window on this marker.
-      map.openInfoWindow(marker.id());
-
-      // Apply knockout bindings to the newly created content.
-      ko.applyBindings(self, content);
-
-      /**
-       * Returns an element intended for use as an info window's content. It
-       * utilizes the custom component 'info-window'.
-       */
-      function createInfoWindowContent(marker) {
-        var content = document.createElement('div');
-        content.classList.add('info-window');
-
-        content.dataset.bind = 'component: { ' +
-                                 'name: \'info-window\', ' +
-                                 'params: { ' +
-                                   'markerID: \'' + marker.id() + '\', ' +
-                                   'getMarker: $root.getMarker, ' +
-                                   'getContainingArray: $root.getContainingArray, ' +
-                                   'recreateMarker: $root.createOrRecreateMarker, ' +
-                                   'openInfoWindow: $root.openInfoWindow' +
-                                 '} ' +
-                               '}';
-
-        return content;
+    // Removes the marker, optionally from the map only.
+    self.removeMarker = function(marker, fromMapOnly) {
+      // If a marker ID was passed, get the corresponding marker.
+      if (!(marker instanceof models.Marker)) {
+        marker = self.getMarker(marker);
       }
+
+      // If the info window is set to this marker, close it.
+      if (self.infoWindow.marker() && self.infoWindow.marker().id() === marker.id()) {
+        self.infoWindow.close();
+      }
+
+      if (!fromMapOnly) {
+        // Remove the marker from the array it's a part of.
+        var obsArr = self.getContainingArray(marker),
+            arr = obsArr(),
+            index;
+
+        index = arr.indexOf(marker);
+
+        arr.splice(index, 1);
+        obsArr(arr);
+      }
+
+      // Remove the marker from the map.
+      map.removeMarker(marker.id());
     };
 
     self.sidebar = null;  // The sidebar view model.
@@ -253,10 +247,7 @@
       });
 
       // Push the created marker to the pending markers array.
-      self.markersForm.pending.push({
-        marker: marker,
-        confirmed: ko.observable(true)
-      });
+      self.markersForm.pending.push(marker);
 
       // Open the confirm markers form.
       self.markersForm.open();
@@ -297,7 +288,9 @@
 
       self.markersForm = new viewmodels.MarkersForm(self);
       self.sidebar = new viewmodels.Sidebar(self);
+      self.infoWindow = new viewmodels.InfoWindow(self);
 
+      // Populate the markers observable array.
       arr.forEach(function(data) {
         if (data.contents) {
           var folder = createFolder(data);
