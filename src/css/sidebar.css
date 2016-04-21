@@ -57,6 +57,14 @@
 /* The add folder form. */
 #sidebar > form {
   flex: 1 1 auto;
+  position: relative;
+}
+
+/* The add folder form's submit button. */
+#sidebar > form button {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 #sidebar-toggle {

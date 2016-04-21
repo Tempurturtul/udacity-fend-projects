@@ -91,8 +91,8 @@
         // The view visible when editing.
         var form = document.createElement('form');
         form.dataset.bind = 'visible: editing, submit: update';
-        form.innerHTML = '<label>Title<input data-bind="textInput: marker().title"></label>' +
-                         '<label>Description<input data-bind="textInput: marker().description"></label>' +
+        form.innerHTML = '<label>Title<input type="text" data-bind="textInput: marker().title"></label>' +
+                         '<label>Description<textarea data-bind="textInput: marker().description" rows="4"></textarea></label>' +
                          '<div class="info-window-form-buttons">' +
                          '<button data-bind="click: restore" type="button">Cancel</button>' +
                          '<button type="submit">Confirm</button>' +

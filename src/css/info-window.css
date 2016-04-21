@@ -1,20 +1,21 @@
 /***********************************
-* Styling for the info window(s).
+* Styling for the info window.
 ***********************************/
 
-.info-window {
-  overflow: hidden;
+#info-window {
+  height: 220px;
+  overflow: auto;
   text-align: center;
   width: 180px;
 }
 
-.info-window > article > h1 {
+#info-window > article > h1 {
   font-size: 1.2em;
 }
 
-.info-window > article > p {}
+#info-window > article > p {}
 
-.info-window > article > h2 {
+#info-window > article > h2 {
   font-size: 1em;
   font-weight: normal;
   margin-bottom: 3px;
