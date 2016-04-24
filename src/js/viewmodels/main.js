@@ -222,8 +222,8 @@
     init();
 
     /**
-     * Called when the user double clicks on the map. Opens the markers form populated
-     * with a marker created using the location clicked.
+     * Called when the user double clicks on the map. Creates a marker at the
+     * clicked location and opens the info-window on it in edit mode.
      */
     function confirmCustomMarker(e) {
       // Create a marker for the location clicked.
@@ -234,11 +234,12 @@
         }
       });
 
-      // Push the created marker to the pending markers array.
-      self.markersForm.pending.push(marker);
+      // Push the created marker to the markers array.
+      self.markers.push(marker);
 
-      // Open the confirm markers form.
-      self.markersForm.open();
+      // Open the info-window in edit mode on the marker.
+      self.infoWindow.open(marker);
+      self.infoWindow.edit();
     }
 
     /**

@@ -15,7 +15,8 @@
         source = 'google',    // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
         infoCache = {},       // Cached information retrieved from third party APIs.
         infoLifetime = 1200,  // Seconds to wait before updating cached info.
-        preChangeMarkerData;  // Used to restore the marker's state if editing is canceled.
+        preChangeMarkerData,  // Used to restore the marker's state if editing is canceled.
+        maxImageWidth = 100;  // Used to specify desired image dimensions in API requests.
 
 
     // Methods for changing the information source.
@@ -75,6 +76,10 @@
         article.dataset.bind = 'visible: !editing()';
         article.innerHTML = '<h1 data-bind="text: marker().title"></h1>' +
                             '<p data-bind="text: marker().description"></p>' +
+                            '<div class="info-window-edit-buttons">' +
+                            '<button data-bind="click: edit">Modify</button>' +
+                            '<button data-bind="click: remove">Remove</button>' +
+                            '</div>' +
                             '<h2>Information Sources</h2>' +
                             '<div class="info-window-source-buttons">' +
                             '<button data-bind="click: changeSourceTo.google">google</button>' +
@@ -82,11 +87,7 @@
                             '<button data-bind="click: changeSourceTo.foursquare">foursquare</button>' +
                             '<button data-bind="click: changeSourceTo.wikipedia">wikipedia</button>' +
                             '</div>' +
-                            '<section class="info-window-info" data-bind="html: info"></section>' +
-                            '<div class="info-window-edit-buttons">' +
-                            '<button data-bind="click: edit">Modify</button>' +
-                            '<button data-bind="click: remove">Remove</button>'+
-                            '</div>';
+                            '<section class="info-window-info" data-bind="html: info"></section>';
 
         // The view visible when editing.
         var form = document.createElement('form');
@@ -129,7 +130,7 @@
       } else {
         switch (source) {
           case 'google':
-            map.getPlaceDetails(infoReady, markerID);
+            map.getPlaceDetails(infoReady, markerID, {maxWidth: maxImageWidth});
             break;
           case 'flickr':
             placeInfo.sources.flickr(infoReady, place);
@@ -194,15 +195,13 @@
        * @returns - An HTML string intended for use in self.info.
        */
       function formatInfo(info) {
-        var str = '<h2>%description%</h2>' +
-                  '<div>%results%</div>' +
+        var str = '<div id="' + info.source + '-results">%results%</div>' +
                   '<footer><small>%credit%</small></footer>',
             resultsHTML = '';
 
         // Handle the case where no results are returned.
         if (!info.results.length) {
-          return str.replace('%description%', 'No Information Found')
-                    .replace('%results%', 'No information from ' + info.source + ' could be found.')
+          return str.replace('%results%', 'No information from ' + info.source + ' could be found.')
                     .replace('%credit%', '');
         }
 
@@ -239,8 +238,7 @@
                              '</div>';
             });
 
-            return str.replace('%description%', 'Details From Google')
-                      .replace('%results%', resultsHTML)
+            return str.replace('%results%', resultsHTML)
                       .replace('%credit%', info.results
                                                   .map(function(result) { return result.attributions; })
                                                   .join(' '));
@@ -255,8 +253,7 @@
                              '</div>';
             });
 
-            return str.replace('%description%', 'Images From Flickr')
-                      .replace('%results%', resultsHTML)
+            return str.replace('%results%', resultsHTML)
                       .replace('%credit%', '<q cite="https://www.flickr.com/services/api/tos/">This product uses the Flickr API but is not endorsed or certified by Flickr.</q>');
           case 'foursquare':
             // https://developer.foursquare.com/docs/responses/venue
@@ -268,8 +265,7 @@
                              '</div>';
             });
 
-            return str.replace('%description%', '')
-                      .replace('%results%', resultsHTML)
+            return str.replace('%results%', resultsHTML)
                       .replace('%credit%', '');
           case 'wikipedia':
             // url: page.fullurl,
@@ -286,8 +282,7 @@
                              '</div>';
             });
 
-            return str.replace('%description%', '')
-                      .replace('%results%', resultsHTML)
+            return str.replace('%results%', resultsHTML)
                       .replace('%credit%', '');
           default:
             // The source wasn't identified, return nothing.
@@ -298,28 +293,25 @@
           var details = '';
 
           if (result.address) {
-            details += '<li>Address: ' + result.address + '</li>';
+            details += '<li><span>Address</span> ' + result.address + '</li>';
           }
           if (result.internationalPhone) {
-            details += '<li>Phone: ' + result.internationalPhone + '</li>';
+            details += '<li><span>Phone</span> ' + result.internationalPhone + '</li>';
           }
-          if (result.types) {
-            details += '<li>Type: ' + result.types.join(', ') + '</li>';
-          }
+          // if (result.types) {
+          //   details += '<li><span>Type</span> ' + result.types.join(', ') + '</li>';
+          // }
           if (result.price) {
-            details += '<li>Price: ' + result.price + '</li>';
+            details += '<li><span>Price</span> ' + result.price + '</li>';
           }
           if (result.rating) {
-            details += '<li>Rating: ' + result.rating + ' / 5</li>';
+            details += '<li><span>Rating</span> ' + result.rating + ' / 5</li>';
           }
           if (result.googlePage) {
-            details += '<li><a href="' + result.googlePage + '" target="_blank">Google Page</a></li>';
-          }
-          if (result.utcOffset) {
-            details += '<li>UTC Offset: ' + result.utcOffset + '</li>';
+            details += '<li><a href="' + result.googlePage + '" target="_blank"><span>Google Page</span></a></li>';
           }
 
-          return '<ul>' + details + '</ul>';
+          return '<ul class="google-details">' + details + '</ul>';
         }
 
         function googleResultPhotos(result) {
@@ -332,7 +324,8 @@
                       '</li>';
           });
 
-          return '<ul>' + photos + '</ul>';
+          return '<h3>Photos</h3>' +
+                 '<ul class="google-photos">' + photos + '</ul>';
         }
 
         function googleResultReviews(result) {
@@ -365,7 +358,7 @@
             name = '<a href="' + result.website + '" target="_blank">' + name + '</a>';
           }
 
-          return '<h3>' + name + '</h3>';
+          return '<h2 class="google-title">' + name + '</h2>';
         }
       }
 

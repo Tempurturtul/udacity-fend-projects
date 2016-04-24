@@ -20,6 +20,14 @@ main {
   position: relative;
 }
 
+a {
+  color: inherit;
+}
+
+a:hover {
+  color: #c00;
+}
+
 .fullpage-error {}
 
 .util-fullpage-form {}

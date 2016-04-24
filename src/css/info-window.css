@@ -35,6 +35,7 @@
 
 .info-window-form-buttons {}
 
+/* The actual additional information section. */
 .info-window-info {
   border: solid grey 1px;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
@@ -49,3 +50,48 @@
   margin: 2px;
   width: 70px;
 }
+
+#google-results {}
+
+#google-results h2 {
+  font-size: 1rem;
+}
+
+#google-results h3 {
+  font-size: 1rem;
+}
+
+.google-title {}
+
+.google-details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.google-details li {
+  margin: 5px 2px;
+}
+
+.google-details li span {
+  display: block;
+  font-weight: bold;
+}
+
+.google-photos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.google-photos li {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+#flickr-results {}
+
+#foursquare-results {}
+
+#wikipedia-results {}
