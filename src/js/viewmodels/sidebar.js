@@ -27,7 +27,9 @@
                           return marker.id();
                         });
 
-      map.centerOn(markerIDs);
+      if (markerIDs.length) {
+        map.centerOn(markerIDs);
+      }
     };
 
     self.confirmFolderRemoval = function(folder) {

@@ -73,18 +73,18 @@
         // The view visible when not editing.
         var article = document.createElement('article');
         article.dataset.bind = 'visible: !editing()';
-        article.innerHTML = '<h1 data-bind="text: marker().title"></h1>' +
-                            '<p data-bind="text: marker().description"></p>' +
-                            '<div class="info-window-edit-buttons">' +
+        article.innerHTML = '<div class="info-window-edit-buttons">' +
                             '<button data-bind="click: edit">Modify</button>' +
                             '<button data-bind="click: remove">Remove</button>' +
                             '</div>' +
+                            '<h1 data-bind="text: marker().title"></h1>' +
+                            '<p data-bind="text: marker().description"></p>' +
                             '<h2>Information Sources</h2>' +
                             '<div class="info-window-source-buttons">' +
-                            '<button data-bind="click: changeSourceTo.google, css: {\'selected-source\': source() === \'google\'}">google</button>' +
-                            '<button data-bind="click: changeSourceTo.flickr, css: {\'selected-source\': source() === \'flickr\'}">flickr</button>' +
-                            '<button data-bind="click: changeSourceTo.foursquare, css: {\'selected-source\': source() === \'foursquare\'}">foursquare</button>' +
-                            '<button data-bind="click: changeSourceTo.wikipedia, css: {\'selected-source\': source() === \'wikipedia\'}">wikipedia</button>' +
+                            '<button data-bind="click: changeSourceTo.google, css: {\'selected-source\': source() === \'google\'}"><i class="fa fa-google"></i></button>' +
+                            '<button data-bind="click: changeSourceTo.flickr, css: {\'selected-source\': source() === \'flickr\'}"><i class="fa fa-flickr"></i></button>' +
+                            '<button data-bind="click: changeSourceTo.foursquare, css: {\'selected-source\': source() === \'foursquare\'}"><i class="fa fa-foursquare"></i></button>' +
+                            '<button data-bind="click: changeSourceTo.wikipedia, css: {\'selected-source\': source() === \'wikipedia\'}"><i class="fa fa-wikipedia-w"></i></button>' +
                             '</div>' +
                             '<section class="info-window-info" data-bind="html: info"></section>';
 
@@ -328,7 +328,7 @@
           result.reviews.forEach(function(review) {
             reviews += '<li>' +
                        (review.author.profile ?
-                        '<a href="' + review.author.profile + '">' + review.author.name.replace(/</g, '&lt;') + '</a>' :
+                        '<a href="' + review.author.profile + '" target="_blank">' + review.author.name.replace(/</g, '&lt;') + '</a>' :
                         review.author.name.replace(/</g, '&lt;')) +
                        '<ul>' +
                        review.aspects
@@ -401,7 +401,7 @@
 
         function wikipediaResultThumb(result) {
           if (result.thumbnail) {
-            return '<img src="' + result.thumbnail.source + '" width="' + maxImageWidth + '">'
+            return '<img src="' + result.thumbnail.source + '" width="' + maxImageWidth + '">';
           } else {
             return '';
           }

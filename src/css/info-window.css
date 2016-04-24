@@ -27,7 +27,10 @@
   font-size: 0.8em;
 }
 
-.info-window-edit-buttons button,
+.info-window-edit-buttons button {
+  margin: 0 2px;
+}
+
 .info-window-form-buttons button {
   margin: 6px 5px 0 5px;
   width: 70px;
@@ -47,12 +50,11 @@
 .info-window-source-buttons {}
 
 .info-window-source-buttons button {
-  margin: 2px;
-  width: 70px;
+  margin: 1px;
 }
 
 .selected-source {
-  font-weight: bold;
+  border-color: #c00;
 }
 
 #google-results > div:not(:last-child),
