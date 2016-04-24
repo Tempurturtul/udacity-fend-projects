@@ -173,7 +173,8 @@
                                                 data: { items: $parent.contents || $parent.markers, item: $data }
                                               }">
             <span class="drag-handle"></span>
-            <span data-bind="text: title, click: $root.markerClicked"></span>
+            <img src="image/pin.svg" height="10" width="10">
+            <span class="entry-name" data-bind="text: title, click: $root.markerClicked"></span>
           </div>
         <!-- /ko -->
 
@@ -205,7 +206,7 @@
             </form>
 
             <!-- If not editing. -->
-            <span data-bind="visible: !editing(), text: name, click: $root.sidebar.toggleFolderEditing"></span>
+            <span class="entry-name" data-bind="visible: !editing(), text: name, click: $root.sidebar.toggleFolderEditing"></span>
 
             <button class="folder-button folder-button-center" data-bind="click: $root.sidebar.centerOnContents"><img src="image/center.svg" height="10" width="10"></button>
           </div>

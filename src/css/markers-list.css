@@ -28,6 +28,10 @@
   content: '‒';
 }
 
+.entry-name {
+  cursor: pointer;
+}
+
 /* Applied to folder buttons. */
 .folder-button {
   background: white;
@@ -98,4 +102,11 @@
   align-items: center;
   display: flex;
   white-space: nowrap;
+}
+
+.marker-entry > img {
+  flex: 0 0 20px;
+  height: 20px;
+  margin-right: 5px;
+  width: 20px;
 }
