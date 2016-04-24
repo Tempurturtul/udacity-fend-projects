@@ -121,7 +121,7 @@
   display: flex;
   flex: 0 0 100%;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .google-photos img {
