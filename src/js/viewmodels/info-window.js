@@ -260,17 +260,15 @@
             return str.replace('%results%', resultsHTML)
                       .replace('%credit%', '');
           case 'wikipedia':
-            // url: page.fullurl,
-            // coordinates: page.coordinates,  // Object array with properties: `globe`, `lat`, `lon`, and `primary`.
-            // lang: page.pagelanguage,
-            // thumbnail: page.thumbnail,  // Object with properties: `height`, `width`, `source`.
-            // title: page.title,
-            // description: page.terms ? page.terms.description : undefined
-
             // Build the HTML for each result.
             info.results.forEach(function(result) {
+              var title = wikipediaResultTitle(result),
+                  thumb = wikipediaResultThumb(result),
+                  description = wikipediaResultDescription(result);
               resultsHTML += '<div>' +
-                             '<h3></h3>' +
+                             title +
+                             thumb +
+                             description +
                              '</div>';
             });
 
@@ -391,6 +389,28 @@
           }
 
           return '<h2 class="foursquare-title">' + name + '</h2>';
+        }
+
+        function wikipediaResultDescription(result) {
+          if (result.description) {
+            return '<p>' + result.description + '</p>';
+          } else {
+            return '';
+          }
+        }
+
+        function wikipediaResultThumb(result) {
+          if (result.thumbnail) {
+            return '<img src="' + result.thumbnail.source + '" width="' + maxImageWidth + '">'
+          } else {
+            return '';
+          }
+        }
+
+        function wikipediaResultTitle(result) {
+          return '<h2 class="wikipedia-title">' +
+                 '<a href="' + result.url + '" target="_blank">' + result.title + '</a>' +
+                 '</h2>';
         }
       }
 

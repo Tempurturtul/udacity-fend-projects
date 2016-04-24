@@ -55,6 +55,14 @@
   font-weight: bold;
 }
 
+#google-results > div:not(:last-child),
+#flickr-results > div:not(:last-child),
+#foursquare-results > div:not(:last-child),
+#wikipedia-results > div:not(:last-child) {
+  border-bottom: solid #000 2px;
+  padding-bottom: 5px;
+}
+
 
 
 /***********************************
@@ -115,7 +123,7 @@
   padding: 0;
 }
 
-.google-reviews > ul > li {
+.google-reviews > ul > li:not(:last-child) {
   border-bottom: solid 1px #ccc;
 }
 
@@ -164,3 +172,5 @@
 ***********************************/
 
 #wikipedia-results {}
+
+.wikipedia-title {}
