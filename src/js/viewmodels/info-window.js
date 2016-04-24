@@ -41,7 +41,7 @@
     self.editing = ko.observable(false);
 
     // The HTML string containing additional information.
-    self.info = ko.observable();
+    self.info = ko.observable('<p>Loading...</p>');
 
     // The marker the info-window is currently assigned to.
     self.marker = ko.observable();
@@ -111,6 +111,9 @@
           markerID = self.marker().id(),
           place = self.marker().position(),
           cached = checkCache(source, source === 'google' ? markerID : JSON.stringify(place));
+
+      // Clear the displayed info.
+      self.info('<p>Loading...</p>');
 
       // Handle requests to placeInfo if it failed to initialize.
       if (!placeInfo && source !== 'google') {
@@ -245,8 +248,12 @@
 
             // Build the HTML for each result.
             info.results.forEach(function(result) {
+              var title = foursquareResultTitle(result),
+                  details = foursquareResultDetails(result);
+
               resultsHTML += '<div>' +
-                             '<h3></h3>' +
+                             title +
+                             details +
                              '</div>';
             });
 
@@ -353,7 +360,38 @@
           return '<h2 class="google-title">' + name + '</h2>';
         }
 
+        function foursquareResultDetails(result) {
+          var details = '';
 
+          if (result.categories.length) {
+            details += '<li><span>' + result.categories.filter(function(category) {
+              if (category.hasOwnProperty('primary')) {
+                return true;
+              } else {
+                return false;
+              }
+            })[0].name + '</span></li>';
+          }
+          if (result.location.address) {
+            details += '<li><span>Address</span> ' + result.location.address + '</li>';
+          }
+          // if (result.location.distance) {
+          //   details += '<li><span>Distance</span> ' + result.location.distance + ' meters</li>';
+          // }
+
+          return '<ul class="foursquare-details">' + details + '</ul>';
+        }
+
+        function foursquareResultTitle(result) {
+          var name = result.name.replace(/</g, '&lt;');
+
+          // If there's a site, link the name to it.
+          if (result.url) {
+            name = '<a href="' + result.url + '" target="_blank">' + name + '</a>';
+          }
+
+          return '<h2 class="foursquare-title">' + name + '</h2>';
+        }
       }
 
       /**

@@ -133,11 +133,29 @@
 }
 
 
+
 /***********************************
 * Foursquare results.
 ***********************************/
 
 #foursquare-results {}
+
+.foursquare-title {}
+
+.foursquare-details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.foursquare-details li {
+  margin: 5px 2px;
+}
+
+.foursquare-details li span {
+  display: block;
+  font-weight: bold;
+}
 
 
 
