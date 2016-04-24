@@ -21,6 +21,13 @@
   margin-bottom: 3px;
 }
 
+#info-window > form > label {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .info-window-edit-buttons,
 .info-window-form-buttons,
 .info-window-source-buttons {
@@ -131,6 +138,7 @@
 
 .google-reviews > ul > li:not(:last-child) {
   border-bottom: solid 1px #ccc;
+  margin-bottom: 5px;
 }
 
 
@@ -195,19 +203,25 @@
 * Media queries.
 ***********************************/
 
-@media (min-width: 400px) {
+@media (min-width: 450px) {
   #info-window {
     width: 300px;
   }
 }
 
-@media (min-height: 400px) {
+@media (min-height: 500px) {
   #info-window {
     height: 320px;
   }
 
   /* The actual additional information section. */
   .info-window-info {
-    max-height: 300px;
+    max-height: 280px;
+  }
+}
+
+@media (min-height: 600px) {
+  #info-window {
+    height: 400px;
   }
 }
