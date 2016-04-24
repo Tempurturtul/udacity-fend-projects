@@ -79,6 +79,12 @@
 }
 
 .google-photos {
+  overflow: hidden;
+  position: relative;
+}
+
+.google-photos ul {
+  display: flex;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -86,8 +92,11 @@
 
 .google-photos li {
   align-items: center;
+  border: solid black 1px;
   display: flex;
+  flex: 0 0 100%;
   flex-direction: column;
+  justify-content: center;
 }
 
 #flickr-results {}

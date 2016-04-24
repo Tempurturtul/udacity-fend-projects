@@ -30,6 +30,45 @@ a:hover {
 
 .fullpage-error {}
 
+.spinner-next,
+.spinner-prev {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  width: 15%;
+}
+
+.spinner-next {
+  right: 0;
+}
+
+.spinner-prev {
+  left: 0;
+}
+
+.spinner-next:hover,
+.spinner-prev:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.spinner-next:hover::after,
+.spinner-prev:hover::after {
+  color: white;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.spinner-next:hover::after {
+  content: '>';
+}
+
+.spinner-prev:hover::after {
+  content: '<';
+}
+
 .util-fullpage-form {}
 
 .util-fullpage-form-overlay {}

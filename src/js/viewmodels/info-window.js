@@ -16,7 +16,7 @@
         infoCache = {},       // Cached information retrieved from third party APIs.
         infoLifetime = 1200,  // Seconds to wait before updating cached info.
         preChangeMarkerData,  // Used to restore the marker's state if editing is canceled.
-        maxImageWidth = 100;  // Used to specify desired image dimensions in API requests.
+        maxImageWidth = 120;  // Used to specify desired image dimensions in API requests.
 
 
     // Methods for changing the information source.
@@ -319,13 +319,19 @@
 
           result.photos.forEach(function(photo) {
             photos += '<li>' +
+                      '<a href="' + photo.fullsize + '" target="_blank">' +
                       '<img src="' + photo.src + '">' +
+                      '</a>' +
                       '<small>' + photo.attributions.join(' ') + '</small>' +
                       '</li>';
           });
 
           return '<h3>Photos</h3>' +
-                 '<ul class="google-photos">' + photos + '</ul>';
+                 '<div class="google-photos">' +
+                 '<ul>' + photos + '</ul>' +
+                 '<div class="spinner-prev"></div>' +
+                 '<div class="spinner-next"></div>' +
+                 '</div>';
         }
 
         function googleResultReviews(result) {

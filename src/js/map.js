@@ -177,6 +177,7 @@
     }
 
     function formatPhotos(photos) {
+      console.log(photos);
       if (!Array.isArray(photos)) {
         return;
       }
@@ -187,7 +188,10 @@
             maxHeight: maxPhotoDimensions.maxHeight,
             maxWidth: maxPhotoDimensions.maxWidth
           }),
-          attributions: photo.html_attributions
+          attributions: photo.html_attributions,
+          fullsize: photo.getUrl({
+            maxWidth: 1600  // Largest size allowed.
+          })
         };
       });
     }
