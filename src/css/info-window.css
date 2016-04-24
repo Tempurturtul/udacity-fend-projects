@@ -59,6 +59,7 @@
 
 #google-results h3 {
   font-size: 1rem;
+  margin-bottom: 7px;
 }
 
 .google-title {}
@@ -78,25 +79,34 @@
   font-weight: bold;
 }
 
-.google-photos {
-  overflow: hidden;
-  position: relative;
-}
+.google-photos {}
 
 .google-photos ul {
   display: flex;
   list-style: none;
   margin: 0;
+  overflow-x: scroll;
   padding: 0;
 }
 
 .google-photos li {
   align-items: center;
-  border: solid black 1px;
   display: flex;
   flex: 0 0 100%;
   flex-direction: column;
   justify-content: center;
+}
+
+.google-reviews {}
+
+.google-reviews ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.google-reviews > ul > li {
+  border-bottom: solid 1px #ccc;
 }
 
 #flickr-results {}

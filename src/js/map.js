@@ -177,7 +177,6 @@
     }
 
     function formatPhotos(photos) {
-      console.log(photos);
       if (!Array.isArray(photos)) {
         return;
       }

@@ -329,8 +329,6 @@
           return '<h3>Photos</h3>' +
                  '<div class="google-photos">' +
                  '<ul>' + photos + '</ul>' +
-                 '<div class="spinner-prev"></div>' +
-                 '<div class="spinner-next"></div>' +
                  '</div>';
         }
 
@@ -353,7 +351,10 @@
                        '</li>';
           });
 
-          return '<ul>' + reviews + '</ul>';
+          return '<h3>Reviews</h3>' +
+                 '<div class="google-reviews">' +
+                 '<ul>' + reviews + '</ul>' +
+                 '</div>';
         }
 
         function googleResultTitle(result) {
