@@ -12,7 +12,6 @@
         map = global.map,
         placeInfo = global.placeInfo,
         ko = global.ko,
-        source = 'google',    // Possible values: 'google', 'flickr', 'foursquare', 'wikipedia'
         infoCache = {},       // Cached information retrieved from third party APIs.
         infoLifetime = 1200,  // Seconds to wait before updating cached info.
         preChangeMarkerData,  // Used to restore the marker's state if editing is canceled.
@@ -82,10 +81,10 @@
                             '</div>' +
                             '<h2>Information Sources</h2>' +
                             '<div class="info-window-source-buttons">' +
-                            '<button data-bind="click: changeSourceTo.google">google</button>' +
-                            '<button data-bind="click: changeSourceTo.flickr">flickr</button>' +
-                            '<button data-bind="click: changeSourceTo.foursquare">foursquare</button>' +
-                            '<button data-bind="click: changeSourceTo.wikipedia">wikipedia</button>' +
+                            '<button data-bind="click: changeSourceTo.google, css: {\'selected-source\': source() === \'google\'}">google</button>' +
+                            '<button data-bind="click: changeSourceTo.flickr, css: {\'selected-source\': source() === \'flickr\'}">flickr</button>' +
+                            '<button data-bind="click: changeSourceTo.foursquare, css: {\'selected-source\': source() === \'foursquare\'}">foursquare</button>' +
+                            '<button data-bind="click: changeSourceTo.wikipedia, css: {\'selected-source\': source() === \'wikipedia\'}">wikipedia</button>' +
                             '</div>' +
                             '<section class="info-window-info" data-bind="html: info"></section>';
 
@@ -108,7 +107,8 @@
 
     // Refreshes the additional information.
     self.refresh = function() {
-      var markerID = self.marker().id(),
+      var source = self.source(),
+          markerID = self.marker().id(),
           place = self.marker().position(),
           cached = checkCache(source, source === 'google' ? markerID : JSON.stringify(place));
 
@@ -207,21 +207,6 @@
 
         switch (info.source) {
           case 'google':
-            // + address = place.formatted_address;
-            // phone = place.formatted_phone_number;
-            // + internationalPhone = place.international_phone_number;
-            // + attributions = place.html_attributions;  // String array. (Must be dispayed.)
-            // icon = place.icon;
-            // + name = place.name;  // NOTE Possibly raw text as typed by user.
-            // + photos = formatPhotos(place.photos);
-            // + price = formatPriceLevel(place.price_level);
-            // + rating = place.rating;  // 1.0 to 5.0
-            // + reviews = formatReviews(place.reviews);
-            // + types = place.types;  // String array. Example: ['restaurant', 'establishment']
-            // + googlePage = place.url;  // Official Google-owned page for the place.
-            // + utcOffset = place.utc_offset;
-            // + website = place.website;  // The place's website. For example: a business' homepage.
-
             // Build the HTML for each result.
             info.results.forEach(function(result) {
               var title = googleResultTitle(result),
@@ -246,15 +231,15 @@
             // Build the HTML for each result.
             info.results.forEach(function(result) {
               resultsHTML += '<div>' +
-                             '<h3>' + result.title.replace(/</g, '&lt;') + '</h3>' +
+                             '<h2>' + result.title.replace(/</g, '&lt;').replace(/#/g, '<wbr>#') + '</h2>' +
                              '<a href="' + result.url + '" target="_blank">' +
-                             '<img src="' + result.src + '"></img>' +
+                             '<img src="' + result.src + '" width="' + maxImageWidth + '">' +
                              '</a>' +
                              '</div>';
             });
 
             return str.replace('%results%', resultsHTML)
-                      .replace('%credit%', '<q cite="https://www.flickr.com/services/api/tos/">This product uses the Flickr API but is not endorsed or certified by Flickr.</q>');
+                      .replace('%credit%', 'Disclaimer: <q cite="https://www.flickr.com/services/api/tos/">This product uses the Flickr API but is not endorsed or certified by Flickr.</q>');
           case 'foursquare':
             // https://developer.foursquare.com/docs/responses/venue
 
@@ -367,6 +352,8 @@
 
           return '<h2 class="google-title">' + name + '</h2>';
         }
+
+
       }
 
       /**
@@ -420,6 +407,9 @@
       self.editing(false);
     };
 
+    // The source of the additional information. Possible valuse are 'google', 'flickr', 'foursquare', and 'wikipedia'.
+    self.source = ko.observable('google');
+
     // Updates the marker with the new data, then reopens the info-window.
     self.update = function() {
       // Finish editing.
@@ -453,8 +443,8 @@
      * @param {string} newSource - The new information source.
      */
     function changeSource(newSource) {
-      if (source !== newSource) {
-        source = newSource;
+      if (self.source() !== newSource) {
+        self.source(newSource);
         self.refresh();
       }
     }

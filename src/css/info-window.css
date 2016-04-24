@@ -51,6 +51,16 @@
   width: 70px;
 }
 
+.selected-source {
+  font-weight: bold;
+}
+
+
+
+/***********************************
+* Google results.
+***********************************/
+
 #google-results {}
 
 #google-results h2 {
@@ -109,8 +119,30 @@
   border-bottom: solid 1px #ccc;
 }
 
+
+
+/***********************************
+* Flickr results.
+***********************************/
+
 #flickr-results {}
 
+#flickr-results h2 {
+  font-size: 1rem;
+  word-wrap: break-word;
+}
+
+
+/***********************************
+* Foursquare results.
+***********************************/
+
 #foursquare-results {}
+
+
+
+/***********************************
+* Wikipedia results.
+***********************************/
 
 #wikipedia-results {}
