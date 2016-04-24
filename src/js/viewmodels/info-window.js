@@ -15,7 +15,7 @@
         infoCache = {},       // Cached information retrieved from third party APIs.
         infoLifetime = 1200,  // Seconds to wait before updating cached info.
         preChangeMarkerData,  // Used to restore the marker's state if editing is canceled.
-        maxImageWidth = 120;  // Used to specify desired image dimensions in API requests.
+        maxImageWidth = 300;  // Used to specify desired image dimensions in API requests.
 
 
     // Methods for changing the information source.
@@ -142,7 +142,7 @@
             placeInfo.sources.foursquare(infoReady, place);
             break;
           case 'wikipedia':
-            placeInfo.sources.wikipedia(infoReady, place);
+            placeInfo.sources.wikipedia(infoReady, place, {maxDimension: maxImageWidth});
             break;
         }
       }
@@ -236,7 +236,7 @@
               resultsHTML += '<div>' +
                              '<h2>' + result.title.replace(/</g, '&lt;').replace(/#/g, '<wbr>#') + '</h2>' +
                              '<a href="' + result.url + '" target="_blank">' +
-                             '<img src="' + result.src + '" width="' + maxImageWidth + '">' +
+                             '<img src="' + result.src + '">' +
                              '</a>' +
                              '</div>';
             });
@@ -401,7 +401,7 @@
 
         function wikipediaResultThumb(result) {
           if (result.thumbnail) {
-            return '<img src="' + result.thumbnail.source + '" width="' + maxImageWidth + '">';
+            return '<img src="' + result.thumbnail.source + '">';
           } else {
             return '';
           }
