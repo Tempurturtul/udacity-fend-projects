@@ -90,11 +90,7 @@
       map.fitBounds(bounds);
     }
 
-    // Update the saved map options with the new center.
-    var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS));
-    mapOptions.center = map.getCenter();
-    mapOptions.zoom = map.getZoom();
-    localStorage.setItem(storageKeys.MAPOPTIONS, JSON.stringify(mapOptions));
+    saveOptions();
   }
 
   /**
@@ -277,6 +273,9 @@
     places = _map.places;
     searchBox = _map.searchBox;
     infoWindow = _map.infoWindow;
+
+    // Save options when the bounds change.
+    onBoundsChange(saveOptions);
   }
 
   /**
@@ -390,6 +389,17 @@
     } else {
       console.warn('Failed to remove marker because it wasn\'t found.');
     }
+  }
+
+  /**
+   * Saves the map options (center and zoom).
+   */
+  function saveOptions() {
+    // Update the saved map options with the new center.
+    var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS));
+    mapOptions.center = map.getCenter();
+    mapOptions.zoom = map.getZoom();
+    localStorage.setItem(storageKeys.MAPOPTIONS, JSON.stringify(mapOptions));
   }
 
   /**

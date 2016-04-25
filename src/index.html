@@ -102,26 +102,7 @@
       ga('send', 'pageview');
     </script> -->
   </head>
-  <body>
-
-    <!-- Work in progress overlay. (Remove when done.) -->
-    <div id="wip-overlay"
-         style="position: fixed; top: 0; left: 0;
-                bottom: 0; right: 0;
-                background: rgba(0,0,0,0.5); display: flex;
-                align-items: center; justify-content: center;
-                z-index: 9999;">
-      <p style="background: black; color: white; text-align: center;
-                font-weight: bold; padding: 10px">Under Development</p>
-    </div>
-
-    <!-- Work in progress overlay script. (Remove when done.) -->
-    <script>
-      document.getElementById('wip-overlay').onclick = function() {
-        this.style.display = 'none';
-      };
-    </script>
-
+  <body class="loading">
     <header id="sidebar" data-bind="css: {expanded: sidebar.expanded}">
       <fieldset>
         <input type="text" placeholder="Search Existing" data-bind="textInput: sidebar.search">

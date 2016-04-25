@@ -16,7 +16,9 @@
   global.window.addEventListener('load', init);
 
   function init() {
-    var map = global.map,
+    var window = global.window,
+        document = global.document,
+        map = global.map,
         placeInfo = global.placeInfo,
         ko = global.ko,
         viewmodels = global.viewmodels,
@@ -41,15 +43,15 @@
       console.error(e.name, ':', e.message);
 
       // The app isn't functional without the map; replace the document body with an error message.
-      global.document.body.innerHTML = '<div class="fullpage-error">' +
-                                       '<h1>Error</h1>' +
-                                       '<p>Google Maps API not found.</p>' +
-                                       '<ol>' +
-                                       '<li>Are you connected to the internet?</li>' +
-                                       '<li>Are you able to reach <a href="https://www.google.com">www.google.com</a>?</li>' +
-                                       '<li>Is it possible that something on your end is blocking requests to maps.googleapis.com?</li>' +
-                                       '</ol>' +
-                                       '</div>';
+      document.body.innerHTML = '<div class="fullpage-error">' +
+                                '<h1>Error</h1>' +
+                                '<p>Google Maps API not found.</p>' +
+                                '<ol>' +
+                                '<li>Are you connected to the internet?</li>' +
+                                '<li>Are you able to reach <a href="https://www.google.com">www.google.com</a>?</li>' +
+                                '<li>Is it possible that something on your end is blocking requests to maps.googleapis.com?</li>' +
+                                '</ol>' +
+                                '</div>';
 
       // Abort initialization.
       return;
@@ -59,6 +61,11 @@
 
     // Apply the Knockout bindings.
     ko.applyBindings(new viewmodels.Main());
+
+    // Remove the loading class after a brief delay.
+    window.setTimeout(function() {
+      document.body.classList.remove('loading');
+    }, 500);
   }
 
 })(this);
