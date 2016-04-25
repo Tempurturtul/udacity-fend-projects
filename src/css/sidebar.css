@@ -3,11 +3,11 @@
 ***********************************/
 
 #sidebar {
-  background: white;
-  border: solid grey 1px;
+  background: #222;
   border-right: none;
   border-top: none;
   box-shadow: rgba(0, 0, 0, 0.3) -1px 1px 4px -1px;
+  color: #fff;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -19,7 +19,7 @@
   transform: translate(0);
   transition: transform 0.25s ease-in;
   width: 100%;
-  z-index: 2;  /* Above map and markers form. */
+  z-index: 1;  /* Above map. */
 }
 
 #sidebar.expanded {
@@ -37,8 +37,17 @@
 
 /* The 'search markers' and 'new folder' inputs. */
 #sidebar input[type='text'] {
+  background: #f9f9f9;
+  border: none;
   display: block;
+  height: 2em;
+  padding: 0 3px 0 5px;
   width: 100%;
+}
+
+/* The 'new folder' input. */
+#sidebar form input[type='text'] {
+  padding: 0 2.5em 0 5px;
 }
 
 /* The 'Only Show Markers Inside Map Bounds' input's label. */
@@ -62,9 +71,19 @@
 
 /* The add folder form's submit button. */
 #sidebar > form button {
+  background: #eee;
+  border: none;
+  border-left: solid 1px grey;
+  height: 2em;
   position: absolute;
   right: 0;
   top: 0;
+  width: 2em;
+}
+
+#sidebar > form button:hover {
+  background: #ddd;
+  border-color: #444;
 }
 
 #sidebar-toggle {
@@ -80,6 +99,11 @@
   top: 7px;
   width: 36px;
   z-index: 3;  /* Above map, markers form, and sidebar. */
+}
+
+#sidebar-toggle:hover {
+  background: #eee;
+  border-color: #444;
 }
 
 #sidebar-toggle:active,
@@ -104,5 +128,31 @@
 
   #sidebar.expanded {
     transform: translate(-500px);
+  }
+}
+
+@media (min-width: 1000px) {
+  #sidebar {
+    left: 0;
+    padding: 0;
+    position: relative;
+    transition: width 0.25s ease-in;
+    width: 0;
+  }
+
+  #sidebar > * {
+    visibility: hidden;
+  }
+
+  #sidebar.expanded {
+    padding: 7px;
+    transform: translate(0);
+    transition: width 0.25s ease-in;
+    width: 500px;
+  }
+
+  #sidebar.expanded > *{
+    transition: visibility 0s 0.25s;
+    visibility: visible;
   }
 }

@@ -53,6 +53,9 @@
       // Clear the pending and tracked arrays.
       clearPending();
       clearTracked();
+
+      // Save changes.
+      mainViewModel.saveMarkers();
     };
 
     // Whether or not the form is visible (open).

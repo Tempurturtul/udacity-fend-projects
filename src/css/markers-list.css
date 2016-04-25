@@ -3,11 +3,13 @@
 ***********************************/
 
 #markers-list {
-  border: solid grey 1px;
+  background: #f9f9f9;
+  box-shadow: inset 1px 1px 3px 0px #333;
+  color: #000;
   flex: 1 1 auto;
   list-style: none;
   overflow: auto;
-  padding: 0;
+  padding: 5px 0;
   white-space: nowrap;
 }
 
@@ -34,7 +36,7 @@
 
 /* Applied to folder buttons. */
 .folder-button {
-  background: white;
+  background: #f9f9f9;
   border: solid 1px grey;
   border-radius: 2px;
   font-weight: bold;
@@ -58,6 +60,7 @@
 .folder-button-collapse {}
 
 .folder-button-confirm {
+  border-radius: 0;
   height: 100%;
   right: 0;
   margin: 0;
@@ -74,6 +77,7 @@
 
 /* Only visible when editing a folder. */
 .folder-button-remove {
+  border-radius: 0;
   height: 100%;
   left: 0;
   margin: 0;

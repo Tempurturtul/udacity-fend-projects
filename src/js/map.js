@@ -2,6 +2,7 @@
 
 (function(global) {
   var document = global.document,
+      window = global.window,
       localStorage = global.localStorage,
       storageKeys = {
         MAPOPTIONS: 'mapOptions'
@@ -17,6 +18,7 @@
 
   global.map = {
     addMarker: addMarker,
+    bounceMarker: bounceMarker,
     centerOn: centerOn,
     closeInfoWindow: closeInfoWindow,
     getInfoWindowContent: getInfoWindowContent,
@@ -31,6 +33,7 @@
     openInfoWindow: openInfoWindow,
     removeMarker: removeMarker,
     setInfoWindowContent: setInfoWindowContent,
+    triggerResize: triggerResize,
     visibleOnMap: visibleOnMap
   };
 
@@ -47,6 +50,22 @@
 
     var marker = new google.maps.Marker(markerData);
     markers.push(marker);
+  }
+
+  /**
+   * Starts a bounce animation on the given marker, then ends it after a short duration.
+   */
+  function bounceMarker(markerID) {
+    var duration = 1.5,  // Seconds.
+        marker = getMarker(markerID);
+
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+
+    window.setTimeout(end, duration * 1000);
+
+    function end() {
+      marker.setAnimation(null);
+    }
   }
 
   /**
@@ -69,6 +88,12 @@
 
       map.fitBounds(bounds);
     }
+
+    // Update the saved map options with the new center.
+    var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS));
+    mapOptions.center = map.getCenter();
+    mapOptions.zoom = map.getZoom();
+    localStorage.setItem(storageKeys.MAPOPTIONS, JSON.stringify(mapOptions));
   }
 
   /**
@@ -365,6 +390,13 @@
    */
   function setInfoWindowContent(content) {
     infoWindow.setContent(content);
+  }
+
+  /**
+   * Triggers the resize event.
+   */
+  function triggerResize() {
+    google.maps.event.trigger(map, 'resize');
   }
 
   /**

@@ -33,3 +33,9 @@ a:hover {
 .util-fullpage-form {}
 
 .util-fullpage-form-overlay {}
+
+@media (min-width: 1000px) {
+  body {
+    display: flex;
+  }
+}

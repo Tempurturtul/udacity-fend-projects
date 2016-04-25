@@ -12,7 +12,7 @@
   text-align: center;
   top: 70%;
   width: 100%;
-  z-index: 1;  /* Above map. */
+  z-index: 2;  /* Above map and sidebar. */
 }
 
 #markers-form button {

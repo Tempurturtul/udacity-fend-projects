@@ -88,7 +88,7 @@
       map.addMarker(data);
 
       map.onMarkerClick(data.id, function() {
-        self.infoWindow.open(marker);
+        self.markerClicked(marker);
       });
 
       return marker;
@@ -177,9 +177,18 @@
     self.infoWindow = null;  // The info-window view model.
 
     self.markerClicked = function(marker) {
+      // Close the sidebar if it isn't set to stay open.
+      if (!self.sidebar.stayOpen()) {
+        self.sidebar.expanded(false);
+      }
+
+      // Bounce the marker.
+      map.bounceMarker(marker.id());
+
       // Center the map on the marker.
       map.centerOn(marker.id());
 
+      // Open the info-window on the marker.
       self.infoWindow.open(marker);
     };
 
@@ -210,10 +219,19 @@
 
         arr.splice(index, 1);
         obsArr(arr);
+
+        // Save the change.
+        self.saveMarkers();
       }
 
       // Remove the marker from the map.
       map.removeMarker(marker.id());
+    };
+
+    // Saves self.markers to local storage as a JSON string.
+    self.saveMarkers = function() {
+      console.log('saving markers');
+      localStorage.setItem(storageKeys.MARKERS, ko.toJSON(self.markers));
     };
 
     self.sidebar = null;  // The sidebar view model.
@@ -236,6 +254,9 @@
 
       // Push the created marker to the markers array.
       self.markers.push(marker);
+
+      // Save the markers.
+      self.saveMarkers();
 
       // Open the info-window in edit mode on the marker.
       self.infoWindow.open(marker);
@@ -295,13 +316,6 @@
 
       // Call confirmCustomMarker when the user double clicks on the map.
       map.onMapDblClick(confirmCustomMarker);
-    }
-
-    /**
-     * Saves self.markers to local storage as a JSON string.
-     */
-    function saveMarkers() {
-      localStorage.setItem(storageKeys.MARKERS, ko.toJSON(self.markers));
     }
 
     /**

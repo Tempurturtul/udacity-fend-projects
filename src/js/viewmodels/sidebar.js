@@ -9,16 +9,22 @@
   function Sidebar(mainViewModel) {
     var self = this,
         document = global.document,
+        window = global.window,
         util = global.util,
         map = global.map,
         ko = global.ko,
-        models = global.models;
+        models = global.models,
+        resizeListener,       // Used by handleMapResizing.
+        resizeSubscription;   // Used by handleMapResizing.
 
     self.addFolder = function(formElem) {
       mainViewModel.markers.push(new models.Folder({name: self.newFolderName()}));
 
       // Reset new folder name.
       self.newFolderName('');
+
+      // Save changes.
+      mainViewModel.saveMarkers();
     };
 
     self.centerOnContents = function(folder) {
@@ -28,6 +34,9 @@
                         });
 
       if (markerIDs.length) {
+        if (!self.stayOpen()) {
+          self.expanded(false);
+        }
         map.centerOn(markerIDs);
       }
     };
@@ -42,6 +51,9 @@
         var removeContents = inputData[0].checked;
 
         removeFolder(folder, removeContents);
+
+        // Save changes.
+        mainViewModel.saveMarkers();
       }
     };
 
@@ -85,6 +97,9 @@
         dragData.items.remove(dragData.item);
         zoneData.items.splice(index, 0, dragData.item);
         dragData.items = zoneData.items;
+
+        // Save changes.
+        mainViewModel.saveMarkers();
       }
 
       /**
@@ -94,11 +109,17 @@
         dragData.items.remove(dragData.item);
         zoneData.item.contents.push(dragData.item);
         dragData.items = zoneData.item.contents;
+
+        // Save changes.
+        mainViewModel.saveMarkers();
       }
     };
 
     // Filter markers by title.
     self.search = ko.observable('');
+
+    // True or false depending on inner window width.
+    self.stayOpen = ko.observable(false);
 
     self.toggle = function() {
       self.expanded(!self.expanded());
@@ -114,10 +135,18 @@
       } else {
         updateVisibility(folder.contents());
       }
+
+      // Save changes.
+      mainViewModel.saveMarkers();
     };
 
     self.toggleFolderEditing = function(folderOrFormElem) {
       this.editing(!this.editing());
+
+      if (!this.editing()) {
+        // Save changes.
+        mainViewModel.saveMarkers();
+      }
     };
 
     // Only display markers that are within the map's current bounds.
@@ -188,12 +217,49 @@
      * Initializes the Sidebar View Model.
      */
     function init() {
+      self.stayOpen(wideEnough());
+      self.expanded(wideEnough());
+
+      window.addEventListener('resize', function() {
+        self.stayOpen(wideEnough());
+      });
+
+      // Subscribe handleMapResizing to stayOpen.
+      self.stayOpen.subscribe(handleMapResizing);
+
       // Subscribe updateVisibility to visibility filters.
       self.visibleOnly.subscribe(updateVisibility);
       self.search.subscribe(updateVisibility);
 
       // Call boundsChanged when the map bounds change.
       map.onBoundsChange(boundsChanged);
+
+      function wideEnough() {
+        if (window.innerWidth >= 1000) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+
+    /**
+     * Invoked when self.stayOpen's value changes.
+     */
+    function handleMapResizing() {
+      if (self.stayOpen()) {
+        // The map is resized when the window width changes, or gradually when self.expanded changes.
+        resizeListener = window.addEventListener('resize', map.triggerResize);
+        resizeSubscription = self.expanded.subscribe(delayed);
+      } else {
+        // The map is not resized.
+        window.removeEventListener('resize', resizeListener, false);
+        resizeSubscription.dispose();
+      }
+
+      function delayed() {
+        window.setTimeout(map.triggerResize, 300);  // Animation duration is 0.25s.
+      }
     }
 
     /**

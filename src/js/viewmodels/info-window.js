@@ -480,6 +480,9 @@
       self.close();
       mainViewModel.createOrRecreateMarker(marker);
       self.open(marker);
+
+      // Save the changes.
+      mainViewModel.saveMarkers();
     };
 
     init();

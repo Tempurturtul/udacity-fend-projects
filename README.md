@@ -88,13 +88,11 @@ using to make API calls.
 
 **In Progress**
 
-- User can view a map that initializes either with the options from the user's most recent visit or with pre-defined defaults.
-- User can click on a map marker on the map or the list to view (within a Google Maps infoWindow) information on the location from various (not all Google API-related) sources.
 - User can view an animation effect on a map marker and corresponding list entry whenever that map marker is selected on the map or in the list.
-- User can experience errors (for example, resulting from unexpected third-party API results) in a gracefully handled manner. (Either with a helpful error message, or with no negative repercussions to the UI.)
 
 **Functional**
 
+- User can view a map that initializes either with the options from the user's most recent visit or with pre-defined defaults.
 - On the user's first visit, five default map markers will exist.
 - User can add, remove, and edit map markers.
   - A marker may be added by selecting a search result, or by double-clicking/double-tapping on the map.
@@ -104,3 +102,5 @@ using to make API calls.
 - User can filter map markers in the list and the map will update its displayed markers accordingly.
 - User can sort and categorize map markers in the list.
 - User can click on an icon next to a map marker category in the list to center and zoom the map in such a way that all the markers contained in that category are visible on the map.
+- User can click on a map marker on the map or the list to view (within a Google Maps infoWindow) information on the location from various (not all Google API-related) sources.
+- User can experience errors (for example, resulting from unexpected third-party API results) in a gracefully handled manner. (Either with a helpful error message, or with no negative repercussions to the UI.)
