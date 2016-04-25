@@ -43,7 +43,6 @@
         if (pending.visible()) {
           // Move to the main view model's markers array.
           mainViewModel.markers.push(pending);
-          // TODO Save. Subscribe a save method to the markers array?
           return false;
         } else {
           return true;

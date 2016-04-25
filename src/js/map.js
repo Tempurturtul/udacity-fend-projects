@@ -280,14 +280,12 @@
   }
 
   /**
-   * Modifies a marker on the map.
+   * Modifies a marker on the map. (Currently only supports changing visiblility.)
    */
   function modifyMarker(markerID, newData) {
     var marker = getMarker(markerID);
 
     if (marker) {
-      // TODO Other data modifications.
-
       if (newData.hasOwnProperty('visible')) {
         marker.setVisible(newData.visible);
       }

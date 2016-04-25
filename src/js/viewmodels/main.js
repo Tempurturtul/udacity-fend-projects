@@ -271,7 +271,6 @@
 
     // Saves self.markers to local storage as a JSON string.
     self.saveMarkers = function() {
-      console.log('saving markers');
       localStorage.setItem(storageKeys.MARKERS, ko.toJSON(self.markers));
     };
 
@@ -380,8 +379,6 @@
       // Create a marker for each place and push it to the pending markers array
       // along with the default confirmed value.
       places.forEach(function(place) {
-        // TODO Icon, etc.
-
         var marker = self.createOrRecreateMarker({
           id: place.place_id,
           title: place.name,

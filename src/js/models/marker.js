@@ -25,12 +25,6 @@
 
     data = data || {};
 
-    // NOTE Add new properties for use with map to the map.modifyMarker method.
-
-    // TODO Additional (google.maps) properties to consider:
-    //  data.icon - Icon for the marker.
-    //  data.label - First letter of this string is displayed on marker.
-
     this.id = ko.observable(data.id || uuid.generate());
     this.description = ko.observable(data.description || '');
     this.position = ko.observable(data.position || {lat: 0, lng: 0});
