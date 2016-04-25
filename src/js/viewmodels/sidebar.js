@@ -131,9 +131,9 @@
 
       // Update the visibility of all contents.
       if (folder.collapsed()) {
-        updateVisibility(folder.contents(), false);
+        self.updateVisibility(folder.contents(), false);
       } else {
-        updateVisibility(folder.contents());
+        self.updateVisibility(folder.contents());
       }
 
       // Save changes.
@@ -149,18 +149,98 @@
       }
     };
 
+    // Updates the visibility of all folders and markers. If visible is defined, uses its value.
+    self.updateVisibility = function(arr, visible) {
+      var search = self.search().toLowerCase(),
+          visibleOnly = self.visibleOnly();
+
+      // If no array is provided, use the markers array.
+      if (!Array.isArray(arr)) {
+        arr = mainViewModel.markers();
+      }
+
+      recurse(arr, visible);
+
+      function recurse(arr, visible) {
+        for (var i = 0; i < arr.length; i++) {
+
+          if (visible !== undefined) {
+            // Simple case: Visibility is defined by the value of visible.
+
+            if (arr[i].visible() !== visible) {
+              arr[i].visible(visible);
+
+              if (!arr[i].contents) {
+                // Marker.
+                map.modifyMarker(arr[i].id(), {visible: visible});
+              }
+            }
+
+            if (arr[i].contents) {
+              // Folder.
+              recurse(arr[i].contents(), visible);
+            }
+          } else {
+            // More complex case: Visibility is defined by the sidebar search
+            // filter and potentially the current map bounds.
+
+            if (arr[i].contents) {
+              // Folder.
+
+              // Folders are only not visible if their containing folders are
+              // collapsed, in which case the passed visible parameter wouldn't
+              // be undefined and we wouldn't reach this point.
+              if (!arr[i].visible()) {
+                arr[i].visible(true);
+              }
+
+              // Is the folder collapsed?
+              if (arr[i].collapsed()) {
+                // Yes, set the contents to not visible.
+                recurse(arr[i].contents(), false);
+              } else {
+                // No, proceed with checking the contents' visibility.
+                recurse(arr[i].contents());
+              }
+            } else {
+              //Marker.
+
+              var result;
+
+              // First filter by title.
+              if (arr[i].title().toLowerCase().indexOf(search) !== -1) {
+                result = true;
+              } else {
+                result = false;
+              }
+
+              // Then filter by map visibility if required.
+              if (self.visibleOnly() && result) {
+                result = map.visibleOnMap(arr[i].id());
+              }
+
+              if (arr[i].visible() !== result) {
+                arr[i].visible(result);
+                map.modifyMarker(arr[i].id(), {visible: result});
+              }
+            }
+          }
+        }
+      }
+    };
+
     // Only display markers that are within the map's current bounds.
     self.visibleOnly = ko.observable(false);
 
     init();
 
     /**
-     * Called when the map's bounds change. Calls updateVisibility only if
+     * Called when the map's bounds change. Calls self.updateVisibility only if
      * necessary.
      */
     function boundsChanged() {
       if (self.visibleOnly()) {
-        updateVisibility();
+        self.updateVisibility();
       }
     }
 
@@ -201,9 +281,9 @@
       // Subscribe handleMapResizing to stayOpen.
       self.stayOpen.subscribe(handleMapResizing);
 
-      // Subscribe updateVisibility to visibility filters.
-      self.visibleOnly.subscribe(updateVisibility);
-      self.search.subscribe(updateVisibility);
+      // Subscribe self.updateVisibility to visibility filters.
+      self.visibleOnly.subscribe(self.updateVisibility);
+      self.search.subscribe(self.updateVisibility);
 
       // Call boundsChanged when the map bounds change.
       map.onBoundsChange(boundsChanged);
@@ -296,89 +376,6 @@
       }
 
       obsArr(arr);
-    }
-
-    /**
-     * Updates the visibility of all folders and markers. If visible is defined,
-     * uses its value.
-     */
-    function updateVisibility(arr, visible) {
-      var search = self.search().toLowerCase(),
-          visibleOnly = self.visibleOnly();
-
-      // If no array is provided, use the markers array.
-      if (!Array.isArray(arr)) {
-        arr = mainViewModel.markers();
-      }
-
-      recurse(arr, visible);
-
-      function recurse(arr, visible) {
-        for (var i = 0; i < arr.length; i++) {
-
-          if (visible !== undefined) {
-            // Simple case: Visibility is defined by the value of visible.
-
-            if (arr[i].visible() !== visible) {
-              arr[i].visible(visible);
-
-              if (!arr[i].contents) {
-                // Marker.
-                map.modifyMarker(arr[i].id(), {visible: visible});
-              }
-            }
-
-            if (arr[i].contents) {
-              // Folder.
-              recurse(arr[i].contents(), visible);
-            }
-          } else {
-            // More complex case: Visibility is defined by the sidebar search
-            // filter and potentially the current map bounds.
-
-            if (arr[i].contents) {
-              // Folder.
-
-              // Folders are only not visible if their containing folders are
-              // collapsed, in which case the passed visible parameter wouldn't
-              // be undefined and we wouldn't reach this point.
-              if (!arr[i].visible()) {
-                arr[i].visible(true);
-              }
-
-              // Is the folder collapsed?
-              if (arr[i].collapsed()) {
-                // Yes, set the contents to not visible.
-                recurse(arr[i].contents(), false);
-              } else {
-                // No, proceed with checking the contents' visibility.
-                recurse(arr[i].contents());
-              }
-            } else {
-              //Marker.
-
-              var result;
-
-              // First filter by title.
-              if (arr[i].title().toLowerCase().indexOf(search) !== -1) {
-                result = true;
-              } else {
-                result = false;
-              }
-
-              // Then filter by map visibility if required.
-              if (self.visibleOnly() && result) {
-                result = map.visibleOnMap(arr[i].id());
-              }
-
-              if (arr[i].visible() !== result) {
-                arr[i].visible(result);
-                map.modifyMarker(arr[i].id(), {visible: result});
-              }
-            }
-          }
-        }
-      }
     }
   }
 

@@ -362,6 +362,9 @@
         }
       });
 
+      // Call sidebar's updateVisibility method.
+      self.sidebar.updateVisibility();
+
       // Call selectPlaces when the user selects a search result.
       map.onPlacesChanged(selectPlaces);
 
