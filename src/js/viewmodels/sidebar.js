@@ -28,7 +28,7 @@
     };
 
     self.centerOnContents = function(folder) {
-      var markerIDs = getAllMarkers(folder.contents())
+      var markerIDs = mainViewModel.getAllMarkers(folder.contents())
                         .map(function(marker) {
                           return marker.id();
                         });
@@ -165,42 +165,6 @@
     }
 
     /**
-     * Searches an array and returns all markers within it and within any sub-arrays.
-     */
-    function getAllMarkers(arr) {
-      var result = [];
-
-      arr.forEach(function(elem) {
-        elem = ko.unwrap(elem);
-
-        // For every element in the given array...
-        if (elem instanceof models.Marker) {
-          // If the element is a marker, push it to the accumulation array.
-          result.push(elem);
-        } else if (Array.isArray(elem)) {
-          // Else if it's an array, search it and concat the results to the accumulation array.
-          result = result.concat(getAllMarkers(elem));
-        } else if (typeof elem === 'object') {
-          // Else if it's an object...
-          for (var prop in elem) {
-            prop = ko.unwrap(elem[prop]);
-
-            // For each of its properties...
-            if (Array.isArray(prop)) {
-              // If it's an array, search it and concat the results to the accumulation array.
-              result = result.concat(getAllMarkers(prop));
-            } else if (prop instanceof models.Marker) {
-              // Else if it's a marker, push it to the accumulation array.
-              result.push(prop);
-            }
-          }
-        }
-      });
-
-      return result;
-    }
-
-    /**
      * Returns the closest element in the DOM matching the selector.
      */
     function getClosest(element, selector) {
@@ -220,9 +184,19 @@
       self.stayOpen(wideEnough());
       self.expanded(wideEnough());
 
+      // Recenter the map if the sidebar expanded (after delay to allow expansion to finish).
+      if (self.expanded()) {
+        window.setTimeout(function() {
+          map.triggerResize();
+          map.recenter();
+        }, 500);  // Animation duration is 0.25s.
+      }
+
       window.addEventListener('resize', function() {
         self.stayOpen(wideEnough());
       });
+
+      handleMapResizing();
 
       // Subscribe handleMapResizing to stayOpen.
       self.stayOpen.subscribe(handleMapResizing);
@@ -249,16 +223,37 @@
     function handleMapResizing() {
       if (self.stayOpen()) {
         // The map is resized when the window width changes, or gradually when self.expanded changes.
-        resizeListener = window.addEventListener('resize', map.triggerResize);
-        resizeSubscription = self.expanded.subscribe(delayed);
+        if (!resizeListener) {
+          resizeListener = function(e) {
+            map.triggerResize();
+            map.recenter();
+          };
+          window.addEventListener('resize', resizeListener);
+        }
+        if (!resizeSubscription) {
+          resizeSubscription = self.expanded.subscribe(delayed);
+        }
       } else {
         // The map is not resized.
-        window.removeEventListener('resize', resizeListener, false);
-        resizeSubscription.dispose();
+        if (resizeListener) {
+          window.removeEventListener('resize', resizeListener, false);
+          resizeListener = null;
+        }
+        if (resizeSubscription) {
+          resizeSubscription.dispose();
+          resizeSubscription = null;
+        }
+      }
+
+      function clear() {
+
       }
 
       function delayed() {
-        window.setTimeout(map.triggerResize, 300);  // Animation duration is 0.25s.
+        window.setTimeout(function() {
+          map.triggerResize();
+          map.recenter();
+        }, 500);  // Animation duration is 0.25s.
       }
     }
 
@@ -287,7 +282,7 @@
       arr.splice(index, 1);
 
       if (removeContents) {
-        var toRemove = getAllMarkers(folder.contents());
+        var toRemove = mainViewModel.getAllMarkers(folder.contents());
 
         // Remove all the markers contained within this folder and its subfolders from the map.
         toRemove.forEach(function(marker) {

@@ -35,6 +35,7 @@
     this.description = ko.observable(data.description || '');
     this.position = ko.observable(data.position || {lat: 0, lng: 0});
     this.title = ko.observable(data.title || 'New Marker');
+    this.selected = ko.observable(data.selected || false);
     this.visible = ko.observable(data.visible || true);
   }
 

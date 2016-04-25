@@ -72,7 +72,8 @@
         map = global.map,
         ko = global.ko,
         models = global.models,
-        viewmodels = global.viewmodels;
+        viewmodels = global.viewmodels,
+        selectedMarkerID;
 
     // Method for creating or recreating a marker. Returns the marker.
     self.createOrRecreateMarker = function(marker) {
@@ -92,6 +93,40 @@
       });
 
       return marker;
+    };
+
+    // Searches an array and returns all markers within it and within any sub-arrays.
+    self.getAllMarkers = function(arr) {
+      var result = [];
+
+      arr.forEach(function(elem) {
+        elem = ko.unwrap(elem);
+
+        // For every element in the given array...
+        if (elem instanceof models.Marker) {
+          // If the element is a marker, push it to the accumulation array.
+          result.push(elem);
+        } else if (Array.isArray(elem)) {
+          // Else if it's an array, search it and concat the results to the accumulation array.
+          result = result.concat(self.getAllMarkers(elem));
+        } else if (typeof elem === 'object') {
+          // Else if it's an object...
+          for (var prop in elem) {
+            prop = ko.unwrap(elem[prop]);
+
+            // For each of its properties...
+            if (Array.isArray(prop)) {
+              // If it's an array, search it and concat the results to the accumulation array.
+              result = result.concat(self.getAllMarkers(prop));
+            } else if (prop instanceof models.Marker) {
+              // Else if it's a marker, push it to the accumulation array.
+              result.push(prop);
+            }
+          }
+        }
+      });
+
+      return result;
     };
 
     // Method for retrieving a marker's or folder's most immediate containing array.
@@ -182,6 +217,12 @@
         self.sidebar.expanded(false);
       }
 
+      // Clear selected state of all markers.
+      clearSelected();
+
+      // Set the new selected marker.
+      marker.selected(true);
+
       // Bounce the marker.
       map.bounceMarker(marker.id());
 
@@ -238,6 +279,17 @@
 
     // Initialize the App View Model.
     init();
+
+    /**
+     * Sets all markers' selected state to false.
+     */
+    function clearSelected() {
+      self.getAllMarkers(self.markers()).forEach(function(marker) {
+        if (marker.selected()) {
+          marker.selected(false);
+        }
+      });
+    }
 
     /**
      * Called when the user double clicks on the map. Creates a marker at the

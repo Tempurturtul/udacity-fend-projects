@@ -305,46 +305,54 @@
         }
 
         function googleResultPhotos(result) {
-          var photos = '';
+          if (result.photos) {
+            var photos = '';
 
-          result.photos.forEach(function(photo) {
-            photos += '<li>' +
-                      '<a href="' + photo.fullsize + '" target="_blank">' +
-                      '<img src="' + photo.src + '">' +
-                      '</a>' +
-                      '<small>' + photo.attributions.join(' ') + '</small>' +
-                      '</li>';
-          });
+            result.photos.forEach(function(photo) {
+              photos += '<li>' +
+                        '<a href="' + photo.fullsize + '" target="_blank">' +
+                        '<img src="' + photo.src + '">' +
+                        '</a>' +
+                        '<small>' + photo.attributions.join(' ') + '</small>' +
+                        '</li>';
+            });
 
-          return '<h3>Photos</h3>' +
-                 '<div class="google-photos">' +
-                 '<ul>' + photos + '</ul>' +
-                 '</div>';
+            return '<h3>Photos</h3>' +
+                   '<div class="google-photos">' +
+                   '<ul>' + photos + '</ul>' +
+                   '</div>';
+          } else {
+            return '';
+          }
         }
 
         function googleResultReviews(result) {
-          var reviews = '';
+          if (result.reviews) {
+            var reviews = '';
 
-          result.reviews.forEach(function(review) {
-            reviews += '<li>' +
-                       (review.author.profile ?
-                        '<a href="' + review.author.profile + '" target="_blank">' + review.author.name.replace(/</g, '&lt;') + '</a>' :
-                        review.author.name.replace(/</g, '&lt;')) +
-                       '<ul>' +
-                       review.aspects
-                          .map(function(aspect) {
-                            return '<li>' + aspect.type + ': ' + aspect.rating + '/3</li>';
-                          })
-                          .join('') +
-                       '</ul>' +
-                       '<p>' + review.text + '</p>' +
-                       '</li>';
-          });
+            result.reviews.forEach(function(review) {
+              reviews += '<li>' +
+                         (review.author.profile ?
+                          '<a href="' + review.author.profile + '" target="_blank">' + review.author.name.replace(/</g, '&lt;') + '</a>' :
+                          review.author.name.replace(/</g, '&lt;')) +
+                         '<ul>' +
+                         review.aspects
+                            .map(function(aspect) {
+                              return '<li>' + aspect.type + ': ' + aspect.rating + '/3</li>';
+                            })
+                            .join('') +
+                         '</ul>' +
+                         '<p>' + review.text + '</p>' +
+                         '</li>';
+            });
 
-          return '<h3>Reviews</h3>' +
-                 '<div class="google-reviews">' +
-                 '<ul>' + reviews + '</ul>' +
-                 '</div>';
+            return '<h3>Reviews</h3>' +
+                   '<div class="google-reviews">' +
+                   '<ul>' + reviews + '</ul>' +
+                   '</div>';
+          } else {
+            return '';
+          }
         }
 
         function googleResultTitle(result) {

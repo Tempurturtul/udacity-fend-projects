@@ -177,7 +177,9 @@
                                               }">
             <span class="drag-handle"></span>
             <img src="image/pin.svg" height="10" width="10">
-            <span class="entry-name" data-bind="text: title, click: $root.markerClicked"></span>
+            <span class="entry-name" data-bind="text: title,
+                                                click: $root.markerClicked,
+                                                css: {selected: selected}"></span>
           </div>
         <!-- /ko -->
 

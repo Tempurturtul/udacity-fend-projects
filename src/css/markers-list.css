@@ -114,3 +114,7 @@
   margin-right: 5px;
   width: 20px;
 }
+
+.selected {
+  color: #c00;
+}

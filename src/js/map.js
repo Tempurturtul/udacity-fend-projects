@@ -31,6 +31,7 @@
     onMarkerClick: onMarkerClick,
     onPlacesChanged: onPlacesChanged,
     openInfoWindow: openInfoWindow,
+    recenter: recenter,
     removeMarker: removeMarker,
     setInfoWindowContent: setInfoWindowContent,
     triggerResize: triggerResize,
@@ -369,6 +370,14 @@
         unsuspendScrollZoomListener = null;
       }
     }
+  }
+
+  /**
+   * Recenters the map on the center saved in mapOptions.
+   */
+  function recenter() {
+    var mapOptions = JSON.parse(localStorage.getItem(storageKeys.MAPOPTIONS));
+    map.panTo(mapOptions.center);
   }
 
   /**
