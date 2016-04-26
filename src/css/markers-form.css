@@ -6,13 +6,24 @@
   background: white;
   border-top: solid grey 1px;
   left: 0;
-  min-height: 30%;
+  height: 30%;
+  overflow: auto;
   padding: 25px;
   position: absolute;
   text-align: center;
   top: 70%;
   width: 100%;
   z-index: 2;  /* Above map and sidebar. */
+}
+
+#markers-form fieldset {
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+#markers-form legend {
+  font-size: 1.1em;
+  font-weight: bold;
 }
 
 #markers-form button {
@@ -31,5 +42,11 @@
 }
 
 .pending-marker span {
+  cursor: pointer;
   flex: 1 1 auto;
+}
+
+/* Identical to markers-list .selected style. */
+.selected {
+  color: #c00;
 }

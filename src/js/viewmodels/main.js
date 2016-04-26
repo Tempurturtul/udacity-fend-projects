@@ -72,8 +72,7 @@
         map = global.map,
         ko = global.ko,
         models = global.models,
-        viewmodels = global.viewmodels,
-        selectedMarkerID;
+        viewmodels = global.viewmodels;
 
     // Method for creating or recreating a marker. Returns the marker.
     self.createOrRecreateMarker = function(marker) {
@@ -217,12 +216,6 @@
         self.sidebar.expanded(false);
       }
 
-      // Clear selected state of all markers.
-      clearSelected();
-
-      // Set the new selected marker.
-      marker.selected(true);
-
       // Bounce the marker.
       map.bounceMarker(marker.id());
 
@@ -278,17 +271,6 @@
 
     // Initialize the App View Model.
     init();
-
-    /**
-     * Sets all markers' selected state to false.
-     */
-    function clearSelected() {
-      self.getAllMarkers(self.markers()).forEach(function(marker) {
-        if (marker.selected()) {
-          marker.selected(false);
-        }
-      });
-    }
 
     /**
      * Called when the user double clicks on the map. Creates a marker at the
@@ -370,6 +352,9 @@
 
       // Call confirmCustomMarker when the user double clicks on the map.
       map.onMapDblClick(confirmCustomMarker);
+
+      // Subscribe updateSelectedMarker to info-window's marker.
+      self.infoWindow.marker.subscribe(updateSelectedMarker);
     }
 
     /**
@@ -396,6 +381,33 @@
 
       // Open the confirm markers form.
       self.markersForm.open();
+    }
+
+    /**
+     * Updates the selected marker to correspond to the marker the info-window
+     * is open on. Subscribed to info-window's marker observable.
+     */
+    function updateSelectedMarker(marker) {
+      clearSelected();
+
+      if (marker) {
+        marker.selected(true);
+      }
+
+      /**
+       * Sets all markers' selected state to false.
+       */
+      function clearSelected() {
+        self.getAllMarkers(self.markers())
+          .concat(
+            self.getAllMarkers(self.markersForm.pending())
+          )
+          .forEach(function(marker) {
+            if (marker.selected()) {
+              marker.selected(false);
+            }
+          });
+      }
     }
   }
 

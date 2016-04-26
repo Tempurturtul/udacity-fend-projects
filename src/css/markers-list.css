@@ -115,6 +115,7 @@
   width: 20px;
 }
 
+/* Identical to markers-form .selected style. */
 .selected {
   color: #c00;
 }
