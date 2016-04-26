@@ -111,8 +111,8 @@
 }
 
 #sidebar-toggle {
-  background: white;
-  border: solid grey 1px;
+  background: #fff;
+  border: solid #555 1px;
   border-radius: 2px;
   box-shadow: rgba(0, 0, 0, 0.298039) 0 1px 4px -1px;
   height: 36px;
@@ -126,13 +126,14 @@
 }
 
 #sidebar-toggle:hover {
-  background: #eee;
-  border-color: #444;
 }
 
-#sidebar-toggle:active,
+#sidebar-toggle:active {
+  background-color: #eee;
+  border-color: #000;
+}
+
 #sidebar-toggle:focus {
-  box-shadow: none;
   outline: none;
 }
 
