@@ -86,6 +86,30 @@
   border-color: #444;
 }
 
+/* The delete all button. */
+#sidebar > button:last-of-type {
+  align-self: center;
+  background-color: #d00;
+  border: solid 1px #555;
+  box-shadow: 0 0 1px 1px #444;
+  color: #ddd;
+  padding: 3px;
+  width: 100px;
+}
+
+#sidebar > button:last-of-type:hover {
+  background-color: #b00;
+}
+
+#sidebar > button:last-of-type:active {
+  background-color: #e00;
+  border-color: #333;
+}
+
+#sidebar > button:last-of-type:focus {
+  outline: none;
+}
+
 #sidebar-toggle {
   background: white;
   border: solid grey 1px;

@@ -41,6 +41,27 @@
       }
     };
 
+    self.confirmDeleteAll = function() {
+      var msg = '<h1>Warning!</h1>' +
+                '<p>Are you sure you want to delete <strong>all</strong> markers and folders?</p>' +
+                '<p><strong>This is an irreversible action.</strong></p>',
+          inputs = '';
+
+      util.fullpageForm(msg, inputs, confirm);
+
+      function confirm(inputData) {
+        var markersCopy = mainViewModel.markers().slice();
+
+        markersCopy.forEach(function(entry) {
+          if (entry instanceof models.Folder) {
+            removeFolder(entry, true);
+          } else {
+            mainViewModel.removeMarker(entry);
+          }
+        });
+      }
+    };
+
     self.confirmFolderRemoval = function(folder) {
       var msg = '<p>Are you sure you want to remove the <i>' + folder.name().replace(/</g, '&lt;') + '</i> folder?</p>',
           inputs = '<label><input type="checkbox" value="removeContents"> Also remove the folder\'s contents.</label>';
@@ -51,9 +72,6 @@
         var removeContents = inputData[0].checked;
 
         removeFolder(folder, removeContents);
-
-        // Save changes.
-        mainViewModel.saveMarkers();
       }
     };
 
@@ -376,6 +394,9 @@
       }
 
       obsArr(arr);
+
+      // Save changes.
+      mainViewModel.saveMarkers();
     }
   }
 
