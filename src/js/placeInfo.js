@@ -152,10 +152,13 @@
     .done(function(data) {
       if (data.response.groups) {
         for (var group in data.response.groups) {
-          group = data.response.groups[group];
+          // Avoid unintentionally iterating over prototype properties.
+          if (data.response.groups.hasOwnProperty(group)) {
+            group = data.response.groups[group];
 
-          for (var i = 0; i < group.items.length; i++) {
-            info.results.push(group.items[i].venue);
+            for (var i = 0; i < group.items.length; i++) {
+              info.results.push(group.items[i].venue);
+            }
           }
         }
       }

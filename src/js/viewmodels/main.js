@@ -111,15 +111,18 @@
         } else if (typeof elem === 'object') {
           // Else if it's an object...
           for (var prop in elem) {
-            prop = ko.unwrap(elem[prop]);
+            // Avoid unintentionally iterating over prototype properties.
+            if (elem.hasOwnProperty(prop)) {
+              prop = ko.unwrap(elem[prop]);
 
-            // For each of its properties...
-            if (Array.isArray(prop)) {
-              // If it's an array, search it and concat the results to the accumulation array.
-              result = result.concat(self.getAllMarkers(prop));
-            } else if (prop instanceof models.Marker) {
-              // Else if it's a marker, push it to the accumulation array.
-              result.push(prop);
+              // For each of its properties...
+              if (Array.isArray(prop)) {
+                // If it's an array, search it and concat the results to the accumulation array.
+                result = result.concat(self.getAllMarkers(prop));
+              } else if (prop instanceof models.Marker) {
+                // Else if it's a marker, push it to the accumulation array.
+                result.push(prop);
+              }
             }
           }
         }
