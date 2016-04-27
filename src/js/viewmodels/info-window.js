@@ -198,15 +198,161 @@
        * @returns - An HTML string intended for use in self.info.
        */
       function formatInfo(info) {
-        var str = '<div id="' + info.source + '-results">%results%</div>' +
-                  '<footer><small>%credit%</small></footer>',
-            resultsHTML = '';
+        var str = '<h1>' + title() + '</h1>' +
+                  '<div>' + results() + '</div>' +
+                  '<footer><small>' + credit() + '</small></footer>';
 
-        // Handle the case where no results are returned.
-        if (!info.results.length) {
-          return str.replace('%results%', 'No information from ' + info.source + ' could be found.')
-                    .replace('%credit%', '');
+        return str;
+
+        function title() {
+          switch (info.source) {
+            case 'google':
+              return 'Details From Google';
+            case 'flickr':
+              return 'Area Photos From Flickr';
+            case 'foursquare':
+              return 'Nearby Venues From Foursquare';
+            case 'wikipedia':
+              return 'Articles From Wikipedia';
+            default:
+              // The source wasn't identified.
+              return '';
+          }
         }
+
+        function results() {
+          // Handle missing results (also occcurs if data requests fail).
+          if (!info.results.length) {
+            return '<p>Nothing found.</p>';
+          }
+
+          switch (info.source) {
+            case 'google':
+              // TODO Test; Replace `?:` operations?
+              return info.source.results
+                .map(function(result) {
+                  // Sanitize name.
+                  result.name = result.name.replace(/</g, '&lt;');
+
+                  return '<div>' +
+
+                         // The result title.
+                         '<h2>' +
+                         (result.website ?
+                           '<a href="' + result.website + '" target="_blank">' + result.name + '</a>' :
+                           result.name) +
+                         '</h2>' +
+
+                         // The result details.
+                         '<ul>' +
+                         (result.address ?
+                           '<li><span>Address</span> ' + result.address + '</li>' :
+                           '') +
+                         (result.internationalPhone ?
+                           '<li><span>Phone</span> ' + result.internationalPhone + '</li>' :
+                           '') +
+                         (result.price ?
+                           '<li><span>Price</span> ' + result.price + '</li>' :
+                           '') +
+                         (result.rating ?
+                           '<li><span>Rating</span> ' + result.rating + ' / 5</li>' :
+                           '') +
+                         (result.googlePage ?
+                           '<li><a href="' + result.googlePage + '" target="_blank"><span>Google Page</span></a></li>' :
+                           '') +
+                         '</ul>' +
+
+                         // The result photos.
+                         (result.photos ?
+                           '<h3>Photos</h3>' +
+                           '<div>' +
+                           '<ul>' +
+                           result.photos
+                             .map(function(photo) {
+                               return '<li>' +
+                                      '<a href="' + photo.fullsize + '" target="_blank">' +
+                                      '<img src="' + photo.src + '">' +
+                                      '</a>' +
+                                      '<small>' + photo.attributions.join(' ') + '</small>' +
+                                      '</li>';
+                             })
+                             .join('') +
+                           '</ul>' +
+                           '</div>' :
+                           '') +
+
+                         // The result reviews.
+                         (result.reviews ?
+                           '<h3>Reviews</h3>' +
+                           '<div>' +
+                           '<ul>' +
+                           result.reviews
+                             .map(function(review) {
+                               return '<li>' +
+                                      (review.author.profile ?
+                                        '<a href="' + review.author.profile + '" target="_blank">' + review.author.name.replace(/</g, '&lt;') + '</a>' :
+                                        review.author.name.replace(/</g, '&lt;')) +
+                                      '<ul>' +
+                                      review.aspects
+                                        .map(function(aspect) {
+                                          return '<li>' +
+                                                 aspect.type + ': ' + aspect.rating + '/3' +
+                                                 '</li>';
+                                        })
+                                        .join('') +
+                                      '</ul>' +
+                                      '<p>' + review.text + '</p>' +
+                                      '</li>';
+                             })
+                             .join('') +
+                           '</ul>' +
+                           '</div>' :
+                           '') +
+
+                         '</div>';
+                })
+                .join('');
+            case 'flickr':
+              // TODO
+              return '';
+            case 'foursquare':
+              // TODO
+              return '';
+            case 'wikipedia':
+              // TODO
+              return '';
+            default:
+              // The source wasn't identified.
+              return '';
+          }
+        }
+
+        function credit() {
+          switch (info.source) {
+            case 'google':
+              return info.results
+                      .map(function(result) {
+                        return result.attributions;
+                      })
+                      .join(' ');
+            case 'flickr':
+              return 'Disclaimer: <q cite="https://www.flickr.com/services/api/tos/">This product uses the Flickr API but is not endorsed or certified by Flickr.</q>';
+            case 'foursquare':
+              // TODO
+              return '';
+            case 'wikipedia':
+              // TODO
+              return '';
+            default:
+              // The source wasn't identified.
+              return '';
+          }
+        }
+
+
+        /********************
+        * OLD
+        ********************/
 
         switch (info.source) {
           case 'google':
@@ -226,7 +372,8 @@
                              '</div>';
             });
 
-            return str.replace('%results%', resultsHTML)
+            return str.replace('%info-title%', 'Details From Google')
+                      .replace('%results%', resultsHTML)
                       .replace('%credit%', info.results
                                                   .map(function(result) { return result.attributions; })
                                                   .join(' '));
@@ -241,7 +388,8 @@
                              '</div>';
             });
 
-            return str.replace('%results%', resultsHTML)
+            return str.replace('%info-title%', 'Area Photos From Flickr')
+                      .replace('%results%', resultsHTML)
                       .replace('%credit%', 'Disclaimer: <q cite="https://www.flickr.com/services/api/tos/">This product uses the Flickr API but is not endorsed or certified by Flickr.</q>');
           case 'foursquare':
             // https://developer.foursquare.com/docs/responses/venue
@@ -257,7 +405,8 @@
                              '</div>';
             });
 
-            return str.replace('%results%', resultsHTML)
+            return str.replace('%info-title%', 'Nearby Venues From Foursquare')
+                      .replace('%results%', resultsHTML)
                       .replace('%credit%', '');
           case 'wikipedia':
             // Build the HTML for each result.
@@ -272,7 +421,8 @@
                              '</div>';
             });
 
-            return str.replace('%results%', resultsHTML)
+            return str.replace('%info-title%', 'Articles From Wikipedia')
+                      .replace('%results%', resultsHTML)
                       .replace('%credit%', '');
           default:
             // The source wasn't identified, return nothing.
