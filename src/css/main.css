@@ -1,56 +1,51 @@
-/***********************************
-* Shared and generic styling.
-***********************************/
+/*
+* TODO (styling-refactor)
+*   - Refactor DOM elements with new IDs and classes where appropriate.
+*   - Double-check that ID/class changes don't break any functionality.
+*   - Re-implement styling with new selectors.
+*   - Remove old files.
+*/
 
-* {
-  box-sizing: border-box;
-}
+/*********************************
+* Classes
+*********************************/
 
-html,
-body,
-main {
-  height: 100%;
-}
+.loading {}
 
-body {
-  overflow-x: hidden;
-}
+.pending-marker {}
 
-main {
-  position: relative;
-}
+.marker-entry {}
 
-a {
-  color: inherit;
-}
+.drag-handle {}
 
-a:hover {
-  color: #c00;
-}
+.entry-name {}
 
-.fullpage-error {}
+.folder-entry {}
 
-.loading::before {
-  align-items: center;
-  bottom: 0;
-  background: #222;
-  color: #fff;
-  content: 'Loading...';
-  display: flex;
-  justify-content: center;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 999;
-}
+.folder-button {}
+
+.folder-edit-form {}
+
+.folder-edit-input {}
+
+.folder-button-remove {}
+
+.folder-button-confirm {}
+
+.folder-button-center {}
+
+.folder-contents {}
+
+.expanded {}
+
+.selected {}
+
+.folder-button-open {}
+
+.folder-button-collapse {}
 
 .util-fullpage-form {}
 
 .util-fullpage-form-overlay {}
 
-@media (min-width: 1000px) {
-  body {
-    display: flex;
-  }
-}
+.selected-source {}

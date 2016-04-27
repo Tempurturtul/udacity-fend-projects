@@ -1,0 +1,56 @@
+/***********************************
+* Shared and generic styling.
+***********************************/
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+main {
+  height: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+main {
+  position: relative;
+}
+
+a {
+  color: inherit;
+}
+
+a:hover {
+  color: #c00;
+}
+
+.fullpage-error {}
+
+.loading::before {
+  align-items: center;
+  bottom: 0;
+  background: #222;
+  color: #fff;
+  content: 'Loading...';
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 999;
+}
+
+.util-fullpage-form {}
+
+.util-fullpage-form-overlay {}
+
+@media (min-width: 1000px) {
+  body {
+    display: flex;
+  }
+}
