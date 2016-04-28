@@ -230,7 +230,7 @@
       dataType: 'jsonp'
     })
     .done(function(data) {
-      if (data.query.pages) {
+      if (data.query && data.query.pages) {
         info.results = data.query.pages
           // Format.
           .map(function(page) {
