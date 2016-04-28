@@ -30,6 +30,24 @@ a:hover {
   color: #c00;
 }
 
+h1 {
+  font-size: 1.5em;
+}
+
+h2 {
+  font-size: 1.3em;
+}
+
+h3 {
+  font-size: 1.1em;
+}
+
+h4,
+h5,
+h6 {
+  font-size: 1em;
+}
+
 header label {
   align-items: center;
   display: flex;
