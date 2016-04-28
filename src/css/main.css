@@ -117,10 +117,36 @@ main > form button {
   margin: 8px;
   max-height: 200px;
   overflow: auto;
+  padding: 2px;
+}
+
+.additional-info-credit {
+  border-top: solid #ccc 1px;
+  color: #222;
+  padding-top: 5px;
+}
+
+.additional-info-results {}
+
+.additional-info-sources {
+  font-size: 1em;
+  margin-bottom: 0;
+}
+
+.additional-info-title {
+  border-bottom: solid #ccc 1px;
+  color: #888;
+  font-size: 1em;
+  font-weight: normal;
+  padding-bottom: 5px;
 }
 
 .button-group {
   font-size: 0.8em;
+}
+
+.button-group button {
+  margin: 2px;
 }
 
 .dangerous-button {

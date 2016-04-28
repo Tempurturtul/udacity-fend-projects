@@ -79,7 +79,7 @@
                             '</div>' +
                             '<h1 data-bind="text: marker().title"></h1>' +
                             '<p data-bind="text: marker().description"></p>' +
-                            '<h2>Information Sources</h2>' +
+                            '<h2 class="additional-info-sources">Information Sources</h2>' +
                             '<div class="button-group">' +
                             '<button data-bind="click: changeSourceTo.google, css: {\'selected-source\': source() === \'google\'}"><i class="fa fa-google"></i></button>' +
                             '<button data-bind="click: changeSourceTo.flickr, css: {\'selected-source\': source() === \'flickr\'}"><i class="fa fa-flickr"></i></button>' +
@@ -198,9 +198,9 @@
        * @returns - An HTML string intended for use in self.info.
        */
       function formatInfo(info) {
-        var str = '<h1>' + title() + '</h1>' +
-                  '<div>' + results() + '</div>' +
-                  '<footer><small>' + credit() + '</small></footer>';
+        var str = '<h1 class="additional-info-title">' + title() + '</h1>' +
+                  '<div class="additional-info-results">' + results() + '</div>' +
+                  '<footer class="additional-info-credit"><small>' + credit() + '</small></footer>';
 
         return str;
 
