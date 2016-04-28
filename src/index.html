@@ -124,7 +124,8 @@
           <!-- ko foreach: markersForm.pending -->
           <div class="pending-marker">
             <input type="checkbox" data-bind="checked: visible">
-            <span data-bind="text: title,
+            <span class="pending-marker-name"
+                  data-bind="text: title,
                              click: $root.markerClicked,
                              css: {'selected-marker': selected}"></span>
           </div>

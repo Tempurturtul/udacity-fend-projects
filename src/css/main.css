@@ -57,6 +57,19 @@ main {
   position: relative;
 }
 
+main > form > * {
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+main > form legend {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+main > form button {
+  margin: 10px 5px;
+}
 
 
 /*********************************
@@ -268,7 +281,7 @@ main {
 .marker-pin {
   flex: 0 0 20px;
   height: 20px;
-  margin-right: 5px;
+  margin-right: 5px;r
   padding: 2px;
   width: 20px;
 }
@@ -278,6 +291,20 @@ main {
   border-bottom: solid 1px #ccc;
   display: flex;
   padding: 5px;
+}
+
+.pending-marker:last-of-type {
+  border-bottom: none;
+}
+
+.pending-marker-name {
+  cursor: pointer;
+  flex: 1 1 auto;
+}
+
+.pending-marker-name:hover {
+  color: #555;
+  transition: color 0.2s;
 }
 
 .pending-markers-form {
