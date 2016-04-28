@@ -4,48 +4,76 @@
 *   - Double-check that ID/class changes don't break any functionality.
 *   - Re-implement styling with new selectors.
 *   - Remove old files.
+*
+* Improved Classes:
+* 	sidebar-toggle-button (CHANGED: sidebar-toggle)
+* 	pending-markers-form (CHANGED: markers-form)
+* 	marker-list-entry (CHANGED: marker-entry)
+* 	marker-name (CHANGED: entry-name)
+* 	folder-list-entry (CHANGED: folder-entry)
+* 	(REMOVED: folder-button)
+* 	edit-folder-form (CHANGED: folder-edit-form)
+* 	(REMOVED: folder-edit-input)
+* 	selected-marker (CHANGED: selected)
+* 	button-group (CHANGED: 	info-window-edit-buttons,
+* 				                  info-window-source-buttons,
+* 				                  info-window-form-buttons)
+* 	additional-info (CHANGED: info-window-info)
+*   folder-name (NEW)
 */
 
 /*********************************
 * Classes
 *********************************/
 
-.loading {}
+.additional-info {}
 
-.pending-marker {}
-
-.marker-entry {}
+.button-group {}
 
 .drag-handle {}
 
-.entry-name {}
-
-.folder-entry {}
-
-.folder-button {}
-
-.folder-edit-form {}
-
-.folder-edit-input {}
-
-.folder-button-remove {}
-
-.folder-button-confirm {}
-
-.folder-button-center {}
-
-.folder-contents {}
+.edit-folder-form {}
 
 .expanded {}
 
-.selected {}
+.folder-button-center {}
+
+.folder-button-collapse {}
+
+.folder-button-confirm {}
 
 .folder-button-open {}
 
-.folder-button-collapse {}
+.folder-button-remove {}
+
+.folder-contents {}
+
+.folder-list-entry {}
+
+.folder-name {}
+
+.fullpage-error {}
+
+.loading {}
+
+.marker-list-entry {}
+
+.marker-name {}
+
+.markers-list {}
+
+.pending-marker {}
+
+.pending-markers-form {}
+
+.selected-marker {}
+
+.selected-source {}
+
+.sidebar {}
+
+.sidebar-toggle-button {}
 
 .util-fullpage-form {}
 
 .util-fullpage-form-overlay {}
-
-.selected-source {}
