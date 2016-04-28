@@ -99,25 +99,25 @@
     </script>
   </head>
   <body class="loading">
-    <header class="sidebar" data-bind="css: {expanded: sidebar.expanded}">
-      <fieldset>
+    <header class="sidebar" data-bind="css: {'expanded': sidebar.expanded}">
+      <fieldset class="filter-list-controls">
         <input type="text" placeholder="Search Existing" data-bind="textInput: sidebar.search">
         <label><input type="checkbox" data-bind="checked: sidebar.visibleOnly"> Only Show Markers Inside Map Bounds</label>
         <!-- <label>Show Collapsed Markers On Map<input type="checkbox" data-bind="checked: sidebar.visibleOnly"></label> -->
       </fieldset>
       <ul class="markers-list" data-bind="template: { name: 'list-template', foreach: markers }">
       </ul>
-      <form data-bind="submit: sidebar.addFolder">
-        <input data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">
-        <button type="submit"><img src="image/checkmark-green.svg" height="10" width="10"></button>
+      <form class="add-folder-form" data-bind="submit: sidebar.addFolder">
+        <input class="add-folder-input" data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder">
+        <button class="add-folder-submit" type="submit"><img src="image/checkmark-green.svg" height="10" width="10"></button>
       </form>
-      <button data-bind="click: sidebar.confirmDeleteAll">Delete All</button>
+      <button class="dangerous-button" data-bind="click: sidebar.confirmDeleteAll">Delete All</button>
     </header>
 
     <main>
       <button class="sidebar-toggle-button" data-bind="click: sidebar.toggle"><img src="image/sidebar-button.svg" height="20" width="20"></button>
-      <input id="places-search" type="text" placeholder="Search">
-      <div id="map"></div>
+      <input id="places-search" class="places-search" type="text" placeholder="Search">
+      <div id="map" class="map"></div>
       <form class="pending-markers-form" data-bind="visible: markersForm.visible">
         <fieldset>
           <legend>Pending Map Markers</legend>
@@ -126,7 +126,7 @@
             <input type="checkbox" data-bind="checked: visible">
             <span data-bind="text: title,
                              click: $root.markerClicked,
-                             css: {selected-marker: selected}"></span>
+                             css: {'selected-marker': selected}"></span>
           </div>
           <!-- /ko -->
         </fieldset>
@@ -143,7 +143,7 @@
       <li data-bind="visible: visible">
         <!-- A marker. -->
         <!-- ko ifnot: $data.contents -->
-          <div class="marker-list-entry" data-bind="dragZone: {
+          <div class="list-entry" data-bind="dragZone: {
                                                 name: 'sortable',
                                                 dragStart: $root.sidebar.dragStart,
                                                 dragEnd: $root.sidebar.dragEnd,
@@ -156,16 +156,16 @@
                                                 data: { items: $parent.contents || $parent.markers, item: $data }
                                               }">
             <span class="drag-handle"></span>
-            <img src="image/pin.svg" height="10" width="10">
-            <span class="marker-name" data-bind="text: title,
+            <img class="marker-pin" src="image/pin.svg" height="10" width="10">
+            <span class="list-entry-name" data-bind="text: title,
                                                 click: $root.markerClicked,
-                                                css: {selected-marker: selected}"></span>
+                                                css: {'selected-marker': selected}"></span>
           </div>
         <!-- /ko -->
 
         <!-- A folder. -->
         <!-- ko if: $data.contents -->
-          <div class="folder-list-entry" data-bind="dragZone: {
+          <div class="list-entry" data-bind="dragZone: {
                                                 name: 'sortable',
                                                 dragStart: $root.sidebar.dragStart,
                                                 dragEnd: $root.sidebar.dragEnd,
@@ -178,20 +178,22 @@
                                                 data: { items: $parent.contents || $parent.markers, item: $data }
                                               }">
             <span class="drag-handle"></span>
-            <button data-bind="click: $root.sidebar.toggleFolder,
-                               css: { 'folder-button-open': collapsed, 'folder-button-collapse': !collapsed() }"><img src="image/fold-arrow.svg" height="10" width="10"></button>
+            <button class="folder-button-toggle" data-bind="click: $root.sidebar.toggleFolder">
+              <img src="image/fold-arrow.svg" height="10" width="10"
+                    data-bind="css: { 'rotate-270': collapsed }">
+            </button>
 
             <!-- If editing. -->
             <form class="edit-folder-form"
                   data-bind="visible: editing, submit: $root.sidebar.toggleFolderEditing">
-              <input type="text" data-bind="value: name">
+              <input class="edit-folder-input" type="text" data-bind="value: name">
               <button class="folder-button-remove" type="button"
                       data-bind="click: $root.sidebar.confirmFolderRemoval"><img src="image/x-red.svg" height="10" width="10"></button>
               <button class="folder-button-confirm" type="submit"><img src="image/checkmark-green.svg" height="10" width="10"></button>
             </form>
 
             <!-- If not editing. -->
-            <span class="folder-name" data-bind="visible: !editing(), text: name, click: $root.sidebar.toggleFolderEditing"></span>
+            <span class="list-entry-name" data-bind="visible: !editing(), text: name, click: $root.sidebar.toggleFolderEditing"></span>
 
             <button class="folder-button-center" data-bind="click: $root.sidebar.centerOnContents"><img src="image/center.svg" height="10" width="10"></button>
           </div>
@@ -205,18 +207,18 @@
 
     <!-- Custom drag element for markers. -->
     <script type="text/html" id="marker-drag-preview">
-      <div class="marker-list-entry">
+      <div class="list-entry">
         <span class="drag-handle"></span>
-        <span class="marker-name" data-bind="text: item.title"></span>
+        <span class="list-entry-name" data-bind="text: item.title"></span>
       </div>
     </script>
 
     <!-- Custom drag element for folders. -->
     <script type="text/html" id="folder-drag-preview">
-      <div class="folder-list-entry">
+      <div class="list-entry">
         <span class="drag-handle"></span>
         <button class="folder-button-open"></button>
-        <span class="folder-name" data-bind="text: item.name"></span>
+        <span class="list-entry-name" data-bind="text: item.name"></span>
         <button class="folder-button-center"></button>
       </div>
     </script>

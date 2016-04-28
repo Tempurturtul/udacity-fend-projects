@@ -68,6 +68,7 @@
        */
       function createContent() {
         var content = document.createElement('div');
+        content.classList.add('info-window');
 
         // The view visible when not editing.
         var article = document.createElement('article');

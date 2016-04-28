@@ -1,79 +1,450 @@
 /*
 * TODO (styling-refactor)
-*   - Refactor DOM elements with new IDs and classes where appropriate.
-*   - Double-check that ID/class changes don't break any functionality.
-*   - Re-implement styling with new selectors.
-*   - Remove old files.
-*
-* Improved Classes:
-* 	sidebar-toggle-button (CHANGED: sidebar-toggle)
-* 	pending-markers-form (CHANGED: markers-form)
-* 	marker-list-entry (CHANGED: marker-entry)
-* 	marker-name (CHANGED: entry-name)
-* 	folder-list-entry (CHANGED: folder-entry)
-* 	(REMOVED: folder-button)
-* 	edit-folder-form (CHANGED: folder-edit-form)
-* 	(REMOVED: folder-edit-input)
-* 	selected-marker (CHANGED: selected)
-* 	button-group (CHANGED: 	info-window-edit-buttons,
-* 				                  info-window-source-buttons,
-* 				                  info-window-form-buttons)
-* 	additional-info (CHANGED: info-window-info)
-*   folder-name (NEW)
+*   - [x] Refactor DOM elements with new IDs and classes where appropriate.
+*   - [x] Double-check that ID/class changes don't break any functionality.
+*   - [ ] Re-implement styling with new selectors.
+*   - [ ] Remove old files.
 */
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+main {
+  height: 100%;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+}
+
+a:hover {
+  color: #c00;
+}
+
+header label {
+  align-items: center;
+  display: flex;
+  font-size: 0.8em;
+  margin-top: 5px;
+}
+
+header input[type='checkbox'] {
+  margin-right: 4px;
+}
+
+header input[type='text'] {
+  display: block;
+  height: 2em;
+  padding: 0 3px 0 5px;
+  width: 100%;
+}
+
+ul {
+  list-style: none;
+  padding-left: 1em;
+}
+
+main {
+  position: relative;
+}
+
+
 
 /*********************************
 * Classes
 *********************************/
 
-.additional-info {}
+.add-folder-form {
+  flex: 1 1 auto;
+  position: relative;
+}
 
-.button-group {}
+.add-folder-input {
+  padding-right: 2.5em;
+}
 
-.drag-handle {}
+.add-folder-submit {
+  height: 2em;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 2em;
+}
 
-.edit-folder-form {}
+.additional-info {
+  border: solid grey 1px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
+  margin: 8px;
+  max-height: 200px;
+  overflow: auto;
+}
 
-.expanded {}
+.button-group {
+  font-size: 0.8em;
+}
 
-.folder-button-center {}
+.dangerous-button {
+  align-self: center;
+  background-color: #d00;
+  border: solid 1px #555;
+  border-radius: 3px;
+  box-shadow: 0 0 1px 1px #444;
+  color: #ddd;
+  padding: 3px;
+  width: 100px;
+}
 
-.folder-button-collapse {}
+.dangerous-button:hover {
+  background-color: #b00;
+}
 
-.folder-button-confirm {}
+.dangerous-button:active {
+  background-color: #e00;
+  border-color: #333;
+}
 
-.folder-button-open {}
+.dangerous-button:focus {
+  outline: none;
+}
 
-.folder-button-remove {}
+
+.drag-handle {
+  cursor: move;
+  flex: 0 0 20px;
+  height: 20px;
+  text-align: center;
+  width: 20px;
+}
+
+.drag-handle::after {
+  content: '‒';
+}
+
+.edit-folder-form {
+  position: relative;
+}
+
+.edit-folder-input {
+  height: inherit !important;
+  padding: 0 23px !important;
+  width: 150px !important;
+}
+
+.expanded {
+  transform: translate(-100%) !important;
+  transition: transform 0.25s ease-in !important;
+}
+
+.filter-list-controls {
+  border: none;
+  flex: 0 0 36px;  /* Basis equal to toggle-button's height. */
+  margin: none;
+  padding: 0 43px 0 0;  /* The toggle button's width plus its right offset (36 + 7). */
+}
+
+.folder-button-center {
+  background: none;
+  border: none;
+  height: 20px;
+  margin-left: 5px;
+  padding: 0;
+  width: 20px;
+}
+
+.folder-button-center:hover {
+  border: solid 1px #aaa;
+  border-radius: 2px;
+}
+
+.folder-button-confirm {
+  height: 100%;
+  margin-left: 5px;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 20px;
+}
+
+.folder-button-remove {
+  height: 100%;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 20px;
+}
+
+.folder-button-toggle {
+  background: none;
+  border: none;
+  height: 20px;
+  margin-right: 5px;
+  padding: 0;
+  width: 20px;
+}
+
+.folder-button-toggle:hover {
+  border: solid 1px #aaa;
+  border-radius: 2px;
+}
 
 .folder-contents {}
 
-.folder-list-entry {}
-
-.folder-name {}
+.folder-list-entry {
+  align-items: center;
+  display: flex;
+  white-space: nowrap;
+}
 
 .fullpage-error {}
 
+.info-window {
+  height: 220px;
+  overflow: auto;
+  text-align: center;
+  width: 180px;
+}
+
+.list-entry {
+  align-items: center;
+  display: flex;
+  white-space: nowrap;
+}
+
+.list-entry-name {
+  cursor: pointer;
+}
+
+.list-entry-name:hover {
+  color: #555;
+  transition: color 0.2s;
+}
+
 .loading {}
 
-.marker-list-entry {}
+.loading::before {
+  align-items: center;
+  bottom: 0;
+  background: #222;
+  color: #fff;
+  content: 'Loading...';
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 999;
+}
 
-.marker-name {}
+.map {
+  height: 100%;
+  width: 100%;
+}
 
-.markers-list {}
+.markers-list {
+  background: #f9f9f9;
+  box-shadow: inset 1px 1px 3px 0px #333;
+  color: #000;
+  flex: 1 1 auto;
+  list-style: none;
+  overflow: auto;
+  padding: 5px 0;
+  white-space: nowrap;
+}
 
-.pending-marker {}
+.marker-pin {
+  flex: 0 0 20px;
+  height: 20px;
+  margin-right: 5px;
+  padding: 2px;
+  width: 20px;
+}
 
-.pending-markers-form {}
+.pending-marker {
+  align-items: center;
+  border-bottom: solid 1px #ccc;
+  display: flex;
+  padding: 5px;
+}
 
-.selected-marker {}
+.pending-markers-form {
+  background: white;
+  border-top: solid grey 1px;
+  left: 0;
+  height: 30%;
+  overflow: auto;
+  padding: 25px;
+  position: absolute;
+  text-align: center;
+  top: 70%;
+  width: 100%;
+  z-index: 2;  /* Above map and sidebar. */
+}
 
-.selected-source {}
+.places-search {
+  box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px -1px;
+  background: #fff;
+  border: none;
+  border-radius: 2px;
+  color: rgb(86, 86, 86);
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 14px;
+  height: 30px;
+  margin-top: 10px;
+  padding: 0 3px 0 5px;
+  width: 150px;
+}
 
-.sidebar {}
+.rotate-270 {
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+}
 
-.sidebar-toggle-button {}
+.selected-marker {
+  color: #c00;
+}
+
+.selected-source {
+  border-color: #c00;
+}
+
+.sidebar {
+  background: #222;
+  border-right: none;
+  border-top: none;
+  box-shadow: rgba(0, 0, 0, 0.3) -1px 1px 4px -1px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding: 7px;
+  position: absolute;
+  right: -100%;
+  top: 0;
+  transform: translate(0);
+  transition: transform 0.25s ease-in;
+  width: 100%;
+  z-index: 1;  /* Above map. */
+}
+
+.sidebar-toggle-button {
+  background: #fff;
+  border: solid #555 1px;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 1px 4px -1px;
+  height: 36px;
+  line-height: 0;
+  padding: 0;
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  width: 36px;
+  z-index: 3;  /* Above map, markers form, and sidebar. */
+}
+
+.sidebar-toggle-button:active {
+  background-color: #eee;
+  border-color: #000;
+}
+
+.sidebar-toggle-button:focus {
+  outline: none;
+}
+
 
 .util-fullpage-form {}
 
 .util-fullpage-form-overlay {}
+
+
+
+/*********************************
+* Media Queries
+*********************************/
+
+@media (min-width: 400px) {
+  .places-search {
+    width: 200px;
+  }
+}
+
+@media (min-width: 450px) {
+  .info-window {
+    width: 300px;
+  }
+}
+
+@media (min-width: 500px) {
+  .expanded {
+    transform: translate(-500px) !important;
+  }
+
+  .sidebar {
+    right: -500px;
+    width: 500px;
+  }
+}
+
+@media (min-width: 1000px) {
+  body {
+    display: flex;
+  }
+
+  main {
+    flex: 1 1 500px;
+  }
+
+  .expanded {
+    padding: 7px !important;
+    transform: translate(0) !important;
+    transition: width 0.25s ease-in !important;
+    width: 500px !important;
+  }
+
+  .expanded > * {
+    transition: visibility 0s 0.25s;
+    visibility: visible !important;
+  }
+
+  .sidebar {
+    left: 0;
+    padding: 0;
+    position: relative;
+    transition: width 0.25s ease-in;
+    width: 0;
+  }
+
+  .sidebar > * {
+    visibility: hidden;
+  }
+}
+
+@media (min-height: 500px) {
+  .additional-info {
+    max-height: 280px;
+  }
+
+  .info-window {
+    height: 320px;
+  }
+}
+
+@media (min-height: 600px) {
+  .info-window {
+    height: 400px;
+  }
+}
