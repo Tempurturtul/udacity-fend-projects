@@ -90,6 +90,7 @@
 
         // The view visible when editing.
         var form = document.createElement('form');
+        form.classList.add('additional-info-form');
         form.dataset.bind = 'visible: editing, submit: update';
         form.innerHTML = '<label>Title<input type="text" data-bind="textInput: marker().title"></label>' +
                          '<label>Description<textarea data-bind="textInput: marker().description" rows="4"></textarea></label>' +
@@ -233,7 +234,7 @@
                   // Sanitize name.
                   result.name = result.name.replace(/</g, '&lt;');
 
-                  return '<div>' +
+                  return '<div class="additional-info-result">' +
 
                          // The result title.
                          '<h2>' +
@@ -322,7 +323,7 @@
                   // Sanitize title and insert word breaks.
                   result.title = result.title.replace(/</g, '&lt;').replace(/#/g, '<wbr>#');
 
-                  return '<div>' +
+                  return '<div class="additional-info-result">' +
                          '<h2>' + result.title + '</h2>' +
                          '<a href="' + result.url + '" target="_blank">' +
                          '<img src="' + result.src + '">' +
@@ -336,7 +337,7 @@
                   // Sanitize name.
                   result.name = result.name.replace(/</g, '&lt;');
 
-                  return '<div>' +
+                  return '<div class="additional-info-result">' +
 
                          // The result title.
                          '<h2>' +
@@ -374,7 +375,6 @@
                          '<li><a href="https://foursquare.com/v/' + result.id + '?ref=0V0DM3MNMWFDECB2ZTPOAB1XIZD1F14VFCIBLGJ1RJQD2C3V" target="_blank">' +
                          'More information...' +
                          '</a></li>' +
-
                          '</ul>' +
 
                          '</div>';
@@ -383,7 +383,7 @@
             case 'wikipedia':
               return info.results
                 .map(function(result) {
-                  return '<div>' +
+                  return '<div class="additional-info-result">' +
 
                          // The result title.
                          '<h2>' +
