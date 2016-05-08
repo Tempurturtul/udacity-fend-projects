@@ -33,6 +33,7 @@
       console.error(e.name, ':', e.message);
 
       // The app isn't functional without the map; replace the document body with an error message.
+      document.body.classList.remove('loading');
       document.body.innerHTML = '<div class="fullpage-error">' +
                                 '<h1>Error</h1>' +
                                 '<p>Google Maps API not found.</p>' +

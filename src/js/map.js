@@ -224,7 +224,7 @@
         case 1:
           return 'Inexpensive';
         case 2:
-          return 'Moderate';
+          return 'Moderately Expensive';
         case 3:
           return 'Expensive';
         case 4:

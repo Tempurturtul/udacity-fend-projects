@@ -68,32 +68,33 @@
        */
       function createContent() {
         var content = document.createElement('div');
-        content.id = 'info-window';
+        content.classList.add('info-window');
 
         // The view visible when not editing.
         var article = document.createElement('article');
         article.dataset.bind = 'visible: !editing()';
-        article.innerHTML = '<div class="info-window-edit-buttons">' +
+        article.innerHTML = '<div class="button-group">' +
                             '<button data-bind="click: edit">Modify</button>' +
                             '<button data-bind="click: remove">Remove</button>' +
                             '</div>' +
                             '<h1 data-bind="text: marker().title"></h1>' +
                             '<p data-bind="text: marker().description"></p>' +
-                            '<h2>Information Sources</h2>' +
-                            '<div class="info-window-source-buttons">' +
+                            '<h2 class="additional-info-sources">Information Sources</h2>' +
+                            '<div class="button-group">' +
                             '<button data-bind="click: changeSourceTo.google, css: {\'selected-source\': source() === \'google\'}"><i class="fa fa-google"></i></button>' +
                             '<button data-bind="click: changeSourceTo.flickr, css: {\'selected-source\': source() === \'flickr\'}"><i class="fa fa-flickr"></i></button>' +
                             '<button data-bind="click: changeSourceTo.foursquare, css: {\'selected-source\': source() === \'foursquare\'}"><i class="fa fa-foursquare"></i></button>' +
                             '<button data-bind="click: changeSourceTo.wikipedia, css: {\'selected-source\': source() === \'wikipedia\'}"><i class="fa fa-wikipedia-w"></i></button>' +
                             '</div>' +
-                            '<section class="info-window-info" data-bind="html: info"></section>';
+                            '<section class="additional-info" data-bind="html: info"></section>';
 
         // The view visible when editing.
         var form = document.createElement('form');
+        form.classList.add('additional-info-form');
         form.dataset.bind = 'visible: editing, submit: update';
         form.innerHTML = '<label>Title<input type="text" data-bind="textInput: marker().title"></label>' +
                          '<label>Description<textarea data-bind="textInput: marker().description" rows="4"></textarea></label>' +
-                         '<div class="info-window-form-buttons">' +
+                         '<div class="button-group">' +
                          '<button data-bind="click: restore" type="button">Cancel</button>' +
                          '<button type="submit">Confirm</button>' +
                          '</div>';
@@ -198,9 +199,9 @@
        * @returns - An HTML string intended for use in self.info.
        */
       function formatInfo(info) {
-        var str = '<h1>' + title() + '</h1>' +
-                  '<div>' + results() + '</div>' +
-                  '<footer><small>' + credit() + '</small></footer>';
+        var str = '<h1 class="additional-info-title">' + title() + '</h1>' +
+                  '<div class="additional-info-results">' + results() + '</div>' +
+                  '<footer class="additional-info-credit"><small>' + credit() + '</small></footer>';
 
         return str;
 
@@ -213,7 +214,7 @@
             case 'foursquare':
               return 'Nearby Venues From Foursquare';
             case 'wikipedia':
-              return 'Articles From Wikipedia';
+              return 'Area Articles From Wikipedia';
             default:
               // The source wasn't identified.
               return '';
@@ -233,66 +234,63 @@
                   // Sanitize name.
                   result.name = result.name.replace(/</g, '&lt;');
 
-                  return '<div>' +
+                  return '<div class="additional-info-result google-result">' +
 
                          // The result title.
-                         '<h2>' +
+                         '<h2 class="google-result-title">' +
                          (result.website ?
                            '<a href="' + result.website + '" target="_blank">' + result.name + '</a>' :
                            result.name) +
                          '</h2>' +
 
                          // The result details.
-                         '<ul>' +
+                         '<ul class="google-result-details">' +
                          // Address.
                          (result.address ?
-                           '<li><span>Address</span> ' + result.address + '</li>' :
+                           '<li class="google-result-detail">' + result.address + '</li>' :
                            '') +
                          // Phone.
                          (result.internationalPhone ?
-                           '<li><span>Phone</span> ' + result.internationalPhone + '</li>' :
+                           '<li class="google-result-detail">' + result.internationalPhone + '</li>' :
                            '') +
                          // Price.
                          (result.price ?
-                           '<li><span>Price</span> ' + result.price + '</li>' :
+                           '<li class="google-result-detail">' + result.price + '</li>' :
                            '') +
                          // Rating.
                          (result.rating ?
-                           '<li><span>Rating</span> ' + result.rating + ' / 5</li>' :
+                           '<li class="google-result-detail">' + result.rating + ' / 5</li>' :
                            '') +
                          // Google page.
                          (result.googlePage ?
-                           '<li><a href="' + result.googlePage + '" target="_blank"><span>Google Page</span></a></li>' :
+                           '<li class="google-result-detail"><a href="' + result.googlePage + '" target="_blank">Google Page</a></li>' :
                            '') +
                          '</ul>' +
 
                          // The result photos.
                          (result.photos ?
                            '<h3>Photos</h3>' +
-                           '<div>' +
-                           '<ul>' +
+                           '<ul class="google-result-photos">' +
                            result.photos
                              .map(function(photo) {
-                               return '<li>' +
+                               return '<li class="google-result-photo-container">' +
                                       '<a href="' + photo.fullsize + '" target="_blank">' +
-                                      '<img src="' + photo.src + '">' +
+                                      '<img class="google-result-photo" src="' + photo.src + '">' +
                                       '</a>' +
                                       '<small>' + photo.attributions.join(' ') + '</small>' +
                                       '</li>';
                              })
                              .join('') +
-                           '</ul>' +
-                           '</div>' :
+                           '</ul>' :
                            '') +
 
                          // The result reviews.
                          (result.reviews ?
                            '<h3>Reviews</h3>' +
-                           '<div>' +
-                           '<ul>' +
+                           '<ul class="google-result-reviews">' +
                            result.reviews
                              .map(function(review) {
-                               return '<li>' +
+                               return '<li class="google-result-review">' +
                                       (review.author.profile ?
                                         '<a href="' + review.author.profile + '" target="_blank">' + review.author.name.replace(/</g, '&lt;') + '</a>' :
                                         review.author.name.replace(/</g, '&lt;')) +
@@ -309,8 +307,7 @@
                                       '</li>';
                              })
                              .join('') +
-                           '</ul>' +
-                           '</div>' :
+                           '</ul>' :
                            '') +
 
                          '</div>';
@@ -322,10 +319,10 @@
                   // Sanitize title and insert word breaks.
                   result.title = result.title.replace(/</g, '&lt;').replace(/#/g, '<wbr>#');
 
-                  return '<div>' +
-                         '<h2>' + result.title + '</h2>' +
+                  return '<div class="additional-info-result flickr-result">' +
+                         '<h2 class="flickr-result-title">' + result.title + '</h2>' +
                          '<a href="' + result.url + '" target="_blank">' +
-                         '<img src="' + result.src + '">' +
+                         '<img class="flickr-result-photo" src="' + result.src + '">' +
                          '</a>' +
                          '</div>';
                 })
@@ -336,45 +333,44 @@
                   // Sanitize name.
                   result.name = result.name.replace(/</g, '&lt;');
 
-                  return '<div>' +
+                  return '<div class="additional-info-result foursquare-result">' +
 
                          // The result title.
-                         '<h2>' +
+                         '<h2 class="foursquare-result-title">' +
                          (result.url ?
                            '<a href="' + result.url + '" target="_blank">' + result.name + '</a>' :
                            result.name) +
                          '</h2>' +
 
                          // The result details.
-                         '<ul>' +
+                         '<ul class="foursquare-result-details">' +
                          // Category.
                          (result.categories.length ?
-                           '<li><span>' + result.categories
+                           '<li class="foursquare-result-detail">' + result.categories
                                             .filter(function(category) {
                                               if (category.hasOwnProperty('primary')) {
                                                 return true;
                                               } else {
                                                 return false;
                                               }
-                                            })[0].name + '</span></li>' :
+                                            })[0].name + '</li>' :
                            '') +
                          // Address.
                          (result.location.address ?
-                           '<li>' + result.location.address + '</li>' :
+                           '<li class="foursquare-result-detail">' + result.location.address + '</li>' :
                            '') +
                          // Price.
                          (result.price ?
-                           '<li><span>Price</span> ' + result.price.message + '</li>' :
+                           '<li class="foursquare-result-detail">Price: ' + result.price.message + '</li>' :
                            '') +
                          // Rating.
                          (result.rating ?
-                           '<li><span>Rating</span> ' + result.rating + ' / 10</li>' :
+                           '<li class="foursquare-result-detail">' + result.rating + ' / 10</li>' :
                            '') +
                          // Attribution link.
-                         '<li><a href="https://foursquare.com/v/' + result.id + '?ref=0V0DM3MNMWFDECB2ZTPOAB1XIZD1F14VFCIBLGJ1RJQD2C3V" target="_blank">' +
+                         '<li class="foursquare-result-detail"><a href="https://foursquare.com/v/' + result.id + '?ref=0V0DM3MNMWFDECB2ZTPOAB1XIZD1F14VFCIBLGJ1RJQD2C3V" target="_blank">' +
                          'More information...' +
                          '</a></li>' +
-
                          '</ul>' +
 
                          '</div>';
@@ -383,10 +379,10 @@
             case 'wikipedia':
               return info.results
                 .map(function(result) {
-                  return '<div>' +
+                  return '<div class="additional-info-result wikipedia-result">' +
 
                          // The result title.
-                         '<h2>' +
+                         '<h2 class="wikipedia-result-title">' +
                          (result.url ?
                            '<a href="' + result.url + '" target="_blank">' + result.title + '</a>' :
                            result.title) +
@@ -394,12 +390,12 @@
 
                          // The result thumbnail.
                          (result.thumbnail ?
-                           '<img src="' + result.thumbnail.source + '">' :
+                           '<img class="wikipedia-result-thumb" src="' + result.thumbnail.source + '">' :
                            '') +
 
                          // The result description.
                          (result.description ?
-                           '<p>' + result.description + '</p>' :
+                           '<p class="wikipedia-result-description">' + result.description + '</p>' :
                            '') +
 
                          '</div>';
@@ -422,10 +418,9 @@
             case 'flickr':
               return 'Disclaimer: <q cite="https://www.flickr.com/services/api/tos/">This product uses the Flickr API but is not endorsed or certified by Flickr.</q>';
             case 'foursquare':
-              // TODO
-              return '';
+              return 'Results provided by <cite><a href="https://foursquare.com/">Foursquare</a></cite>.';
             case 'wikipedia':
-              return '';
+              return 'Results provided by <cite><a href="https://www.wikipedia.org/">Wikipedia</a></cite>.';
             default:
               // The source wasn't identified.
               return '';
