@@ -29,6 +29,7 @@
 
   /**
    * Invokes the callback with an object including an array of photos taken near the given place.
+   * In the event of an error, returns the info object without results.
    * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=10] - The maximum number of results to return.
@@ -106,6 +107,7 @@
 
   /**
    * Invokes the callback with an object including an array of popular nearby venues.
+   * In the event of an error, returns the info object without results.
    * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {number} [limit=5] - The maximum number of results to return.
@@ -170,6 +172,7 @@
 
   /**
    * Invokes the callback with an object including an array of wikipedia results for nearby places (sorted by proximity).
+   * In the event of an error, returns the info object without results.
    * @param {infoReady} cb
    * @param {object} place - Data defining the place.
    * @param {object} [opts] - Additional options.
