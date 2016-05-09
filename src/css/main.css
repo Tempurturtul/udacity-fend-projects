@@ -171,6 +171,8 @@ main > form button {
   border-radius: 3px;
   box-shadow: 0 0 1px 1px #444;
   color: #ddd;
+  flex: 0 0 auto;
+  margin: 5px 0;
   padding: 3px;
   width: 100px;
 }
