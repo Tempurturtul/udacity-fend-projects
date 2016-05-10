@@ -34,6 +34,7 @@ $(document).ready(function() {
           break;
         case 'web-technologies':
           msg = '<ul>' +
+                '<li>Jasmine</li>' +
                 '<li>jQuery</li>' +
                 '<li>Knockout</li>' +
                 '<li>Polymer</li>' +
@@ -48,7 +49,6 @@ $(document).ready(function() {
           break;
         case 'new-things':
           msg = '<ul>' +
-                '<li>CSS Preprocessors</li>' +
                 '<li>Web Workers</li>' +
                 '<li>Service Workers</li>' +
                 '<li>IndexedDB API</li>' +
