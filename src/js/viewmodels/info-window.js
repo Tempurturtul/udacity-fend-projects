@@ -15,7 +15,7 @@
         infoCache = {},       // Cached information retrieved from third party APIs.
         infoLifetime = 1200,  // Seconds to wait before updating cached info.
         preChangeMarkerData,  // Used to restore the marker's state if editing is canceled.
-        maxImageWidth = 300;  // Used to specify desired image dimensions in API requests.
+        maxImageWidth = 450;  // Used to specify desired image dimensions in API requests.
 
 
     // Methods for changing the information source.

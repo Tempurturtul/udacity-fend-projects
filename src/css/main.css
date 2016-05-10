@@ -115,7 +115,6 @@ main > form button {
   border: solid grey 1px;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px 0px;
   margin: 8px;
-  max-height: 200px;
   overflow: auto;
   padding: 2px;
 }
@@ -228,7 +227,7 @@ main > form button {
 .flickr-result {}
 
 .flickr-result-photo {
-  width: 90%;
+  max-width: 90% !important;  /* Override Google's styling. */
 }
 
 .flickr-result-title {
@@ -323,7 +322,7 @@ main > form button {
 }
 
 .google-result-photo {
-  width: 90%;
+  max-width: 90% !important;  /* Override Google's styling. */
 }
 
 .google-result-photo-container {
@@ -354,10 +353,8 @@ main > form button {
 .google-result-title {}
 
 .info-window {
-  height: 220px;
   overflow: auto;
   text-align: center;
-  width: 180px;
 }
 
 .list-entry {
@@ -531,7 +528,7 @@ main > form button {
 .wikipedia-result-description {}
 
 .wikipedia-result-thumb {
-  width: 90%;
+  max-width: 90% !important;  /* Override Google's styling. */
 }
 
 .wikipedia-result-title {}
@@ -545,12 +542,6 @@ main > form button {
 @media (min-width: 400px) {
   .places-search {
     width: 200px !important;
-  }
-}
-
-@media (min-width: 450px) {
-  .info-window {
-    width: 300px;
   }
 }
 
@@ -596,21 +587,5 @@ main > form button {
 
   .sidebar > * {
     visibility: hidden;
-  }
-}
-
-@media (min-height: 500px) {
-  .additional-info {
-    max-height: 280px;
-  }
-
-  .info-window {
-    height: 320px;
-  }
-}
-
-@media (min-height: 600px) {
-  .info-window {
-    height: 400px;
   }
 }
