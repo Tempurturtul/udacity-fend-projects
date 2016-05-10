@@ -46,16 +46,17 @@ $(document).ready(function() {
         'welcomeMessage' : 'I\'m currently seeking employment as a front-end web ' +
         'developer and am happy to relocate as necessary within the United States. ' +
         'Please don\'t hesitate to contact me! This resume was last updated in ' +
-        'March of 2016.',
+        'May of 2016.',
         'skills' : [
           'HTML',
           'CSS',
           'JavaScript',
           'jQuery',
           'Knockout',
-          'AngularJS',
-          'Node.js',
-          'Gulp'
+          'Angular',
+          'Node',
+          'Gulp',
+          'Jasmine'
         ],
         'biopic' : 'img/self.png'
       };
@@ -84,6 +85,38 @@ $(document).ready(function() {
     getProjects: function() {
       return {
         'projects': [
+          {
+            'title': 'Feed Reader',
+            'dates': 'May 2016',
+            'description': 'A simple project completed after learning Test-Driven ' +
+            'Development practices using Jasmine. The application and all of its ' +
+            'functionality was provided and I was tasked with writing the spec sheet ' +
+            'located in the jasmine/spec folder. The tests and their pass/fail states ' +
+            'are displayed at the bottom of the live site.',
+            'images': [
+              'img/fend-feed-reader-specs.png'
+            ],
+            'github': 'https://github.com/Tempurturtul/fend-feed-reader',
+            'url': 'http://tempurturtul.github.io/fend-feed-reader/'
+          },
+          {
+            'title': 'Neighborhood Map',
+            'dates': 'May 2016',
+            'description': 'A single-page web application built using Knockout ' +
+            'that displays a Google Map of an area, along with various ' +
+            'user-defined map markers. Users can filter and organize map markers ' +
+            'in a list with user-created (and optionally nested) folders. Clicking ' +
+            'on a map marker displays additional information about the location ' +
+            'retrieved from the Google, Flickr, Foursquare, and Wikipedia APIs.',
+            'images': [
+              'img/fend-neighborhood-map-clear.png',
+              'img/fend-neighborhood-map-info.png',
+              'img/fend-neighborhood-map-sidebar.png',
+              'img/fend-neighborhood-map-delete.png'
+            ],
+            'github': 'https://github.com/Tempurturtul/fend-neighborhood-map',
+            'url': 'https://tempurturtul.github.io/fend-neighborhood-map/'
+          },
           {
             'title': 'Optimization',
             'dates': 'February 2016',
@@ -189,7 +222,7 @@ $(document).ready(function() {
             'give graduates the ability to build "beautiful, responsive websites ' +
             'optimized for security and performance." I completed multiple projects ' +
             'as part of this nanodegree, including projects focusing on optimization, ' +
-            'design patterns, and refactoring.'
+            'design patterns, testing, and refactoring.'
           },
           {
             'name': 'Central Penn College',
