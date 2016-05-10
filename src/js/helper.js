@@ -1,6 +1,7 @@
 var helper = {};
 
 helper.HTMLheaderName = '<h1>%data%</h1>';
+helper.HTMLheaderNameWithUrl = '<h1><a href="%url-data%" target="_blank">%data%</a></h1>';
 helper.HTMLheaderRole = '<p class="subtitle">%data%</p><hr>';
 
 helper.HTMLmobile = '<li class="hide-content-container"><i class="fa fa-mobile"></i><span class="hide-content">%data%</span></li>';
@@ -10,6 +11,7 @@ helper.HTMLgithub = '<li class="hide-content-container"><i class="fa fa-github">
 helper.HTMLlocation = '<li class="hide-content-container"><i class="fa fa-map-marker"></i><span class="hide-content"><a href="https://www.google.com/maps/search/%data%" target="_blank">%data%</a></span></li>';
 
 helper.HTMLbioPic = '<div class="row"><img class="biopic" src="%data%"></div>';
+helper.HTMLbioPicWithUrl = '<div class="row"><a href="%url-data%" target="_blank"><img class="biopic" src="%data%"></a></div>';
 helper.HTMLwelcomeMsg = '<p class="welcome-message">%data%</p>';
 
 helper.HTMLskillsStart = '<ul id="skills"></ul>';

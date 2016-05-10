@@ -53,6 +53,10 @@ header {
   text-shadow: -1px -1px 0 #444;
 }
 
+header a:hover {
+  color: inherit;
+}
+
 p {
   color: #444;
   margin: 0;

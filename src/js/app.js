@@ -39,6 +39,7 @@ $(document).ready(function() {
         'contacts' : {
           'mobile' : '717-303-9839',
           'email' : 'tempurturtul@gmail.com',
+          'homepage' : 'https://tempurturtul.github.io',
           'github' : 'https://github.com/Tempurturtul',
           'linkedin' : 'https://www.linkedin.com/in/tempurturtul',
           'location' : 'Massena, NY'
@@ -461,7 +462,18 @@ $(document).ready(function() {
       init: function() {
         var bio = octopus.getBio();
 
-        var formattedName = helper.HTMLheaderName.replace(/%data%/g, bio.name);
+        var formattedName;
+        var formattedBioPic;
+
+        // If additional bio.contacts.homepage data is present...
+        if (bio.contacts.homepage) {
+          formattedName = helper.HTMLheaderNameWithUrl.replace(/%data%/g, bio.name).replace(/%url-data%/g, bio.contacts.homepage);
+          formattedBioPic = helper.HTMLbioPicWithUrl.replace(/%data%/g, bio.biopic).replace(/%url-data%/g, bio.contacts.homepage);
+        } else {
+          formattedName = helper.HTMLheaderName.replace(/%data%/g, bio.name);
+          formattedBioPic = helper.HTMLbioPic.replace(/%data%/g, bio.biopic);
+        }
+
         var formattedRole = helper.HTMLheaderRole.replace(/%data%/g, bio.role);
         var formattedMobile = helper.HTMLmobile.replace(/%data%/g, bio.contacts.mobile);
         var formattedEmail = helper.HTMLemail.replace(/%data%/g, bio.contacts.email);
@@ -478,7 +490,6 @@ $(document).ready(function() {
 
 
         var formattedLocation = helper.HTMLlocation.replace(/%data%/g, bio.contacts.location);
-        var formattedBioPic = helper.HTMLbioPic.replace(/%data%/g, bio.biopic);
         var formattedWelcomeMsg = helper.HTMLwelcomeMsg.replace(/%data%/g, bio.welcomeMessage);
 
         $('header').prepend(formattedRole)
