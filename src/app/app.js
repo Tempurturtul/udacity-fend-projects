@@ -34,11 +34,12 @@ $(document).ready(function() {
           break;
         case 'web-technologies':
           msg = '<ul>' +
-                '<li>Jasmine</li>' +
                 '<li>jQuery</li>' +
                 '<li>Knockout</li>' +
-                '<li>Polymer</li>' +
                 '<li>AngularJS</li>' +
+                '<li>Polymer</li>' +
+                '<li>SASS</li>' +
+                '<li>Jasmine</li>' +
                 '<li>Node.js</li>' +
                 '<li>Gulp</li>' +
                 '<li>Grunt</li>' +
@@ -49,10 +50,11 @@ $(document).ready(function() {
           break;
         case 'new-things':
           msg = '<ul>' +
-                '<li>Web Workers</li>' +
                 '<li>Service Workers</li>' +
+                '<li>Web Workers</li>' +
                 '<li>IndexedDB API</li>' +
-                '<li>SQL and NoSQL</li>' +
+                '<li>SQL</li>' +
+                '<li>WebRTC</li>' +
                 '<li>many more...</li>' +
                 '</ul>';
           break;
