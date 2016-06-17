@@ -1,0 +1,29 @@
+Optimization Notes
+
+Basics
+
+	Minify, Compress, Cache
+		(HTML, CSS, JavaScript)
+	Minimize use of render blocking resources.
+		(CSS)
+		(Inline or use media queries.)
+	Minimize use of parser blocking resources.
+		(JS)
+		(Defer execution or use async attribute.)
+
+	1. Minimize bytes.
+	2. Reduce critical resources.
+	3. Shorten CRP length.
+		(Analyze CRP: number of critical resources, bytes, round trips.)
+
+Further Detail
+
+	Apply content-specific optimizations first: CSS, JS, and HTML minifiers; then apply GZIP to compress the minified output. (Most servers automatically apply GZIP compression.)
+	Use HTTP caching. (See HTML5 Boilerplate for sample server config files.)
+		See following for choosing optimal cache-control policy.
+			https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching
+		Use versions or fingerprints in file names to allow on-demand updates (style.0001.css).
+	Reduce render-blocking CSS by and using media attribute with multiple CSS files.
+		Ex.: <link rel="stylesheet" href="style-print.css" media="print">
+	Use the async attribute to prevent javascript from blocking DOM and CSSOM.
+		Ex.: <script src="analytics.js" async></script>
