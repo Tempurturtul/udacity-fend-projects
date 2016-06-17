@@ -1,0 +1,395 @@
+/*************************
+  Global Styles
+*************************/
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #5f7d8e;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+}
+
+button {
+  border: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+footer,
+header {
+  background-color: #5f7d8e;
+  padding: 5px 5%;
+}
+
+h1 {
+  color: #f3f3f3;
+  margin: 0;
+}
+
+h2 {
+  color: #999;
+  margin-top: 0;
+}
+
+h3,
+h4 {
+  color: #444;
+  margin-bottom: 0;
+}
+
+header {
+  text-shadow: -1px -1px 0 #444;
+}
+
+header a:hover {
+  color: inherit;
+}
+
+p {
+  color: #444;
+  margin: 0;
+}
+
+section {
+  border-bottom: solid 1px #ddd;
+  padding: 25px 5%;
+}
+
+section:first-of-type {
+  border-top: solid 1px #ddd;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+
+/*************************
+  Classes
+*************************/
+
+.biopic {
+  border-left: solid #444 1px;
+  border-top: solid #444 1px;
+  border-radius: 50%;
+  flex: 0 0;
+  margin: 10px 0;
+  width: 150px;
+  height: 150px;
+}
+
+.collapse-button {
+  background: inherit;
+  border-top: solid 1px #ddd;
+  color: #777;
+  display: block;
+  width: 100%;
+}
+
+.collapse-button:hover {
+  border-top-color: #5f7d8e;    /* Same as a elements. */
+  color: #5f7d8e;    /* Same as a elements. */
+}
+
+.collapse-container {
+  margin-top: 15px;
+}
+
+.contacts-list {
+  display: flex;
+  justify-content: space-around;
+  max-width: 500px;
+  margin: 15px auto;
+  overflow: hidden;  /* Along with position:relative, prevents contacts flexbox from creating unwanted whitespace beyond 100% width. */
+  position: relative;  /* Along with overflow:hidden, prevents contacts flexbox from creating unwanted whitespace beyond 100% width. */
+  text-shadow: none;
+}
+
+.description {
+  margin-top: 0.5em;
+}
+
+.education-entry {
+
+}
+
+.github-link {
+  color: #666;
+  font-size: 1.2rem;
+  line-height: 1rem;
+  position: relative;
+  top: 0;
+}
+
+.github-link:hover {
+  top: -3px;
+  transition: top 0.2s;
+}
+
+.gray {
+  background-color: #f3f3f3;
+}
+
+.hide-content-container > .hide-content {
+  /* Hide the content inside the container (but not from screen-readers). */
+  opacity: 0;
+  position: absolute;
+  visibility: hidden;
+}
+
+.hide-content-container:hover > .hide-content {
+  /* On hover, display the content inside the container. */
+  opacity: 1;
+  position: inherit;
+  transition: visibility 0.2s, opacity 0.2s linear;
+  transition-delay: 0.3s;
+  visibility: visible;
+  white-space: nowrap;
+}
+
+.location {
+  color: #999;
+  font-style: italic;
+}
+
+.project-entry {
+
+}
+
+.project-images {
+  align-items: center;
+  display: flex;
+  height: 300px;
+  justify-content: flex-start;
+  overflow-x: scroll;
+  width: 100%;
+}
+
+.protective-overlay {
+  align-items: center;
+  color: black;
+  display: flex;
+  font-size: 2rem;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  text-align: center;
+  text-shadow: 0 0 4px white;
+  top: 0;
+  width: 100%;
+  opacity: 0;
+  z-index: 10;
+}
+
+.protective-overlay:hover {
+  background: rgba(255,255,255,0.5);
+  opacity: 1;
+}
+
+.row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.subtitle {
+  display: inline-block;
+  font-size: 1rem;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.time-period {
+  color: #999;
+  font-style: italic;
+}
+
+.welcome-message {
+  color: #f3f3f3;
+  flex: 1 1 auto;
+  font-style: italic;
+  line-height: 1.5em;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.work-entry {
+
+}
+
+
+/*************************
+  Specific Styles
+*************************/
+
+#classes-heading {
+  color: #999;
+}
+
+#education {
+
+}
+
+#main-container {
+
+}
+
+#map {
+  height: 400px;
+}
+
+#map-container {
+  position: relative;  /* Needed for protective-overlay. */
+}
+
+#places {
+
+}
+
+#projects {
+
+}
+
+#skills {
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.9em;
+  font-variant: small-caps;
+  justify-content: center;
+}
+
+#skills li:not(:last-of-type) {
+  margin-right: 15px;
+}
+
+#subtitle {
+
+}
+
+#work-experience {
+
+}
+
+/* Name. */
+header h1 {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+/* Role. */
+header h1 + p {
+  color: #bdc9d1;
+}
+
+/* Biopic and Welcome Message. */
+header .row {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contacts-list li {
+  align-items: center;
+  background: #f0f0f0;
+  border-top: 1px solid #666;
+  border-left: 1px solid #666;
+  border-radius: 3px;
+  color: #333;
+  display: flex;
+  flex: 1 0 auto;
+  font-size: 0.8em;
+  height: 2em;
+  justify-content: center;
+  padding: 5px;
+  max-width: 2em;
+  overflow: hidden;
+  transition: all 0.5s;
+  transition-delay: 0.1s;
+}
+
+.contacts-list li:hover {
+  max-width: 100%;
+  transition: all 0.7s;
+}
+
+.contacts-list li:not(:last-of-type) {
+  margin-right: 8px;
+}
+
+.contacts-list li span {
+  font-size: 0.7em;
+  margin-left: 0.5em;
+}
+
+.work-entry > h3 {
+  display: inline-block;  /* Require the user to mouse over the title text. */
+}
+
+.work-entry > h3:hover {
+  color: #5f7d8e;  /* Same as a elements. */
+  cursor: pointer;  /* Same as a elements. */
+}
+
+/* Icon in project, education, and online course titles. */
+h3 .fa-external-link,
+h4 .fa-external-link {
+  font-size: 0.6em;
+  vertical-align: super;
+}
+
+.project-images img {
+  border: solid #ddd 1px;
+  border-radius: 5px;
+  flex: 0 0 auto;
+  margin-right: 10px;  /* Ignored by overflow scroll (scrolls to last element's border edge, not margin edge). */
+  max-height: 100%;
+}
+
+footer .contacts-list {
+  margin: 5px auto;
+}
+
+/*************************
+  Media Queries
+*************************/
+@media (min-width: 980px) {
+  .biopic {
+    margin: 0 10px 0 0;
+    order: 0;
+  }
+
+  .welcome-message {
+    margin-right: 160px;
+  }
+
+  /* The bio pic and welcome message row. */
+  header > .row {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 600px) {
+  .contacts-list li {
+    font-size: 1em;
+    height: 2em;
+    width: 2em;
+  }
+
+  .contacts-list li span {
+    font-size: 0.8em;
+  }
+}
