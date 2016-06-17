@@ -1,0 +1,12 @@
+{
+  "name": "fend-neighborhood-map",
+  "private": true,
+  "dependencies": {
+    "knockout": "^3.4.0",
+    "uuid.js": "^3.3.0",
+    "knockout-dragdrop": "^2.4.4"
+  },
+  "resolutions": {
+    "knockout": "3.4.0"
+  }
+}
