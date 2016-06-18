@@ -1,17 +1,18 @@
 #!/bin/bash
 # Build Script, version 1
 #
-#  Copies contents of dist/ directories in ../ directories determined
-#+ to contain projects, and pastes them to
-#+ ./src/projects/[project-name]/dist/. Then creates a projects.js
-#+ file that declares a global projects variable, which is an array
-#+ of strings representing relative paths from ./src to
-#+ projects/[project-name].
+#  Checks for directories in ../ containing src/ and dist/
+#+ subdirectories. Copies the contents of the dist/ subdirectories
+#+ to ./src/projects/PROJECT_NAME/dist/. Also copies the contents of
+#+ any manually defined directories in the same way. Then creates a
+#+ projects.js file in ./src/scripts/ that declares a global projects
+#+ variable, which is an array of PROJECT_NAME strings.
 
-#  Manually defined paths to project distribution files.
+#  Manually defined paths to project distribution files. Edit this to
+#+ suit your needs.
 MANUALLY_DEFINED=( "../fend-feed-reader" )
 
-# Remove the projects directory if it exists.
+# Remove the ./src/projects directory if it exists.
 if [ -d "./src/projects" ]
 then
   rm -r ./src/projects
@@ -29,7 +30,7 @@ echo "Manually defined project files:"
 echo "$MANUALLY_DEFINED"
 echo
 
-# For each src/ directory...
+# For each project src/ directory...
 for directory in $src_directories
 do
   # Extract the project's root directory.
