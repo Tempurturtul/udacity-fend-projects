@@ -4,15 +4,10 @@ Provides links to the distribution versions of all detected projects stored one 
 
 **Requires bash and \*nix commands to use the build script.**
 
-**Alternatively:**
+## Quickstart
 
-- Manually copy your projects' distribution files to `projects-index/src/projects/YOUR_PROJECT/dist/`.
-- Create a `projects-index/src/scripts/projects.js` file with the following contents:
-  ```js
-  var projects = ['YOUR_PROJECT', 'YOUR_OTHER_PROJECT', ...];
-  ```
+**Using the build script:**
 
-## Quickstart (using the build script)
 - Clone this repository next to the projects you wish to provide links to.
 ```
   cd YOUR_PROJECTS_FOLDER/
@@ -29,6 +24,25 @@ Provides links to the distribution versions of all detected projects stored one 
 ```
   # YOU READ IT, RIGHT?
   ./build-script
+```
+- Spin up a local server and view in your browser.
+```
+  # Just an example, do this however you like.
+  cd src/
+  python -m SimpleHTTPServer 3000 & sleep 2; firefox -new-tab localhost:3000
+```
+
+**Without the build script:**
+
+- Clone this repository and navigate to it.
+```
+  git clone https://github.com/Tempurturtul/projects-index.git
+  cd projects-index/
+```
+- Copy your projects' distribution files to `src/projects/YOUR_PROJECT/dist/`.
+- Create a `src/scripts/projects.js` file with the following contents:
+```js
+var projects = ['YOUR_PROJECT', 'YOUR_OTHER_PROJECT', ...];
 ```
 - Spin up a local server and view in your browser.
 ```
