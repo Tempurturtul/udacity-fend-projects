@@ -2,4 +2,3 @@ node_modules
 .tmp
 dist
 .publish
-projects-index/src/projects
