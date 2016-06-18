@@ -1,9 +1,0 @@
-{
-  "name": "fend-resume",
-  "private": true,
-  "ignore": [],
-  "dependencies": {
-    "polymer": "Polymer/polymer#^1.2.0",
-    "iron-collapse": "PolymerElements/iron-collapse#~1.0.5"
-  }
-}
