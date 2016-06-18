@@ -7,10 +7,3 @@ Each `fend` project was added using [git-subtree](https://github.com/git/git/blo
 The `projects-index/` directory is the exception, and is original to this repository. It contains the index site hosted on this repository's `gh-pages` branch.
 
 **See project directories for project details.**
-
-## WHERE-WAS-I?
-
-- Build fend-projects.
-- Run `projects-index/build-script`.
-- Setup `gh-pages` branch.
-- Create remote repo and push.
