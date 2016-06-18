@@ -8,9 +8,10 @@
 #+ projects.js file in ./src/scripts/ that declares a global projects
 #+ variable, which is an array of PROJECT_NAME strings.
 
-#  Manually defined paths to project distribution files. Edit this to
-#+ suit your needs.
-MANUALLY_DEFINED=( "../fend-feed-reader" )
+#  Manually defined paths to project distribution files. (Paths are
+#+ relative to this file.)
+#  Use this for projects that aren't automatically detected.
+MANUALLY_DEFINED=( "" )
 
 # Remove the ./src/projects directory if it exists.
 if [ -d "./src/projects" ]
