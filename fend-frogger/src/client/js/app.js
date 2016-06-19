@@ -1024,7 +1024,7 @@
    * Opens the bug tracker for this app.
    */
   function openBugTacker() {
-    window.open('https://github.com/Tempurturtul/fend-frogger/issues', '_blank');
+    window.open('https://github.com/Tempurturtul/udacity-fend-projects/issues', '_blank');
   }
 
   /**
