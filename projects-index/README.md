@@ -4,11 +4,10 @@ Provides an index site for all projects stored one level above this directory (`
 
 ## Requirements
 
-- All projects with a live version must have a root `index.html` file.
 - The `src/scripts/main.js` file must be edited so the `sourcePath` variable on line 5 matches the path to the source code for your projects. This path must be fundamentally the same for all projects, minus the project name.
   - Example:
   ```js
-  var sourcePath = 'https://github.com/Tempurturtul/{{project-name}}';
+    var sourcePath = 'https://github.com/Tempurturtul/{{project-name}}';
   ```
 
 **Additional build script specific requirements:**
