@@ -17,18 +17,18 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
 }
 
 .project-links {
   list-style: none;
-  margin: 5px;
+  margin: 5px auto;
   padding: 0;
 }
 
 .project-links__entry {
   margin: 5px;
   font-family: monospace;
+  white-space: nowrap;
 }
 
 .project-links__link {
