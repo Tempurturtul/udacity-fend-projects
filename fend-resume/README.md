@@ -1,7 +1,7 @@
 # Resume
 This is the **2nd** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program.
 
-**[View here.](http://tempurturtul.github.io/fend-resume)**
+**[View here.](https://tempurturtul.github.io/udacity-fend-projects/projects/fend-resume/dist/)**
 
 In this project I was required to complete Udacity's [JavaScript Basics](https://www.udacity.com/course/javascript-basics--ud804) course, which covers the construction of the basic resume site using a provided template. I was then allowed to personalize the result.
 
@@ -10,10 +10,10 @@ I used the [Polymer](https://www.polymer-project.org/) `iron-collapse` component
 ## Quickstart
 
 - Install [Node](https://nodejs.org/en/), [Gulp](http://gulpjs.com/), and [Bower](http://bower.io/).
-- Clone this repository and install dependencies.
+- Clone the repository, navigate to this project, and install dependencies.
 ```
-  git clone https://github.com/Tempurturtul/fend-resume.git
-  cd fend-resume/
+  git clone https://github.com/Tempurturtul/udacity-fend-projects.git
+  cd udacity-fend-projects/fend-resume/
   npm install
   bower install
 ```
