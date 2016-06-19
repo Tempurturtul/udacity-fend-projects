@@ -16,21 +16,39 @@
 
     // For each project in the projects array...
     projects.forEach(function(project) {
-      // Build the project path.
-      path = 'projects/' + project + '/dist/index.html';
-
-      // Ensure the project name is HTML safe.
-      project = project
-                  .replace(/>/g, '&gt;')
-                  .replace(/</g, '&lt;');
-
-      // Escape any double-quotes in the project path.
-      path = path.replace(/"/g, '\\"');
-
       // Create a new li element.
       li = document.createElement('li');
       li.classList.add('project-links__entry');
-      li.innerHTML = '<a class="project-links__link" href="' + path + '">' + project + '</a>';
+
+      // Build the source path.
+      path = 'https://github.com/Tempurturtul/udacity-fend-projects/tree/master/' + project.name;
+
+      // Escape any double-quotes in the source path (just in case).
+      path = path.replace(/"/g, '\\"');
+
+      // Add a source link to the li.
+      li.innerHTML = '<a class="project-links__link" href="' + path + '">' +
+                     'Source</a>';
+
+      // Add the project name to the li (and make it HTML safe just in case).
+      li.innerHTML += '<span class="project-name">' +
+                      project.name
+                        .replace(/>/g, '&gt;')
+                        .replace(/</g, '&lt;') +
+                      '</span>';
+
+      // If the project has a live version...
+      if (project.live) {
+        // Build the project path.
+        path = 'projects/' + project.name + '/dist/index.html';
+
+        // Escape any double-quotes in the project path (just in case).
+        path = path.replace(/"/g, '\\"');
+
+        // Add a live version link to the li.
+        li.innerHTML += '<a class="project-links__link" href="' + path + '">' +
+                        'Live Site</a>';
+      }
 
       // Add the li element to the existing ul element.
       ul.appendChild(li);

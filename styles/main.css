@@ -28,19 +28,26 @@ body {
 
 .project-links__entry {
   margin: 5px;
+  font-family: monospace;
 }
 
 .project-links__link {
-  color: inherit;
+  color: #b55;
   text-decoration: none;
   padding: 5px;
   display: inline-block;
+  font-size: 1.2em;
+  font-variant: small-caps;
 }
 
 .project-links__link:visited {
-  color: #b55;
+  color: #755;
 }
 
 .project-links__link:hover {
-  color: #d00;
+  color: #f55;
+}
+
+.project-name {
+  font-size: 1.4em;
 }
