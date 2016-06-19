@@ -10,10 +10,10 @@ This is the second version of the "Cat Clicker" application, created after worki
 - [Node](https://nodejs.org/en/)
 - [Gulp](http://gulpjs.com/)
 
-**Clone the repository and install the dependencies for this project.**
+**Clone the repository, navigate to this project, and install dependencies.**
 ```
-  git clone https://github.com/Tempurturtul/fend-design-patterns.git
-  cd fend-design-patterns/cat-clicker-v2/
+  git clone https://github.com/Tempurturtul/udacity-fend-projects.git
+  cd udacity-fend-projects/fend-design-patterns/cat-clicker-v2/
   npm install
 ```
 

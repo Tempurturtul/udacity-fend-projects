@@ -2,7 +2,7 @@
 
 This is the first version of the "Cat Clicker" application, created before working through the [Design Patterns course](https://www.udacity.com/course/ud989-nd).
 
-It is included for comparison with [version 2](https://github.com/Tempurturtul/fend-design-patterns/tree/master/cat-clicker-v2), which was created after working through the course.
+It is included for comparison with [version 2](https://github.com/Tempurturtul/udacity-fend-projects/tree/master/fend-design-patterns/cat-clicker-v2), which was created after working through the course.
 
 ![Preview](docs/preview.png "A preview screenshot.")
 
@@ -12,10 +12,10 @@ It is included for comparison with [version 2](https://github.com/Tempurturtul/f
 - [Node](https://nodejs.org/en/)
 - [Gulp](http://gulpjs.com/)
 
-**Clone the repository and install the dependencies for this project.**
+**Clone the repository, navigate to this project, and install dependencies.**
 ```
-  git clone https://github.com/Tempurturtul/fend-design-patterns.git
-  cd fend-design-patterns/cat-clicker-v1/
+  git clone https://github.com/Tempurturtul/udacity-fend-projects.git
+  cd udacity-fend-projects/fend-design-patterns/cat-clicker-v1/
   npm install
 ```
 
