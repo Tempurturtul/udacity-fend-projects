@@ -2,8 +2,6 @@
 
 This is the **4th** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program. It provides a portfolio website that must be optimized to achieve a high [PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/) score and steady FPS.
 
-**[View completed project here.](http://tempurturtul.github.io/fend-optimization/)**
-
 ## Optimization Process
 1. Concatenated appropriate `.js` and `.css` files.
 1. Minified `.css`, `.js`, `.html`, and images.
@@ -20,10 +18,10 @@ This is the **4th** project in Udacity's [Front-End Web Developer Nanodegree](ht
 ## Quickstart
 
 - Install [Node](https://nodejs.org/en/) and [Gulp](http://gulpjs.com/).
-- Clone this repository and install dependencies.
+- Clone the repository, navigate to this project, and install dependencies.
 ```
-  git clone https://github.com/Tempurturtul/fend-optimization.git
-  cd fend-optimization/
+  git clone https://github.com/Tempurturtul/udacity-fend-projects.git
+  cd udacity-fend-projects/fend-optimization/
   npm install
 ```
 - Run the desired gulp task. *(See `gulpfile.js` for additional tasks.)*
