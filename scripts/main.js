@@ -1,4 +1,9 @@
 (function(global) {
+  // Use this variable to define the path to your source code. In my case, I'm
+  // using a subdirectory of a single GitHub repo. In most cases, this will
+  // instead be something like 'https://github.com/YOUR_NAME/{{project-name}}'.
+  var sourcePath = 'https://github.com/Tempurturtul/udacity-fend-projects/tree/master/{{project-name}}';
+
   var window = global.window;
   var document = global.document;
 
@@ -21,7 +26,7 @@
       li.classList.add('project-links__entry');
 
       // Build the source path.
-      path = 'https://github.com/Tempurturtul/udacity-fend-projects/tree/master/' + project.name;
+      path = sourcePath.replace('{{project-name}}', project.name);
 
       // Escape any double-quotes in the source path (just in case).
       path = path.replace(/"/g, '\\"');
@@ -40,7 +45,7 @@
       // If the project has a live version...
       if (project.live) {
         // Build the project path.
-        path = 'projects/' + project.name + '/dist/index.html';
+        path = 'projects/' + project.name + '/dist/';
 
         // Escape any double-quotes in the project path (just in case).
         path = path.replace(/"/g, '\\"');
