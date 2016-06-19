@@ -1,17 +1,16 @@
 #!/bin/bash
-# Build Script, version 1
+# Build Script, version 2
 #
-#  Checks for directories in ../ containing src/ and dist/
-#+ subdirectories. Copies the contents of the dist/ subdirectories
-#+ to ./src/projects/PROJECT_NAME/dist/. Also copies the contents of
-#+ any manually defined directories in the same way. Then creates a
-#+ projects.js file in ./src/scripts/ that declares a global projects
-#+ variable, which is an array of PROJECT_NAME strings.
-
-#  Manually defined paths to project distribution files. (Paths are
-#+ relative to this file.)
-#  Use this for projects that aren't automatically detected.
-MANUALLY_DEFINED=( "" )
+#  Populates the ./src/projects/ directory with subdirectories
+#+ containing distribution files for each project in ../ that has
+#+ both a src/ and a dist/ subdirectory at depth 1. Also creates the
+#+ file ./src/scripts/projects.js, which declares a global projects
+#+ variable in JavaScript. The projects variable is an array of
+#+ objects containing name and live properties, where name is the
+#+ name for a folder located in ../ excluding the projects-index
+#+ folder, and live is a boolean indicating the presence of
+#+ distribution files in the ./src/projects directory corresponding
+#+ to the named project.
 
 # Remove the ./src/projects directory if it exists.
 if [ -d "./src/projects" ]
@@ -19,73 +18,83 @@ then
   rm -r ./src/projects
 fi
 
-#  Get the src/ subdirectories of ../ project directories (excluding
-#+ this one).
-src_directories=$(find ../ -maxdepth 2 -type d | grep .*/src$ | grep -v projects-index)
+#  Get all directories in ../, excluding hidden (dot) directories and
+#+ the projects-index directory, then trim the preceding ../ to get
+#+ just the directory names.
+names=$(find ../ -maxdepth 1 -mindepth 1 -type d | grep -v "projects-index" | grep -v "\/\." | grep -o "[^\.\./].*")
 
+# Let the user know the directory names found.
 echo
-echo "Project source directories found:"
-echo "$src_directories"
-echo
-echo "Manually defined project files:"
-echo "$MANUALLY_DEFINED"
+echo "Projects found:"
+echo "$names"
 echo
 
-# For each project src/ directory...
-for directory in $src_directories
+# For each directory name...
+for name in $names
 do
-  # Extract the project's root directory.
-  proj_root=${directory#\.\.\/}
-  proj_root=${proj_root%\/*}
-  # Check if the project contains a dist/ directory.
-  if [ -d "../$proj_root/dist" ]
-  # If it has the expected dist/ directory...
+  # Check for src/ and dist/ subdirectories at depth 1.
+  if [ -d "../$name/src" ] && [ -d "../$name/dist" ]
   then
-    echo "Adding project files to ./src/projects/$proj_root/dist"
+    # Let the user know the distribution files are being added.
+    echo "Adding: ./src/projects/$name/dist"
     # Make the destination directory.
-    mkdir -p ./src/projects/$proj_root/dist
-    # Copy the files.
-    cp -r ../$proj_root/dist/* ./src/projects/$proj_root/dist/
-  # If it doesn't, output a warning to stderr.
-  else
-    >&2 echo "Warning: ../$proj_root/dist is missing. Did you forget to build it?"
+    mkdir -p ./src/projects/$name/dist
+    # Copy the contents of dist/ to ./src/projects/$name/dist/.
+    cp -r ../$name/dist/* ./src/projects/$name/dist/
+  # Check for only src/ subdirectories at depth 1.
+  elif [ -d "../$name/src" ]
+  then
+    #  Warn the user that the project's distribution files may need
+    #+ to be built.
+    >&2 echo "Warning: ../$name/dist is missing. Did you forget to build the project?"
   fi
 done
 
-# Add the manually defined distribution files.
-for directory in $MANUALLY_DEFINED
+#  Create the beginning of the string to write to the projects.js
+#+ file.
+js="var projects = ["
+
+# For each directory name...
+for name in $names
 do
-  # Extract the project's root directory.
-  proj_root=${directory#\.\.\/}
-  proj_root=${proj_root%%\/*}
-  echo "Adding manually defined project files to ./src/projects/$proj_root/dist"
-  mkdir -p ./src/projects/$proj_root/dist
-  # Copy the files.
-  cp -r $directory/* ./src/projects/$proj_root/dist/
+  #  Create the beginning of a new JavaScript object in the js string
+  #+ and add the name property and value, and the live property.
+  js="$js{name: '$name', live:"
+
+  #  Check for the presence of distribution files for the named
+  #+ project in ./src/projects/.
+  if [ -d "./src/projects/$name/dist" ]
+  then
+    # Set the live property to true and close the JavaScript object.
+    js="$js true}, "
+  # If there are no distribution files for the named project...
+  else
+    # Set the live property to false and close the JavaScript object.
+    js="$js false}, "
+  fi
 done
 
-# Create new contents of projects.js file.
-js="var projects = ["
-for directory in $(find ./src/projects/ -maxdepth 1 -mindepth 1 -type d | grep -o projects/.*)
-do
-  # Trim the preceding "projects/".
-  directory=${directory:9}
-  js="$js'$directory',"
-done
-# Trim the last "," and close the array.
-js=${js%,}
+#  Trim the last ", " from the js string.
+js=${js%", "}
+
+# End the JavaScript array declaration.
 js="$js];"
 
-# Create new projects.js file.
+# Make sure the ./src/scripts directory exists.
 if ! [ -d "./src/scripts" ]
 then
   mkdir ./src/scripts
 fi
+
+#  Create or recreate the projects.js file beginning with a
+#+ JavaScript comment that the file was automatically generated.
 echo "// Generated automatically by \`build-script\`." > ./src/scripts/projects.js
+
+# Append the js string to the projects.js file.
 echo $js >> ./src/scripts/projects.js
 
-echo
-echo "Created ./src/scripts/projects.js"
+# Inform the user that the projects.js file was created.
+echo "Created: ./src/scripts/projects.js"
 echo
 
 exit
