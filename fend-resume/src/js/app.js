@@ -133,7 +133,7 @@ $(document).ready(function() {
               'img/fend-optimization-pizzeria.png'
             ],
             'github': 'https://github.com/Tempurturtul/udacity-fend-projects/tree/master/fend-optimization',
-            'url': 'https://tempurturtul.github.io/udacity-fend-projects/projects/fend-optimization/dist/'
+            'url': ''
           },
           {
             'title': 'Frogger Clone',
