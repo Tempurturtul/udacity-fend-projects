@@ -2,7 +2,7 @@
 
 This is the **3rd** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program. It provides art assets and a simple game engine that must be used to build a frogger clone. I am required to implement only the basic game, but am encouraged to implement additional features of my choosing.
 
-**[Play here.](https://tempurturtul.github.io/udacity-fend-projects/projects/fend-frogger/dist/)**
+**[Play here.](https://tempurturtul.github.io/udacity-fend-projects/projects/fend-frogger/)**
 
 ## Controls
 
