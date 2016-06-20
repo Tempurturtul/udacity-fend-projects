@@ -1,7 +1,7 @@
 # Resume
 This is the **2nd** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program.
 
-**[View here.](https://tempurturtul.github.io/udacity-fend-projects/projects/fend-resume/dist/)**
+**[View here.](https://tempurturtul.github.io/udacity-fend-projects/projects/fend-resume/)**
 
 In this project I was required to complete Udacity's [JavaScript Basics](https://www.udacity.com/course/javascript-basics--ud804) course, which covers the construction of the basic resume site using a provided template. I was then allowed to personalize the result.
 

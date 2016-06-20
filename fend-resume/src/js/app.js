@@ -116,7 +116,7 @@ $(document).ready(function() {
               'img/fend-neighborhood-map-delete.png'
             ],
             'github': 'https://github.com/Tempurturtul/udacity-fend-projects/tree/master/fend-neighborhood-map',
-            'url': 'https://tempurturtul.github.io/udacity-fend-projects/projects/fend-neighborhood-map/dist/'
+            'url': 'https://tempurturtul.github.io/udacity-fend-projects/projects/fend-neighborhood-map/'
           },
           {
             'title': 'Optimization',
@@ -150,7 +150,7 @@ $(document).ready(function() {
               'img/fend-frogger-scores.png'
             ],
             'github': 'https://github.com/Tempurturtul/udacity-fend-projects/tree/master/fend-frogger',
-            'url': 'https://tempurturtul.github.io/udacity-fend-projects/projects/fend-frogger/dist/'
+            'url': 'https://tempurturtul.github.io/udacity-fend-projects/projects/fend-frogger/'
           },
           {
             'title': 'Resume',
@@ -170,7 +170,7 @@ $(document).ready(function() {
               'img/fend-resume-bot.png'
             ],
             'github': 'https://github.com/Tempurturtul/udacity-fend-projects/tree/master/fend-resume',
-            'url': 'https://tempurturtul.github.io/udacity-fend-projects/projects/fend-resume/dist/'
+            'url': 'https://tempurturtul.github.io/udacity-fend-projects/projects/fend-resume/'
           },
           {
             'title': 'Portfolio',
@@ -188,7 +188,7 @@ $(document).ready(function() {
               'img/fend-portfolio-contact.png'
             ],
             'github': 'https://github.com/Tempurturtul/udacity-fend-projects/tree/master/fend-portfolio',
-            'url': 'https://tempurturtul.github.io/udacity-fend-projects/projects/fend-portfolio/dist/'
+            'url': 'https://tempurturtul.github.io/udacity-fend-projects/projects/fend-portfolio/'
           },
           {
             'title': 'Twitch Streamers - Angular Refactor',
