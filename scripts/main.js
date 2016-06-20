@@ -45,7 +45,7 @@
       // If the project has a live version...
       if (project.live) {
         // Build the project path.
-        path = 'projects/' + project.name + '/dist/';
+        path = 'projects/' + project.name + '/';
 
         // Escape any double-quotes in the project path (just in case).
         path = path.replace(/"/g, '\\"');
