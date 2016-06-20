@@ -2,7 +2,7 @@
 
 This is the **5th** project in Udacity's [Front-End Web Developer Nanodegree](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001) program.
 
-**[View here.](https://tempurturtul.github.io/udacity-fend-projects/projects/fend-neighborhood-map/dist/)**
+**[View here.](https://tempurturtul.github.io/udacity-fend-projects/projects/fend-neighborhood-map/)**
 
 ## Quickstart
 
