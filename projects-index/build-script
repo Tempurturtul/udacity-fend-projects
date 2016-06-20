@@ -36,11 +36,11 @@ do
   if [ -d "../$name/src" ] && [ -d "../$name/dist" ]
   then
     # Let the user know the distribution files are being added.
-    echo "Adding: ./src/projects/$name/dist"
+    echo "Adding: ./src/projects/$name"
     # Make the destination directory.
-    mkdir -p ./src/projects/$name/dist
-    # Copy the contents of dist/ to ./src/projects/$name/dist/.
-    cp -r ../$name/dist/* ./src/projects/$name/dist/
+    mkdir -p ./src/projects/$name
+    # Copy the contents of dist/ to ./src/projects/$name/.
+    cp -r ../$name/dist/* ./src/projects/$name/
   # Check for only src/ subdirectories at depth 1.
   elif [ -d "../$name/src" ]
   then
@@ -63,7 +63,7 @@ do
 
   #  Check for the presence of distribution files for the named
   #+ project in ./src/projects/.
-  if [ -d "./src/projects/$name/dist" ]
+  if [ -d "./src/projects/$name" ]
   then
     # Set the live property to true and close the JavaScript object.
     js="$js true}, "

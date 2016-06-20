@@ -52,7 +52,7 @@ Provides an index site for all projects stored one level above this directory (`
   git clone https://github.com/Tempurturtul/projects-index.git
 ```
 1. Edit the `src/scripts/main.js` file as described in the requirements section.
-1. Copy your projects' distribution files to `src/projects/YOUR_PROJECT/dist/`.
+1. Copy your projects' distribution files to `src/projects/YOUR_PROJECT/`.
 1. Create a `src/scripts/projects.js` file with the following contents:
 ```js
 var projects = [
