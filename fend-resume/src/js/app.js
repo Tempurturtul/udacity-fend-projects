@@ -44,20 +44,29 @@ $(document).ready(function() {
           'linkedin' : 'https://www.linkedin.com/in/tempurturtul',
           'location' : 'Massena, NY'
         },
-        'welcomeMessage' : 'I\'m currently seeking employment as a front-end web ' +
-        'developer and am happy to relocate as necessary within the United States. ' +
-        'Please don\'t hesitate to contact me! This resume was last updated in ' +
-        'May of 2016.',
+        'welcomeMessage' : 'I\'m currently seeking employment as a junior web ' +
+        'developer and am happy to relocate as necessary within the United ' +
+        'States and Canada. Please don\'t hesitate to contact me! This resume ' +
+        'was last updated in July of 2016.',
         'skills' : [
           'HTML',
           'CSS',
+          'SCSS',
+          'BEM',
           'JavaScript',
+          'ES6',
           'jQuery',
           'Knockout',
           'Angular',
+          'MVC',
+          'Tape',
           'Node',
           'Gulp',
-          'Jasmine'
+          'Bower',
+          'Browserify',
+          'Git',
+          'Design',
+          'Optimization'
         ],
         'biopic' : 'img/self.png'
       };
