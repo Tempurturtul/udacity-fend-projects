@@ -3,3 +3,4 @@ node_modules
 dist
 .publish
 projects-index/src/projects
+projects-index/src/scripts/projects.js
