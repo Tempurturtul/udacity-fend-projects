@@ -42,7 +42,7 @@ Provides an index site for all projects stored one level above this directory (`
 ```
   # Just an example, do this however you like.
   cd src/
-  python -m SimpleHTTPServer 3000 & sleep 2; firefox -new-tab localhost:3000
+  python -m SimpleHTTPServer 3000 && firefox -new-tab localhost:3000
 ```
 
 **Without the build script:**
@@ -71,5 +71,5 @@ var projects = [
 ```
   # Just an example, do this however you like.
   cd src/
-  python -m SimpleHTTPServer 3000 & sleep 2; firefox -new-tab localhost:3000
+  python -m SimpleHTTPServer 3000 && firefox -new-tab localhost:3000
 ```
