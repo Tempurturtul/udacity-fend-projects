@@ -44,10 +44,11 @@ $(document).ready(function() {
           'linkedin' : 'https://www.linkedin.com/in/tempurturtul',
           'location' : 'Massena, NY'
         },
-        'welcomeMessage' : 'I\'m currently seeking employment as a junior web ' +
-        'developer and am happy to relocate as necessary within the United ' +
-        'States and Canada. Please don\'t hesitate to contact me! This resume ' +
-        'was last updated in July of 2016.',
+        'welcomeMessage' : 'Hello! I\'m currently seeking full-time remote ' +
+        'employment in a junior software engineering role. My strength is web ' +
+        'development with JavaScript, but I\'m constantly learning and plan to ' +
+        'enroll in a C.S. program early next year. This resume was updated ' +
+        'in September of 2016.',
         'skills' : [
           'HTML',
           'CSS',
@@ -95,6 +96,24 @@ $(document).ready(function() {
     getProjects: function() {
       return {
         'projects': [
+          {
+            'title': 'Junior Dev',
+            'dates': 'September 2016',
+            'description': 'Personal homepage featuring my blog and portfolio. ' +
+            'Built with semantic HTML, modular CSS, and vanilla JavaScript (no ' +
+            'third-party code used). Includes JSDoc comments throughout, BEM ' +
+            'methodology for CSS, a thoroughly tested hash router, an MVC ' +
+            'design pattern, build scripts via npm, testing (incomplete) with ' +
+            'tape and jsdom, and modularization of code using IIFEs.',
+            'images': [
+              'img/junior-dev-landing.png',
+              'img/junior-dev-blog.png',
+              'img/junior-dev-portfolio.png',
+              'img/junior-dev-contact.png'
+            ],
+            'github': 'https://github.com/Tempurturtul/junior-dev',
+            'url': 'https://tempurturtul.github.io/junior-dev/'
+          },
           {
             'title': 'Feed Reader',
             'dates': 'May 2016',
@@ -249,6 +268,15 @@ $(document).ready(function() {
           }
         ],
         'onlineCourses': [
+          {
+            'title': 'Introduction to Haskell',
+            'school': 'University of Pennsylvania',
+            'date': 2016,
+            'url': 'http://www.seas.upenn.edu/~cis194/spring13/',
+            'description': 'Study of the Haskell programming language: ' +
+            '"a high-level, pure functional programming language with a strong ' +
+            'static type system and elegant mathematical underpinnings".'
+          },
           {
             'title': 'JavaScript Design Patterns',
             'school': 'Udacity',
