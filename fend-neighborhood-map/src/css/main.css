@@ -355,7 +355,7 @@ main > form button {
   height: 400px;
   overflow-y: scroll;
   text-align: center;
-  width: 400px;
+  max-width: 400px;
 }
 
 .list-entry {
