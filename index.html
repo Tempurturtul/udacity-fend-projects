@@ -1,73 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="x-ua-compatible" content="ie=edge"><title>Neighborhood Map | FEND Projects</title><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1"><link rel="stylesheet" href="styles.8995de5a.css"><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"><script>function initMap(){var a={MAPOPTIONS:"mapOptions"},e={mapOptions:{center:{lat:40.7707,lng:-73.9745},zoom:12,disableDoubleClickZoom:!0}},o="places-search",p=JSON.parse(localStorage.getItem(a.MAPOPTIONS)),m=document.getElementById(o);p||(p=e.mapOptions,localStorage.setItem(a.MAPOPTIONS,JSON.stringify(p))),_map={},_map.map=new google.maps.Map(document.getElementById("map"),p),_map.places=new google.maps.places.PlacesService(_map.map),_map.searchBox=new google.maps.places.SearchBox(m),_map.map.addListener("bounds_changed",function(){_map.searchBox.setBounds(_map.map.getBounds())}),_map.map.controls[google.maps.ControlPosition.TOP_LEFT].push(m),_map.infoWindow=new google.maps.InfoWindow}var _map</script><script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFjYsMLSna2dvG5DIL-zXcXRQs5-UY-Zs&libraries=places&callback=initMap"></script><script async src="bower_components/uuid.js/dist/uuid.core.js"></script><script async src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script><script src="scripts.f4085c55.js" async></script><script>!function(e,a,t,n,c,o,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,o=a.createElement(t),s=a.getElementsByTagName(t)[0],o.async=1,o.src=n,s.parentNode.insertBefore(o,s)}(window,document,"script","//www.google-analytics.com/analytics.js","ga"),ga("create","UA-72597920-3","auto"),ga("send","pageview")</script></head><body class="loading"><header class="sidebar" data-bind="css: {'expanded': sidebar.expanded}"><fieldset class="filter-list-controls"><input type="text" placeholder="Search Existing" data-bind="textInput: sidebar.search"><label><input type="checkbox" data-bind="checked: sidebar.visibleOnly"> Only Show Markers Inside Map Bounds</label></fieldset><ul class="markers-list" data-bind="template: { name: 'list-template', foreach: markers }"></ul><form class="add-folder-form" data-bind="submit: sidebar.addFolder"><input class="add-folder-input" data-bind="textInput: sidebar.newFolderName" type="text" placeholder="New Folder"> <button class="add-folder-submit" type="submit"><img src="image/checkmark-green.64705757.svg" height="10" width="10"></button></form><button class="dangerous-button" data-bind="click: sidebar.confirmDeleteAll">Delete All</button></header><main><button class="sidebar-toggle-button" data-bind="click: sidebar.toggle"><img src="image/sidebar-button.a4e79d00.svg" height="20" width="20"></button> <input id="places-search" class="places-search" type="text" placeholder="Search"><div id="map" class="map"></div><form class="pending-markers-form" data-bind="visible: markersForm.visible"><fieldset><legend>Pending Map Markers</legend><!-- ko foreach: markersForm.pending --><div class="pending-marker"><input type="checkbox" data-bind="checked: visible"> <span class="pending-marker-name" data-bind="text: title,
-                             click: $root.markerClicked,
-                             css: {'selected-marker': selected}"></span></div><!-- /ko --></fieldset><button type="button" data-bind="click: markersForm.cancel">Cancel</button> <button type="button" data-bind="click: markersForm.submit">Confirm</button></form></main><script type="text/html" id="list-template"><li data-bind="visible: visible">
-        <!-- A marker. -->
-        <!-- ko ifnot: $data.contents -->
-          <div class="list-entry" data-bind="dragZone: {
-                                                name: 'sortable',
-                                                dragStart: $root.sidebar.dragStart,
-                                                dragEnd: $root.sidebar.dragEnd,
-                                                data: { items: $parent.contents || $parent.markers, item: $data },
-                                                element: 'marker-drag-preview'
-                                              },
-                                              dragEvents: {
-                                                accepts: 'sortable',
-                                                dragOver: $root.sidebar.reorder,
-                                                data: { items: $parent.contents || $parent.markers, item: $data }
-                                              }">
-            <span class="drag-handle"></span>
-            <img class="marker-pin" src="image/pin.0b77fe23.svg" height="10" width="10">
-            <span class="list-entry-name" data-bind="text: title,
-                                                click: $root.markerClicked,
-                                                css: {'selected-marker': selected}"></span>
-          </div>
-        <!-- /ko -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Index of completed Udacity Front-End Web Developer Nanodegree projects.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Index | FEND Projects</title>
 
-        <!-- A folder. -->
-        <!-- ko if: $data.contents -->
-          <div class="list-entry" data-bind="dragZone: {
-                                                name: 'sortable',
-                                                dragStart: $root.sidebar.dragStart,
-                                                dragEnd: $root.sidebar.dragEnd,
-                                                data: { items: $parent.contents || $parent.markers, item: $data },
-                                                element: 'folder-drag-preview'
-                                              },
-                                              dragEvents: {
-                                                accepts: 'sortable',
-                                                dragOver: $root.sidebar.reorder,
-                                                data: { items: $parent.contents || $parent.markers, item: $data }
-                                              }">
-            <span class="drag-handle"></span>
-            <button class="folder-button-toggle" data-bind="click: $root.sidebar.toggleFolder">
-              <img src="image/fold-arrow.0b7141d5.svg" height="10" width="10"
-                    data-bind="css: { 'rotate-270': collapsed }">
-            </button>
+    <!-- Apply Color to Mobile Status Bar -->
+    <meta name="theme-color" content="#c00">
 
-            <!-- If editing. -->
-            <form class="edit-folder-form"
-                  data-bind="visible: editing, submit: $root.sidebar.toggleFolderEditing">
-              <input class="edit-folder-input" type="text" data-bind="value: name">
-              <button class="folder-button-remove" type="button"
-                      data-bind="click: $root.sidebar.confirmFolderRemoval"><img src="image/x-red.5b606503.svg" height="10" width="10"></button>
-              <button class="folder-button-confirm" type="submit"><img src="image/checkmark-green.64705757.svg" height="10" width="10"></button>
-            </form>
+    <link rel="stylesheet" href="styles/normalize.css">
+    <link rel="stylesheet" href="styles/main.css">
 
-            <!-- If not editing. -->
-            <span class="list-entry-name" data-bind="visible: !editing(), text: name, click: $root.sidebar.toggleFolderEditing"></span>
+    <!-- Google Analytics -->
+    <!--
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-XXXXX-Y', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    -->
+  </head>
 
-            <button class="folder-button-center" data-bind="click: $root.sidebar.centerOnContents"><img src="image/center.c5e43c68.svg" height="10" width="10"></button>
-          </div>
-          <div class="folder-contents">
-            <ul data-bind="template: { name: 'list-template', foreach: contents }">
-            </ul>
-          </div>
-        <!-- /ko -->
-      </li></script><script type="text/html" id="marker-drag-preview"><div class="list-entry">
-        <span class="drag-handle"></span>
-        <span class="list-entry-name" data-bind="text: item.title"></span>
-      </div></script><script type="text/html" id="folder-drag-preview"><div class="list-entry">
-        <span class="drag-handle"></span>
-        <button class="folder-button-open"></button>
-        <span class="list-entry-name" data-bind="text: item.name"></span>
-        <button class="folder-button-center"></button>
-      </div></script><script src="bower_components/knockout/dist/knockout.js"></script><script async src="bower_components/knockout-dragdrop/lib/knockout.dragdrop.js"></script></body></html>
+  <body>
+
+    <div class="container">
+      <ul class="project-links">
+      </ul>
+    </div>
+
+    <script src="scripts/projects.js"></script>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>
