@@ -10,6 +10,7 @@ body {
 body {
   background: #222;
   color: #f5f5f5;
+  font-size: 0.8em;
 }
 
 .container {
@@ -50,4 +51,10 @@ body {
 
 .project-name {
   font-size: 1.4em;
+}
+
+@media (min-width: 450px) {
+  body {
+    font-size: 1em;
+  }
 }
