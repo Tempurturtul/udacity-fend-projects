@@ -353,8 +353,10 @@ main > form button {
 .google-result-title {}
 
 .info-window {
-  overflow: auto;
+  height: 400px;
+  overflow-y: scroll;
   text-align: center;
+  width: 400px;
 }
 
 .list-entry {
