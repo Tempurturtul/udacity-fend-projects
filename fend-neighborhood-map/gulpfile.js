@@ -84,7 +84,7 @@ var VENDOR = 'vendor';
 
 
 /* Browsers. */
-var browsers = ['google-chrome', 'firefox'];
+// var browsers = ['google-chrome', 'firefox'];
 
 
 /* Project-specific variables. */
@@ -340,7 +340,7 @@ gulp.task('serve', function(cb) {
       },
       // middleware: middleware
     },
-    browser: browsers,
+    // browser: browsers,
     notify: false,  // Prevents pop-over notifications in the browser.
     minify: false   // Prevents minification of client-side JS.
   }, cb);
