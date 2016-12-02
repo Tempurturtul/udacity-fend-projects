@@ -354,7 +354,7 @@ gulp.task('serve:dest', function(cb) {
       baseDir: DEST,
       middleware: middleware
     },
-    browser: browsers,
+    // browser: browsers,
     notify: false,  // Prevents pop-over notifications in the browser.
     minify: false   // Prevents minification of client-side JS.
   }, cb);
