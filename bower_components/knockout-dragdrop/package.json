@@ -1,0 +1,29 @@
+{
+  "name": "knockout-dragdrop",
+  "description": "A drag and drop binding for Knockout",
+  "version": "2.5.1",
+  "keywords": [
+    "drag and drop"
+  ],
+  "maintainers": [
+    {
+      "name": "Sune Simonsen",
+      "email": "sss@one.com"
+    }
+  ],
+  "repository": "git://github.com/One-com/knockout-dragdrop.git",
+  "main": "lib/knockout.dragdrop.js",
+  "licence": "Standard 3-clause BSD",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha-phantomjs test/index.html"
+  },
+  "devDependencies": {
+    "bower": "1.7.9",
+    "serve": "1.4.0",
+    "mocha": "2.4.5",
+    "mocha-phantomjs": "4.0.2",
+    "unexpected": "10.13.0",
+    "factory.js": "0.0.8",
+    "sinon": "1.17.3"
+  }
+}
