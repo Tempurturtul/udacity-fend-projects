@@ -29,7 +29,8 @@
               mapOptions: {
                 center: {lat: 40.7707, lng: -73.9745},  // New York, US.
                 zoom: 12,
-                disableDoubleClickZoom: true
+                disableDoubleClickZoom: true,
+                gestureHandling: 'greedy'  // Pan map with one finger.
               }
             },
             searchBoxID = 'places-search',
