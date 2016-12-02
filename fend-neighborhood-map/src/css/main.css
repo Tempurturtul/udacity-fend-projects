@@ -189,7 +189,6 @@ main > form button {
   outline: none;
 }
 
-
 .drag-handle {
   cursor: move;
   flex: 0 0 20px;
