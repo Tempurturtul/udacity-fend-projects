@@ -147,7 +147,6 @@ var jsonlint = require('gulp-jsonlint');
 var merge = require('merge-stream');
 var path = require('path');
 var plumber = require('gulp-plumber');
-var pngquant = require('imagemin-pngquant');
 var psi = require('psi');
 var replace = require('gulp-replace');
 var RevAll = require('gulp-rev-all');
@@ -276,9 +275,7 @@ gulp.task('minify:js', function() {
 gulp.task('minify:images', function() {
   return gulp.src(TMP + imageFiles)
     .pipe(plumber())
-    .pipe(imagemin({
-      use: [pngquant()]  // Better compression than optipng.
-    }))
+    .pipe(imagemin())
     .pipe(gulp.dest(TMP));
 });
 
